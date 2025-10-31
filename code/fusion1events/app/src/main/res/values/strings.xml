@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">fusion1-events</string>
+    <string-array name="selectRolesArray">
+        <item>Select a role..</item>
+        <item>Entrant</item>
+        <item>Organizer</item>
+        <item>Admin</item>
+    </string-array>
+</resources>

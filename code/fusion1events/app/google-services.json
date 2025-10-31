@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "553948353612",
+    "project_id": "cmput301-7983a",
+    "storage_bucket": "cmput301-7983a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553948353612:android:82328cc53249aa4eda10e9",
+        "android_client_info": {
+          "package_name": "com.example.fusion1_events"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq8uZSGA7gNiP8_0MtYFCadAH5vx3uNhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
