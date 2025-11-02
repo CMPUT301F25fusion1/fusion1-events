@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EventActivity" android:exported="false"/>
+        <activity android:name=".EventDetailActivity" android:exported="false"/>
+        <activity android:name=".YourEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
     </application>
 

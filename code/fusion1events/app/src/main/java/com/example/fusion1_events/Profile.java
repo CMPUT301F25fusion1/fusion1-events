@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
     private String name;
     private String email;
     private String phone_num;
