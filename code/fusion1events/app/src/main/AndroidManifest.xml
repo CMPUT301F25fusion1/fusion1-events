@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Browse_Class" />
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    tools:context=".Browse_Class">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Browse Profiles"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Optional Search Bar / Filter -->
+    <EditText
+        android:id="@+id/searchProfiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by name or role..."
+        android:padding="12dp"
+        android:background="@drawable/search_box_bg"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- RecyclerView to show all profiles -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewProfiles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/activity_profile_card" />
+
+</LinearLayout>
