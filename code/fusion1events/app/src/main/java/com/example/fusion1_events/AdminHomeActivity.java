@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,20 +25,21 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         profileRef = DatabaseReferences.getProfileDatabase();
 
+        TextView welcomeMessage = findViewById(R.id.welcomeText);
+        Button buttonBrowseProfiles = findViewById(R.id.buttonBrowseProfiles);
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
             profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
 
                 if (profile.exists()) {
                     String name = profile.getString("name");
-
-                    TextView welcomeMessage = findViewById(R.id.welcomeText);
-
                     welcomeMessage.setText("Welcome "+ name);
-
                 }
             });
-
+        });
+        buttonBrowseProfiles.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminHomeActivity.this, Browse_Class.class);
+            startActivity(intent);
         });
     }
 }
