@@ -37,6 +37,12 @@ public class EventActivity extends AppCompatActivity {
 
         TextView tvHome = findViewById(R.id.tvHome);
         TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+        TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+
+        tvYourProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(EventActivity.this, ProfileViewActivity.class);
+            startActivity(intent);
+        });
 
         tvHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, EventActivity.class);

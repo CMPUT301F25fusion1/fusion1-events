@@ -84,7 +84,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
     private void goProfileScreen(){
         startActivity(new android.content.Intent(this, ProfileViewActivity.class));
-        finish();
+
     }
 
     private void setupRecyclerView() {

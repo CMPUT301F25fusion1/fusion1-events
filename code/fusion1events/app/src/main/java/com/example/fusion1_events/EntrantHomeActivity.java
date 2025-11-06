@@ -1,5 +1,6 @@
 package com.example.fusion1_events;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -42,8 +43,7 @@ public class EntrantHomeActivity extends AppCompatActivity {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventList = new ArrayList<>();
 
-        profileButton = findViewById(R.id.buttonProfileEntrantHome);
-        profileButton.setOnClickListener(v -> goProfileScreen());
+
 
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
@@ -54,6 +54,12 @@ public class EntrantHomeActivity extends AppCompatActivity {
 
                     TextView tvHome = findViewById(R.id.tvHome);
                     TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+                    TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+
+                    tvYourProfile.setOnClickListener(v -> {
+                        Intent intent = new Intent(EntrantHomeActivity.this, ProfileViewActivity.class);
+                        startActivity(intent);
+                    });
 
                     tvHome.setOnClickListener(v -> {
                         Intent intent = new Intent(EntrantHomeActivity.this, EntrantHomeActivity.class);
@@ -85,10 +91,6 @@ public class EntrantHomeActivity extends AppCompatActivity {
 
     }
 
-    private void goProfileScreen(){
-        startActivity(new android.content.Intent(this, ProfileViewActivity.class));
-        finish();
-    }
     }
 
 

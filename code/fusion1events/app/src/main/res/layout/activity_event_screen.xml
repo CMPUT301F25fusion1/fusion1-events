@@ -41,15 +41,14 @@
             android:gravity="center"
             android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/buttonProfileEntrantHome"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvYourProfile"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:backgroundTint="#808080"
-            android:text="@string/Profile"
-            android:textColor="@android:color/white"
-            android:visibility="visible"
-            app:cornerRadius="0dp" />
+            android:text="Profile"
+            android:gravity="center"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_weight="1"

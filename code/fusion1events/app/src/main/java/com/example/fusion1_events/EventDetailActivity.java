@@ -1,5 +1,6 @@
 package com.example.fusion1_events;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -69,6 +70,13 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         TextView tvHome = findViewById(R.id.tvHome);
                         TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+
+                        TextView tvYourProfile = findViewById(R.id.tvYourProfileEvent);
+
+                        tvYourProfile.setOnClickListener(v -> {
+                            Intent intent = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
+                            startActivity(intent);
+                        });
 
                         tvHome.setOnClickListener(v -> {
                             Intent intent = new Intent(this, EventActivity.class);
