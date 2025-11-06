@@ -12,18 +12,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
-    private TextView tvDetailTitle, tvDetailDate, tvDetailTime, tvDetailLocation, tvDetailPrice,
-            tvDetailDeadline, tvDetailTotalEntrants, tvDetailWaitingList, tvDetailOrganizer,
-            tvDetailDescription;
+    private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
+            tvDetailSignups;
     private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList;
-    private Event event;
     private Profile currentUser;
     private FirebaseFirestore db;
+    private String eventId;
+    private String deviceId;
+    private Event currentEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,105 +37,82 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         db = FirebaseFirestore.getInstance();
-
-        event = (Event) getIntent().getSerializableExtra("event");
+        eventId = getIntent().getStringExtra("eventId");
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
         ivDetailImage = findViewById(R.id.ivDetailImage);
         tvDetailTitle = findViewById(R.id.tvDetailTitle);
         tvDetailDate = findViewById(R.id.tvDetailDate);
-        tvDetailTime = findViewById(R.id.tvDetailTime);
-        tvDetailLocation = findViewById(R.id.tvDetailLocation);
-        tvDetailPrice = findViewById(R.id.tvDetailPrice);
-        tvDetailDeadline = findViewById(R.id.tvDetailDeadline);
-        tvDetailTotalEntrants = findViewById(R.id.tvDetailTotalEntrants);
-        tvDetailWaitingList = findViewById(R.id.tvDetailWaitingList);
-        tvDetailOrganizer = findViewById(R.id.tvDetailOrganizer);
         tvDetailDescription = findViewById(R.id.tvDetailDescription);
-
+        tvDetailSignups = findViewById(R.id.tvDetailSignups);
         btnScanQR = findViewById(R.id.btnScanQR);
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
 
-        if (event.getWaitingList().contains(currentUser.getName())) {
-            btnJoinWaitingList.setVisibility(View.GONE);
-            btnLeaveWaitingList.setVisibility(View.VISIBLE);
-        } else {
-            btnJoinWaitingList.setVisibility(View.VISIBLE);
-            btnLeaveWaitingList.setVisibility(View.GONE);
-        }
+        FirebaseInstallations.getInstance().getId().addOnSuccessListener(id -> {
+            deviceId = id;
 
-        tvDetailTitle.setText(event.getName());
-        tvDetailDate.setText(event.getDate());
-        tvDetailTime.setText(event.getTime());
-        tvDetailLocation.setText(event.getLocation());
-        tvDetailPrice.setText(event.getPrice());
-        tvDetailDeadline.setText(event.getRegistrationDeadline());
-        tvDetailTotalEntrants.setText(String.valueOf(event.getTotalEntrants()));
-        tvDetailWaitingList.setText(event.getWaitingListMax() + ""); // show capacity
-        tvDetailOrganizer.setText(event.getOrganizer());
-        tvDetailDescription.setText(event.getDescription());
-        ivDetailImage.setImageResource(event.getImageResId());
+            db.collection("Events").document(eventId)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        currentEvent = doc.toObject(Event.class);
 
-        TextView tvHome = findViewById(R.id.tvHome);
-        TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+                        tvDetailTitle.setText(currentEvent.getTitle());
+                        tvDetailDescription.setText(currentEvent.getDescription());
 
-        tvHome.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EventActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            startActivity(intent);
+                        Date date = currentEvent.getDate().toDate();
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault());
+                        tvDetailDate.setText(sdf.format(date));
+
+                        tvDetailSignups.setText(String.valueOf(currentEvent.getSignups()));
+                        ivDetailImage.setImageResource(R.drawable.ic_launcher_background);
+
+                        TextView tvHome = findViewById(R.id.tvHome);
+                        TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+
+                        tvHome.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, EventActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
+                        });
+
+                        tvYourEvents.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, YourEventsActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
+                        });
+
+                        btnScanQR.setOnClickListener(v ->
+                                Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
+                        );
+                        //btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
+                        //btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingList());
+                    });
         });
-
-        tvYourEvents.setOnClickListener(v -> {
-            Intent intent = new Intent(this, YourEventsActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            startActivity(intent);
-        });
-
-        btnScanQR.setOnClickListener(v -> {
-            Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show();
-        });
-
-        btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
-        btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingList());
     }
-    private void joinWaitingList() {
-        if (event.getWaitingList().contains(currentUser.getEmail())) {
-            Toast.makeText(this, "You already joined this waiting list!", Toast.LENGTH_SHORT).show();
-            return;
+    /*private void joinWaitingList() {
+        if (!currentEvent.getWaitingList().contains(deviceId)) {
+            currentEvent.getWaitingList().add(deviceId);
+            db.collection("Events").document(eventId)
+                    .update("waitingList", currentEvent.getWaitingList())
+                    .addOnSuccessListener(aVoid -> {
+                        btnJoinWaitingList.setVisibility(View.GONE);
+                        btnLeaveWaitingList.setVisibility(View.VISIBLE);
+                        tvDetailSignups.setText(String.valueOf(currentEvent.getSignups() + 1));
+                        Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
+                    });
+            }
         }
-        if (event.getWaitingListSize() >= event.getWaitingListMax()) {
-            Toast.makeText(this, "Waiting list is full.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        event.addEntrant(currentUser.getName());
-        Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
-
-        DocumentReference eventRef = db.collection("Events").document(event.getId());
-        eventRef.update("waitingList", event.getWaitingList())
-                .addOnSuccessListener(aVoid -> {
-                    btnLeaveWaitingList.setVisibility(View.VISIBLE);
-                    btnJoinWaitingList.setVisibility(View.GONE);
-                    tvDetailTotalEntrants.setText(String.valueOf(event.getTotalEntrants()));
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error updating database: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show());
-    }
     private void leaveWaitingList() {
-        List<String> waitingList = event.getWaitingList();
-        waitingList.remove(currentUser.getName());
-
-        DocumentReference eventRef = db.collection("Events").document(event.getId());
-        eventRef.update("waitingList", waitingList)
+        currentEvent.getWaitingList().remove(deviceId);
+        db.collection("Events").document(eventId)
+                .update("waitingList", currentEvent.getWaitingList())
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "You left the waiting list.", Toast.LENGTH_SHORT).show();
-                    tvDetailTotalEntrants.setText(String.valueOf(event.getTotalEntrants()));
                     btnJoinWaitingList.setVisibility(View.VISIBLE);
                     btnLeaveWaitingList.setVisibility(View.GONE);
-                })
-                .addOnFailureListener(e -> Toast.makeText(this,
-                        "Error updating database: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show());
-    }
+                    tvDetailSignups.setText(String.valueOf(currentEvent.getSignups() - 1));
+                    Toast.makeText(this, "You left the waiting list.", Toast.LENGTH_SHORT).show();
+                });
+    }*/
+
 }

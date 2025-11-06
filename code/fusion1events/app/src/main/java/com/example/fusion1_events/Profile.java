@@ -11,6 +11,8 @@ public class Profile implements Serializable {
 
     private String device_id;
 
+    public Profile() {}
+
     public Profile(String name, String email,String phone_num, String role, String device_id){
         this.name = name;
         this.email = email;

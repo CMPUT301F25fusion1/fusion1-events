@@ -1,9 +1,7 @@
 package com.example.fusion1_events;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -12,16 +10,20 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
 
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText signupName, signupEmail, signupNumber;
-    private Spinner signupRole;
-    private Button buttonSignUP;
-    private FirebaseFirestore db;
+    private EditText nameEditText, emailEditText, numEditText;
+    private Spinner roleSpinner;
+    private Button submitButton;
+
+    private CollectionReference profileRef, entrantsRef, organizerRef, adminRef ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,35 +31,113 @@ public class SignUpActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
 
-        signupName = findViewById(R.id.signupName);
-        signupEmail = findViewById(R.id.signupEmail);
-        signupNumber = findViewById(R.id.signupNumber);
-        signupRole = findViewById(R.id.signupRole);
-        buttonSignUP = findViewById(R.id.buttonSignUP);
-        buttonSignUP.setOnClickListener(v -> {
+        nameEditText = findViewById(R.id.signupName);
+        emailEditText = findViewById(R.id.signupEmail);
+        numEditText = findViewById(R.id.signupNumber);
 
-            String name = signupName.getText().toString().trim();
-            String email = signupEmail.getText().toString().trim();
-            String phone = signupNumber.getText().toString().trim();
-            String role = signupRole.getSelectedItem().toString().trim();
-            String device_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            if(name.isEmpty() || email.isEmpty() || role.isEmpty()){
-                Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        roleSpinner = findViewById(R.id.signupRole);
 
-            Profile user = new Profile(name, email, phone, role, device_id);
+        submitButton = findViewById(R.id.buttonSignUP);
 
-            db = FirebaseFirestore.getInstance();
-            db.collection("Profile").document(device_id).set(user);
-            // Go to EventActivity
+        profileRef = DatabaseReferences.getProfileDatabase();
 
-            Intent intent = new Intent(SignUpActivity.this, EventActivity.class);
-            intent.putExtra("currentUser", user);
-            startActivity(intent);
-            finish();
-        });
+        entrantsRef = DatabaseReferences.getEntrantsDatabase();
+        organizerRef = DatabaseReferences.getOrganizersDatabase();
+        adminRef = DatabaseReferences.getAdminDatabase();
+
+
+        submitButton.setOnClickListener(v -> signUpProfile());
 
     }
+
+    private void signUpProfile(){
+        String name = nameEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String number = numEditText.getText().toString().trim();
+
+        String role = "";
+        if (roleSpinner.getSelectedItem() != null){
+            role = roleSpinner.getSelectedItem().toString();
+        }
+
+        if (role.equals("Select a role..")){
+            role = "";
+        }
+
+
+        if(TextUtils.isEmpty(name)){
+            Toast.makeText(this, "Please Enter a Name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(email)){
+            Toast.makeText(this, "Please Enter an Email Address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        if(TextUtils.isEmpty(role)){
+            Toast.makeText(this, "Please select a Role", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        submitButton.setEnabled(false);
+
+        String finalRole = role;
+        FirebaseInstallations.getInstance().getId().addOnSuccessListener(device_id -> {
+            Map<String, Object> profileData = new HashMap<>();
+
+            profileData.put("name", name);
+            profileData.put("email", email);
+
+            if (!number.isEmpty()){
+                profileData.put("number", number);
+            }
+
+            else {
+                profileData.put("number", "NA");
+            }
+
+            profileData.put("role", finalRole);
+
+            profileData.put("device_id", device_id);
+
+
+
+            profileRef.document(device_id).set(profileData)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Sign-Up Successful!!", Toast.LENGTH_SHORT).show();
+                        submitButton.setEnabled(true);
+                        if (finalRole.equals("ENTRANT")) {
+                            entrantsRef.document(device_id).set(profileData);
+                            startActivity(new android.content.Intent(this, EntrantHomeActivity.class));
+                            finish();
+                        }
+                        if (finalRole.equals("ORGANIZER")){
+                            organizerRef.document(device_id).set(profileData);
+                            startActivity(new android.content.Intent(this, OrganizerHomeActivity.class));
+                            finish();
+                        }
+                        if (finalRole.equals("ADMIN")) {
+                            adminRef.document(device_id).set(profileData);
+                            startActivity(new android.content.Intent(this, AdminHomeActivity.class));
+                            finish();
+                        }
+
+                    })
+
+                    .addOnFailureListener(e ->{
+                        Toast.makeText(this, "Sign-Up Failed", Toast.LENGTH_SHORT).show();
+                        submitButton.setEnabled(true);
+
+                    });
+
+        });
+
+
+
+
+    }
+
 
 }

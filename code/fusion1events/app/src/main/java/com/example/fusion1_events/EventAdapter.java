@@ -11,7 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> eventList;
@@ -37,17 +43,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         Event event = eventList.get(position);
 
         // Set the card contents
-        holder.tvTitle.setText(event.getName());
-        holder.tvDate.setText(event.getDate());
+        holder.tvTitle.setText(event.getTitle());
         holder.tvDescription.setText(event.getDescription());
-        holder.ivImage.setImageResource(
-                event.getImageResId() != 0 ? event.getImageResId() : R.drawable.ic_launcher_background
-        );
+        Date date = event.getDate().toDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault());
+        holder.tvDate.setText(sdf.format(date));
+        holder.ivImage.setImageResource(R.drawable.ic_launcher_background);
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, EventDetailActivity.class);
-            intent.putExtra("event", event);
-            intent.putExtra("currentUser", currentUser);
-            context.startActivity(intent);
+            FirebaseFirestore.getInstance()
+                    .collection("Events")
+                    .whereEqualTo("title", event.getTitle())
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        String eventId = querySnapshot.getDocuments().get(0).getId();
+                        Intent intent = new Intent(context, EventDetailActivity.class);
+                        intent.putExtra("eventId", eventId);
+                        intent.putExtra("currentUser", currentUser);
+                        context.startActivity(intent);
+                    });
         });
     }
     @Override

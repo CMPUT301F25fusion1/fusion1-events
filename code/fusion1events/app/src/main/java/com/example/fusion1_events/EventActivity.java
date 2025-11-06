@@ -14,7 +14,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EventActivity extends AppCompatActivity {
@@ -60,7 +59,7 @@ public class EventActivity extends AppCompatActivity {
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            Log.d("FirestoreEvent", event.getName());
+                            Log.d("FirestoreEvent", event.getTitle());
                             eventList.add(event);
                         } else {
                             Log.d("FirestoreEvent", "Failed to map document: " + doc.getId());

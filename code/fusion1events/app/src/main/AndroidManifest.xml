@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Fusion1events">
         <activity
-            android:name=".SignUpActivity"
+            android:name=".LoadAppActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +25,12 @@
         <activity android:name=".EventDetailActivity" android:exported="false"/>
         <activity android:name=".YourEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".EntrantHomeActivity"/>
+        <activity android:name=".OrganizerHomeActivity"/>
+        <activity android:name=".AdminHomeActivity"/>
+
+
     </application>
 
 </manifest>

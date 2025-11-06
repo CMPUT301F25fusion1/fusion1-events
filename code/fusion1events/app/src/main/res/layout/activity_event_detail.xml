@@ -263,7 +263,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvDetailTotalEntrants"
+                        android:id="@+id/tvDetailSignups"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="50"

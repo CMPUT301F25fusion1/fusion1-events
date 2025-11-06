@@ -53,16 +53,16 @@ public class YourEventsActivity extends AppCompatActivity {
         adapter = new EventAdapter(this, userEventList, currentUser);
         yourEventsRecyclerView.setAdapter(adapter);
 
-        db.collection("Events")
+        /*db.collection("Events")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            Log.d("FirestoreEvent", event.getName());
+                            Log.d("FirestoreEvent", event.getTitle());
                             if (event.getWaitingList() != null && event.getWaitingList().contains(currentUser.getName())) {
                                 userEventList.add(event);
-                                Toast.makeText(this, "Added " + event.getName() + " to userEventList", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Added " + event.getTitle() + " to userEventList", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(this, "Failed to map document: " + doc.getId(), Toast.LENGTH_SHORT).show();
@@ -72,6 +72,6 @@ public class YourEventsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Failed to load your events: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                );*/
     }
 }
