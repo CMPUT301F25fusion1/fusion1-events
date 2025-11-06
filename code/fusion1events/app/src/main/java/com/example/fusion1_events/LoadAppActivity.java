@@ -1,5 +1,6 @@
 package com.example.fusion1_events;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -28,19 +29,29 @@ public class LoadAppActivity extends AppCompatActivity {
 
                     if (profile.exists()) {
                         String role = profile.getString("role");
+                        String device_id = profile.getString("device_id");
 
                         if (role.equals("ENTRANT")) {
-                            startActivity(new android.content.Intent(this, EntrantHomeActivity.class));
+                            Intent intent = new Intent(this, EntrantHomeActivity.class);
+                            intent.putExtra("device_id", device_id);
+                            startActivity(intent);
                             finish();
                         }
+
                         if (role.equals("ORGANIZER")) {
-                            startActivity(new android.content.Intent(this, OrganizerHomeActivity.class));
+                            Intent intent = new Intent(this, OrganizerHomeActivity.class);
+                            intent.putExtra("device_id", device_id);
+                            startActivity(intent);
                             finish();
                         }
+
                         if (role.equals("ADMIN")) {
-                            startActivity(new android.content.Intent(this, AdminHomeActivity.class));
+                            Intent intent = new Intent(this, AdminHomeActivity.class);
+                            intent.putExtra("device_id", device_id);
+                            startActivity(intent);
                             finish();
                         }
+
                     } else {
                         startActivity(new android.content.Intent(this, SignUpActivity.class));
                         finish();
