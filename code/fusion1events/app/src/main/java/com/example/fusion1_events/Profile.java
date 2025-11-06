@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
     private String name;
     private String email;
     private String phone_num;
@@ -8,6 +10,8 @@ public class Profile {
     private String role;
 
     private String device_id;
+
+    public Profile() {}
 
     public Profile(String name, String email,String phone_num, String role, String device_id){
         this.name = name;
