@@ -4,6 +4,16 @@ import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/*
+ * File: DatabaseReferences.java
+ *
+ * Role:
+ * - To provide a centralized model for accessing all the collections in the firebase database.
+ *
+ * Issues:
+ * - Assumes device is online.
+ *
+ */
 public class DatabaseReferences {
 
     private static final FirebaseFirestore database = FirebaseFirestore.getInstance();

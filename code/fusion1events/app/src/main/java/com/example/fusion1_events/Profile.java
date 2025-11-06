@@ -1,18 +1,30 @@
 package com.example.fusion1_events;
 
+import androidx.annotation.Nullable;
+
+/*
+ * File: Profile.java
+ *
+ * Role:
+ * - Model for a user Profile.
+ * Issues:
+ * -
+ *
+ */
 public class Profile {
     private String name;
     private String email;
-    private String phone_num;
+    private String number;
 
     private String role;
 
     private String device_id;
 
-    public Profile(String name, String email,String phone_num, String role, String device_id){
+    public Profile(){}
+    public Profile(String name, String email, @Nullable String phone_num, String role, String device_id){
         this.name = name;
         this.email = email;
-        this.phone_num = phone_num;
+        this.number = phone_num;
         this.role = role;
         this.device_id = device_id;
     }
@@ -34,12 +46,12 @@ public class Profile {
     }
 
 
-    public String getPhone_num() {
-        return phone_num;
+    @Nullable public String getNumber() {
+        return number;
     }
 
-    public void setPhone_num(String phone_num) {
-        this.phone_num = phone_num;
+    public void setNumber(@Nullable String number) {
+        this.number = number;
     }
 
 

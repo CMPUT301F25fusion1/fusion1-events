@@ -1,5 +1,7 @@
 package com.example.fusion1_events;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,11 +19,30 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * File: ProfileViewActivity.java
+ *
+ * Role:
+ * - Let user view their current information like name, email and phone number,
+ *       they provided to the app
+ * - To get user's information like name, email, phone number that the
+ *      user wants to update in the database
+ * - Update all of this information to a collection called Profile in firebase.
+ * - As per their selected role, update the same set of data to either Entrant, Admin
+ *   or Organizer collection respectively.
+ * - Let's the user delete their account/profile from the app.
+ *
+ *
+ * Issues:
+ * - Assumes device is online.
+ *
+ */
+
 public class ProfileViewActivity extends AppCompatActivity {
     private CollectionReference profileRef, entrantsRef, organizerRef, adminRef ;
     private EditText nameProfileEditText, emailProfileEditText, numProfileEditText;
 
-    private Button homeButton, edtButton, saveButton, cancelEdtButton;
+    private Button homeButton, edtButton, saveButton, cancelEdtButton, deleteButtonProfileView;
 
     private String preEditName, preEditEmail, preEditNum;
 
@@ -36,6 +57,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
 
         edtButton = findViewById(R.id.buttonEdit);
+        deleteButtonProfileView = findViewById(R.id.buttonDeleteProfileView);
         saveButton = findViewById(R.id.buttonSaveEdit);
         cancelEdtButton = findViewById(R.id.buttonCancelEdit);
 
@@ -79,9 +101,52 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> saveEdit());
 
+        deleteButtonProfileView.setOnClickListener(v -> deleteUserProfile());
 
 
 
+
+    }
+
+    private void deleteUserProfile(){
+            new AlertDialog.Builder(this).setTitle("Delete Your Profile/Account.")
+                    .setMessage("Are you sure you want to delete your profile/account?")
+                    .setNegativeButton("Cancel", (d,w)-> {d.dismiss();
+                        deleteButtonProfileView.setEnabled(true);})
+                    .setPositiveButton("DELETE",(d,w)->{
+                        deleteButtonProfileView.setEnabled(false);
+
+                        FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
+
+                            profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
+
+                                    String role = profile.getString("role");
+
+                                    if (role.equals("ENTRANT")) {
+                                        entrantsRef.document(deviceId).delete();
+                                    }
+                                    if (role.equals("ORGANIZER")) {
+                                        organizerRef.document(deviceId).delete();
+                                    }
+                                    if (role.equals("ADMIN")) {
+                                        adminRef.document(deviceId).delete();
+                                    }
+
+                                    profileRef.document(deviceId).delete()
+                                            .addOnSuccessListener(v->{
+                                                Toast.makeText(this, "Profile/Account deleted successfully.",
+                                                        Toast.LENGTH_SHORT).show();
+                                                startActivity(new android.content.Intent(this, LoadAppActivity.class));
+                                                finish();
+                                            })
+                                            .addOnFailureListener(e ->{
+                                                Toast.makeText(this, "Could not delete right now!",
+                                                        Toast.LENGTH_SHORT).show();
+                                                deleteButtonProfileView.setEnabled(true);
+                                            });
+                            });
+                        });
+                    }).show();
     }
 
     private void goHomeScreen(){
@@ -93,19 +158,23 @@ public class ProfileViewActivity extends AppCompatActivity {
                     String role = profile.getString("role");
 
                     if (role.equals("ENTRANT")) {
-                        startActivity(new android.content.Intent(this, EntrantHomeActivity.class));
+                        startActivity(new android.content.Intent(this,
+                                EntrantHomeActivity.class));
                         finish();
                     }
                     if (role.equals("ORGANIZER")) {
-                        startActivity(new android.content.Intent(this, OrganizerHomeActivity.class));
+                        startActivity(new android.content.Intent(this,
+                                OrganizerHomeActivity.class));
                         finish();
                     }
                     if (role.equals("ADMIN")) {
-                        startActivity(new android.content.Intent(this, AdminHomeActivity.class));
+                        startActivity(new android.content.Intent(this,
+                                AdminHomeActivity.class));
                         finish();
                     }
                 } else {
-                    startActivity(new android.content.Intent(this, SignUpActivity.class));
+                    startActivity(new android.content.Intent(this,
+                            SignUpActivity.class));
                     finish();
                 }
             });
@@ -117,12 +186,14 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         if (Mode){
             edtButton.setVisibility(View.GONE);
+            deleteButtonProfileView.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
             cancelEdtButton.setVisibility(View.VISIBLE);
         }
 
         else {
             edtButton.setVisibility(View.VISIBLE);
+            deleteButtonProfileView.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.GONE);
             cancelEdtButton.setVisibility(View.GONE);
         }
@@ -141,7 +212,8 @@ public class ProfileViewActivity extends AppCompatActivity {
 
         editMode(false);
 
-        Toast.makeText(this, "Edit Canceled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Edit Canceled",
+                Toast.LENGTH_SHORT).show();
 
     }
 
@@ -151,12 +223,14 @@ public class ProfileViewActivity extends AppCompatActivity {
         String postEditNum = numProfileEditText.getText().toString().trim();
 
         if(TextUtils.isEmpty(postEditName)){
-            Toast.makeText(this, "Please Enter a Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter a Name",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(postEditEmail)){
-            Toast.makeText(this, "Please Enter an Email Address", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter an Email Address",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -176,12 +250,6 @@ public class ProfileViewActivity extends AppCompatActivity {
                 updateProfileData.put("number", "NA");
             }
 
-            profileRef.document(device_id).get().addOnSuccessListener(profile -> {
-
-                if (profile.exists()) {
-                    String role = profile.getString("role");
-                }
-            });
 
             profileRef.document(device_id).set(updateProfileData, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
@@ -191,18 +259,22 @@ public class ProfileViewActivity extends AppCompatActivity {
                             String role = profile.getString("role");
 
                             if (role.equals("ENTRANT")) {
-                                entrantsRef.document(device_id).set(updateProfileData, SetOptions.merge());
+                                entrantsRef.document(device_id).set(updateProfileData,
+                                        SetOptions.merge());
                             }
 
                             if (role.equals("ORGANIZER")){
-                                organizerRef.document(device_id).set(updateProfileData, SetOptions.merge());
+                                organizerRef.document(device_id).set(updateProfileData,
+                                        SetOptions.merge());
                             }
 
                             if (role.equals("ADMIN")) {
-                                adminRef.document(device_id).set(updateProfileData, SetOptions.merge());
+                                adminRef.document(device_id).set(updateProfileData,
+                                        SetOptions.merge());
                             }
                         });
-                        Toast.makeText(this, "Edit commited Successful!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Edit commited Successful!!",
+                                Toast.LENGTH_SHORT).show();
 
 
 

@@ -8,6 +8,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.installations.FirebaseInstallations;
 
+/*
+* File: LoadAppActivity.java
+*
+* Role:
+* - To load the device_id for the device and check if there is any profile linked to it.
+* - The loading screen shows the logo of the app for few seconds for visual effect.
+* - If there is a profile linked to it, start a Home Screen Activity as per their role.
+* - If there isn't a profile linked to it, start the SignUpActivity prompting
+*       the user to create a account
+*
+* Issues:
+* - The app assumes a connection to the firebase, i.e. no exception thrown if device is offline.
+*
+ */
 public class LoadAppActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
