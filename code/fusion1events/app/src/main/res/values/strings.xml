@@ -6,4 +6,5 @@
         <item>ORGANIZER</item>
         <item>ADMIN</item>
     </string-array>
+    <string name="people_count">people_count</string>
 </resources>
