@@ -1,5 +1,7 @@
 package com.example.fusion1_events;
 
+import java.io.Serializable;
+
 import androidx.annotation.Nullable;
 
 /*
@@ -11,20 +13,22 @@ import androidx.annotation.Nullable;
  * -
  *
  */
-public class Profile {
+
+public class Profile implements Serializable {
     private String name;
     private String email;
-    private String number;
+    private String phone_num;
 
     private String role;
 
     private String device_id;
 
-    public Profile(){}
-    public Profile(String name, String email, @Nullable String phone_num, String role, String device_id){
+    public Profile() {}
+
+    public Profile(String name, String email,String phone_num, String role, String device_id){
         this.name = name;
         this.email = email;
-        this.number = phone_num;
+        this.phone_num = phone_num;
         this.role = role;
         this.device_id = device_id;
     }
@@ -46,12 +50,12 @@ public class Profile {
     }
 
 
-    @Nullable public String getNumber() {
-        return number;
+    public @Nullable String getPhone_num() {
+        return phone_num;
     }
 
-    public void setNumber(@Nullable String number) {
-        this.number = number;
+    public void setPhone_num(@Nullable String phone_num) {
+        this.phone_num = phone_num;
     }
 
 

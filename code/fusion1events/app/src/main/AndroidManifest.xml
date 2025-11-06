@@ -21,12 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EventActivity" android:exported="false"/>
+        <activity android:name=".EventDetailActivity" android:exported="false"/>
+        <activity android:name=".YourEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
         <activity android:name=".AdminHomeActivity"/>
-        <activity android:name=".ProfileViewActivity"/>
 
 
     </application>

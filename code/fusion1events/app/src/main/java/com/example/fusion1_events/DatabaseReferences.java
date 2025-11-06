@@ -38,4 +38,5 @@ public class DatabaseReferences {
     public static CollectionReference getAdminDatabase(){
         return database.collection("Admins");
     }
+    public static CollectionReference getEvents() { return database.collection("Events");}
 }

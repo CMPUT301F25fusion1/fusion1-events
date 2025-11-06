@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:gravity="center_horizontal">
+
+            <!-- Title -->
+            <EditText
+                android:id="@+id/inputTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Title"
+                android:inputType="textCapWords"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Description -->
+            <EditText
+                android:id="@+id/inputDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Registration Dates -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/inputRegStartDate"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Reg Start Date"
+                    android:focusable="false"/>
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="match_parent"/>
+
+                <EditText
+                    android:id="@+id/inputRegEndDate"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Reg End Date"
+                    android:focusable="false"/>
+            </LinearLayout>
+
+            <!-- Event Date -->
+            <EditText
+                android:id="@+id/inputEventDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Date"
+                android:focusable="false"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Image Upload -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/imagePreview"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_image_placeholder"
+                    android:contentDescription="Image preview"/>
+
+                <Button
+                    android:id="@+id/btnAddImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Image"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
+
+            <!-- Number of People -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnDecrease"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="-"/>
+
+                <TextView
+                    android:id="@+id/txtPeopleCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:gravity="center"/>
+
+                <Button
+                    android:id="@+id/btnIncrease"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="+"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.cardview.widget.CardView>
