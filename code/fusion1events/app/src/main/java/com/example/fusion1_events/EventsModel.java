@@ -1,5 +1,6 @@
 package com.example.fusion1_events;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EventsModel {
@@ -10,10 +11,19 @@ public class EventsModel {
     Date date;
     Long attendees;
     Long signups;
+    ArrayList<String> waitingList;;
+
+    public ArrayList<String> getWaitingList() {
+        return waitingList;
+    }
+
+    public void setWaitingList(ArrayList<String> waitingList) {
+        this.waitingList = waitingList;
+    }
 
     // Constructor without poster field
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
-                       String eventDescription, Date date, Long attendees, Long signups) {
+                       String eventDescription, Date date, Long attendees, Long signups, ArrayList waitingList) {
         this.eventTitle = eventTitle;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
@@ -21,6 +31,7 @@ public class EventsModel {
         this.date = date;
         this.attendees = attendees;
         this.signups = signups;
+        this.waitingList = waitingList;
     }
 
     public String getEventTitle() {
