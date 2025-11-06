@@ -4,6 +4,7 @@ package com.example.fusion1_events;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,12 +38,18 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
     private ArrayList<EventsModel> eventsModels = new ArrayList<>();
     private DocumentReference organizerRef;
     private String deviceId;
+    private Button profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_organizer_home);
+
+        profileButton = findViewById(R.id.buttonProfileOrganizerHome);
+        profileButton.setOnClickListener(v -> goProfileScreen());
+
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -73,6 +80,11 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
         // Load existing events from Firestore
         loadEvents();
+    }
+
+    private void goProfileScreen(){
+        startActivity(new android.content.Intent(this, ProfileViewActivity.class));
+
     }
 
     private void setupRecyclerView() {

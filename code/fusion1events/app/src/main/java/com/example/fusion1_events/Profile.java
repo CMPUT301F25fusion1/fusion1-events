@@ -2,6 +2,18 @@ package com.example.fusion1_events;
 
 import java.io.Serializable;
 
+import androidx.annotation.Nullable;
+
+/*
+ * File: Profile.java
+ *
+ * Role:
+ * - Model for a user Profile.
+ * Issues:
+ * -
+ *
+ */
+
 public class Profile implements Serializable {
     private String name;
     private String email;
@@ -38,11 +50,11 @@ public class Profile implements Serializable {
     }
 
 
-    public String getPhone_num() {
+    public @Nullable String getPhone_num() {
         return phone_num;
     }
 
-    public void setPhone_num(String phone_num) {
+    public void setPhone_num(@Nullable String phone_num) {
         this.phone_num = phone_num;
     }
 
