@@ -27,22 +27,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/buttonBrowseProfiles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:background="@drawable/rounded_grey_button"
-        android:backgroundTint="#2F2B2B"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:padding="12dp"
-        android:text="Browse Profiles"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
-        app:layout_constraintVertical_bias="0.218"
-        tools:layout_editor_absoluteX="24dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

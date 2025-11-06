@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.android.application")
 }
 
 android {
@@ -33,7 +33,11 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.qr.generator)
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.2")
+    implementation ("androidx.multidex:multidex:2.0.1")
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -41,6 +45,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.firebase.firestore)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+
 
     implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
     implementation("com.google.firebase:firebase-analytics")
