@@ -1,7 +1,10 @@
 package com.example.fusion1_events;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 
 public class Event implements Serializable {
     private int Signups;
@@ -11,11 +14,12 @@ public class Event implements Serializable {
     private Timestamp registration_end;
     private Timestamp registration_start;
     private String title;
+    private ArrayList<DocumentReference> waitingList;
 
     public Event(){}
 
     public Event(int signups, int attendees, Timestamp date, String description,
-                 Timestamp registration_start, Timestamp registration_end, String title) {
+                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -23,6 +27,7 @@ public class Event implements Serializable {
         this.registration_start = registration_start;
         this.registration_end = registration_end;
         this.title = title;
+        this.waitingList = waitingList;
     }
 
     //getters and setters
@@ -47,5 +52,10 @@ public class Event implements Serializable {
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
-    // class get Signups
+    public ArrayList<DocumentReference> getWaitingList() {
+        return waitingList;
+    }
+    public void setWaitingList(ArrayList<DocumentReference> waitingList) {
+        this.waitingList = waitingList;
+    }
 }
