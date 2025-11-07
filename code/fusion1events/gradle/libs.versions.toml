@@ -9,6 +9,7 @@ activity = "1.11.0"
 constraintlayout = "2.2.1"
 qrGenerator = "4.3.0"
 firebaseFirestore = "26.0.2"
+espressoContrib = "3.7.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -20,6 +21,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 qr-generator = {group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "qrGenerator" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
