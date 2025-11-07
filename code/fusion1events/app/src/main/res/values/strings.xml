@@ -11,4 +11,15 @@
 
     <string name="Home">Home</string>
     <string name="people_count">people_count</string>
+
+<!--    Admin Strings-->
+    <string name="browse_events">Browse Events</string>
+    <string name="browse_images">Browse Images</string>
+    <string name="view_notifications">View Notifications</string>
+    <string name="browse_profiles">Browse Profiles</string>
+    <string name="delete">Delete</string>
+    <string name="test_admin_dashboard">Test Admin Dashboard</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="view_details">View Details</string>
+    <string name="events">Events</string>
 </resources>

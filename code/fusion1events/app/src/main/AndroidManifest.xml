@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.fusion1_events"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
@@ -21,8 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity android:name=".EventDetailActivity" android:exported="false"/>
         <activity android:name=".YourEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
@@ -30,10 +29,20 @@
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
         <activity android:name=".AdminHomeActivity" />
+        <activity android:name=".ProfileViewActivity" />
+        <activity android:name=".GuidelinesActivity" />
+
+        <activity android:name=".AdminBrowseEventsActivity" />
+        <activity android:name=".AdminBrowseProfilesActivity" />
+        <activity android:name=".AdminBrowseImagesActivity" />
+        <activity android:name=".AdminEventDetailsActivity" />
+        <activity android:name=".AdminProfileDetailsActivity"/>
         <activity android:name=".ProfileViewActivity"/>
         <activity android:name=".SampleEntrantsActivity"/>
 
 
+
     </application>
+
 
 </manifest>

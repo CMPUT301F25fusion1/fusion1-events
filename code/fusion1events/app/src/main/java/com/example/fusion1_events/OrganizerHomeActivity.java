@@ -98,7 +98,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
             @Override
             public void onEventClick(EventsModel event, int position) {
                 EventCreatedDialogFragment confirmDialog =
-                        EventCreatedDialogFragment.newInstance(event.getEventTitle(), null);
+                        EventCreatedDialogFragment.newInstance(event, null);
                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
             }
 
@@ -278,13 +278,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     @Override
                     public void onProgress(String requestId, long bytes, long totalBytes) {
                         double progress = (double) bytes / totalBytes * 100;
-                        Log.d(TAG, "Upload progress: " + progress + "%");
+                        Log.d(TAG, " progress: " + progress + "%");
                     }
 
                     @Override
                     public void onSuccess(String requestId, Map resultData) {
                         String imageUrl = (String) resultData.get("secure_url");
-                        Log.d(TAG, "Cloudinary upload successful. URL: " + imageUrl);
+                        Log.d(TAG, "Cloudinary upload URL: " + imageUrl);
 
                         runOnUiThread(() -> createEventInFirestore(eventsModel, imageUrl));
                     }
@@ -320,8 +320,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("Signups", eventsModel.getSignups());
         eventData.put("imageUrl", imageUrl); // Cloudinary URL
-        eventData.put("waitingList", new ArrayList<>());
-        eventData.put("finaList", new ArrayList<>());
+        eventData.put("waitingList", new ArrayList<>()); // ADDED: Initialize with empty waiting list
 
         db.collection("Events")
                 .add(eventData)
@@ -341,7 +340,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                 EventCreatedDialogFragment confirmDialog =
                                         EventCreatedDialogFragment.newInstance(
-                                                eventsModel.getEventTitle(),
+                                                eventsModel,
                                                 null);
                                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
                             })
@@ -383,7 +382,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                         // TODO: Implement notification to entrants
                                     }
 
-                                    // Note: Cloudinary images remain (see previous implementation notes)
+                                    //Cloudinary images remain (see previous implementation notes)
                                     if (imageUrl != null && !imageUrl.isEmpty()) {
                                         Log.d(TAG, "Image remains in Cloudinary: " + imageUrl);
                                     }
@@ -411,5 +410,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+
+        //TODO: add editing events functions
     }
 }

@@ -62,4 +62,29 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation("com.google.truth:truth:1.4.2")
+
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
+
+    // QR scanning
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.4.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
+    // Android instrumented tests
+    //androidTestImplementation("androidx.test:core:1.5.0")
+    //androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+
+
+    androidTestImplementation ("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-intents:3.6.1")
+    androidTestImplementation ("org.mockito:mockito-android:5.12.0")
+
+    testImplementation("junit:junit:4.13.2")
 }

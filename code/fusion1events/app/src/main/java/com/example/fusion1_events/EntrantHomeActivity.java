@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,10 +22,22 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * EntrantHomeActivity is the main screen for users with the "entrant" role.
+ * File: EntrantHomeActivity.java
  *
- * It displays a list of events in a RecyclerView, allows navigation to
- * the user's events, and retrieves the current user's profile from Firestore.
+ * Role:
+ * - Acts as the home screen for users with the Entrant role.
+ * - Retrieves the current user’s profile using their device ID.
+ * - Displays a list of all available events from Firestore.
+ * - Provides navigation to:
+ *      - Home screen
+ *      - Entrant's events screen
+ *      - Entrant's profile screen
+ * - Initializes and binds an EventAdapter to show event cards for the entrant.
+ *
+ * Issues:
+ * - Assumes successful retrieval of the Firebase Installation ID.
+ * - Assumes device is online for Firestore operations.
+ * - No explicit error handling for missing profiles or failed Firestore queries.
  */
 public class EntrantHomeActivity extends AppCompatActivity {
 
@@ -48,7 +62,11 @@ public class EntrantHomeActivity extends AppCompatActivity {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventList = new ArrayList<>();
 
-
+        Button lotteryGuidelinesBtn = findViewById(R.id.lottery_guidelines_btn);
+        lotteryGuidelinesBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(EntrantHomeActivity.this, GuidelinesActivity.class);
+            startActivity(intent);
+        });
 
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
@@ -60,6 +78,8 @@ public class EntrantHomeActivity extends AppCompatActivity {
                     TextView tvHome = findViewById(R.id.tvHome);
                     TextView tvYourEvents = findViewById(R.id.tvYourEvents);
                     TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+                    ImageView tvDetailImage = findViewById(R.id.ivDetailImage);
+
 
                     tvYourProfile.setOnClickListener(v -> {
                         Intent intent = new Intent(EntrantHomeActivity.this, ProfileViewActivity.class);
