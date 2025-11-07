@@ -75,12 +75,44 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         // Set event title
         titleText.setText("Event Created!\n" + createdEvent.getEventTitle());
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode("TEST!", BarcodeFormat.QR_CODE, 200, 200);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            qrCode.setImageBitmap(bitmap);
+
+        } catch(WriterException e) {
+            throw new RuntimeException(e);
+        }
+
+        titleText.setText("Event Created!\n"+ createdEvent.getEventTitle());
         titleText.setTextSize(20);
         titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleText.setPadding(0, 16, 0, 16);
 
         // Display attendees or registration deadline
         displayAttendeeInformation(attendeesText, attendeesList);
+        ArrayList<String> finalListTest = createdEvent.getFinalList();
+        Date registrationDeadline = createdEvent.getRegistrationEnd();
+
+        if (finalListTest.isEmpty()) {
+            attendeesText.setText("registration deadline: "+registrationDeadline);
+        } else {
+            attendeesText.setText("Invited attendees:");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    getContext(),
+                    android.R.layout.simple_list_item_1,
+                    finalListTest
+            );
+            attendeesList.setAdapter(adapter);
+
+        }
+
+
+
+
 
         // Build and configure dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

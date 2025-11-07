@@ -1,0 +1,47 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageViewEvent"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tvImageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Event Name"
+        android:textStyle="bold"
+        android:paddingTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tvOrganizer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Uploaded by Organizer"
+        android:textSize="12sp"
+        android:textColor="#555555"/>
+
+    <TextView
+        android:id="@+id/tvRegEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration Ends: MMM d, yyyy"
+        android:textSize="12sp"
+        android:textColor="#555555"/>
+
+    <Button
+        android:id="@+id/buttonDeleteImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#D32F2F"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

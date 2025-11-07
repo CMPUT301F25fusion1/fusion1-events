@@ -57,8 +57,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation("com.google.truth:truth:1.4.2")
+
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
 
     // QR scanning
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
@@ -74,4 +80,11 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
 
 
+
+    androidTestImplementation ("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation ("androidx.test.espresso:espresso-intents:3.6.1")
+    androidTestImplementation ("org.mockito:mockito-android:5.12.0")
+
+    testImplementation("junit:junit:4.13.2")
 }

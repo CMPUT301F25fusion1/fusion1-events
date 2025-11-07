@@ -21,28 +21,35 @@ import com.google.firebase.firestore.DocumentReference;
  *
  */
 public class Event implements Serializable {
-    private int Signups;
-    private int attendees;
-    private Timestamp date;
-    private String description;
-    private Timestamp registration_end;
-    private Timestamp registration_start;
+    private String id;
     private String title;
-    private ArrayList<DocumentReference> waitingList;
+    private String description;
     private String imageUrl;
+    private Timestamp registration_start;
+    private Timestamp registration_end;
+    private Timestamp date;
+    private int attendees;
+    private int Signups;
+    private ArrayList<DocumentReference> waitingList;
+
 
     public Event(){}
 
 
-    public Event(int signups, int attendees, Timestamp date, String description,
+
+    public Event(int signups, int attendees, Timestamp date,String id, String description,
                  Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList, String imageUrl) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
+        this.id = id;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.registration_start = registration_start;
         this.registration_end = registration_end;
-        this.title = title;
+        this.date = date;
+        this.attendees = attendees;
+        this.Signups = signups;
         this.waitingList = waitingList;
         this.imageUrl = imageUrl;
     }
@@ -51,18 +58,23 @@ public class Event implements Serializable {
 
     //getters and setters
     /**
+     * Gets the unique ID of the event.
+     *
+     * @return the ID of the event
+     */
+    public String getId() { return id; }
+    /**
+     * Sets the unique ID of the event.
+     *
+     * @param id the new ID of the event
+     */
+    public void setId(String id) { this.id = id; }
+
+    /**
      * Returns the number of users currently signed up.
      *
      * @return number of signups
      */
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
     public int getSignups() { return Signups; }
     /**
      * Sets the number of users currently signed up.
@@ -158,5 +170,13 @@ public class Event implements Serializable {
      */
     public void setWaitingList(ArrayList<DocumentReference> waitingList) {
         this.waitingList = waitingList;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
     }
 }

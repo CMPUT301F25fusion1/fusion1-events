@@ -7,17 +7,25 @@ import java.util.Date;
  * Stores event information including title, dates, attendees, waiting list, and image URL.
  */
 public class EventsModel {
-    private String eventTitle;
-    private Date registrationStart;
-    private Date registrationEnd;
-    private String eventDescription;
-    private Date date;
-    private Long attendees;
-    private Long signups;
-    private ArrayList<String> waitingList;
-    private ArrayList<String> finalList;
-    private String imageUrl;
-    private String eventId;
+    String eventTitle;
+    Date registrationStart;
+    Date registrationEnd;
+    String eventDescription;
+    Date date;
+    Long attendees;
+    Long signups;
+    ArrayList<String> waitingList; // ADDED: Store entrant IDs from waiting list
+    ArrayList<String> finalList;
+    String imageUrl; // Store Cloudinary URL for event image
+    String eventId; // Store Firestore document ID for updates/deletes
+
+    public ArrayList<String> getFinalList() {
+        return finalList;
+    }
+
+    public void setFinalList(ArrayList<String> finalList) {
+        this.finalList = finalList;
+    }
 
     /**
      * Constructor to create an EventsModel with all fields.
