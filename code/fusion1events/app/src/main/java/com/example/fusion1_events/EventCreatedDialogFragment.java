@@ -30,7 +30,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         EventCreatedDialogFragment fragment = new EventCreatedDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EVENT_TITLE, eventTitle);
-        // imageUri parameter kept for backwards compatibility but not used
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,7 +44,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         ImageView qrCode = view.findViewById(R.id.generatedQrImage);
         Button backButton = view.findViewById(R.id.btnAddImage);
 
-        // Get arguments
         String eventTitle = getArguments() != null ? getArguments().getString(ARG_EVENT_TITLE) : "Event Created!";
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
@@ -59,21 +57,17 @@ public class EventCreatedDialogFragment extends DialogFragment {
             throw new RuntimeException(e);
         }
 
-        // Set the title
         titleText.setText(eventTitle + " Created!");
         titleText.setTextSize(20);
         titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleText.setPadding(0, 16, 0, 16);
 
-        // Keep placeholder image (no dynamic image loading)
 
-        // Build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         AlertDialog dialog = builder
                 .setView(view)
                 .create();
 
-        // Set up back button to dismiss dialog
         backButton.setOnClickListener(v -> dismiss());
 
         return dialog;
