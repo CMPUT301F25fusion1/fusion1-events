@@ -15,7 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-
+/**
+ * Adapter for displaying a list of EventsModel objects in a RecyclerView.
+ *
+ * Each item shows the event title, registration dates, attendees, and a banner image.
+ * It also provides an options menu for editing or deleting events and supports click callbacks
+ * via the OnEventClickListener interface.
+ */
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
     private ArrayList<EventsModel> events;
