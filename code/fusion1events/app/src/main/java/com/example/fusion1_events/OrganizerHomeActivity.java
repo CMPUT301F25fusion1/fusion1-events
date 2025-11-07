@@ -96,7 +96,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventsAdapter = new EventsAdapter(eventsModels, new EventsAdapter.OnEventClickListener() {
             @Override
             public void onEventClick(EventsModel event, int position) {
-                // Handle event card click - you can navigate to event details
                 EventCreatedDialogFragment confirmDialog =
                         EventCreatedDialogFragment.newInstance(event.getEventTitle(), null);
                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
@@ -104,7 +103,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
             @Override
             public void onEditClick(EventsModel event, int position) {
-                // Handle edit click
                 Toast.makeText(OrganizerHomeActivity.this,
                         "Edit: " + event.getEventTitle(),
                         Toast.LENGTH_SHORT).show();
@@ -123,7 +121,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
     private void loadEvents() {
         Log.d(TAG, "Loading events for organizer: " + organizerRef.getPath());
 
-        // Get the organizer document to retrieve the Events array
         organizerRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Log.d(TAG, "Organizer document retrieved successfully");
@@ -132,7 +129,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                         Log.d(TAG, "Organizer document exists");
                         Log.d(TAG, "Document data: " + documentSnapshot.getData());
 
-                        // Get the Events array (array of references)
+
                         Object eventsObj = documentSnapshot.get("events");
                         Log.d(TAG, "Events object type: " + (eventsObj != null ? eventsObj.getClass().getName() : "null"));
                         Log.d(TAG, "Events object: " + eventsObj);
@@ -144,7 +141,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                 eventsModels.clear();
                                 Log.d(TAG, "Found " + eventsList.size() + " event references");
 
-                                // Load each event by following its reference
+
                                 for (Object eventObj : eventsList) {
                                     if (eventObj instanceof DocumentReference) {
                                         DocumentReference eventRef = (DocumentReference) eventObj;
@@ -157,24 +154,24 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                         Log.d(TAG, "Event data: " + eventDoc.getData());
 
                                                         try {
-                                                            // ADDED: Load waitingList references from Firestore
                                                             Object waitingListObj = eventDoc.get("waitingList");
                                                             ArrayList<String> waitingList = new ArrayList<>();
+                                                            ArrayList<String> finaList = new ArrayList<>();
 
                                                             if (waitingListObj instanceof List) {
                                                                 List<Object> waitingListRefs = (List<Object>) waitingListObj;
                                                                 Log.d(TAG, "Found " + waitingListRefs.size() + " entrants in waiting list");
 
-                                                                // ADDED: Extract entrant IDs from references
+
                                                                 for (Object refObj : waitingListRefs) {
                                                                     if (refObj instanceof DocumentReference) {
                                                                         DocumentReference entrantRef = (DocumentReference) refObj;
-                                                                        // Store the document ID (entrant ID)
+
                                                                         String entrantId = entrantRef.getId();
                                                                         waitingList.add(entrantId);
                                                                         Log.d(TAG, "Added entrant to waiting list: " + entrantId);
                                                                     } else if (refObj instanceof String) {
-                                                                        // ADDED: In case IDs are stored directly as strings
+
                                                                         waitingList.add((String) refObj);
                                                                         Log.d(TAG, "Added entrant ID to waiting list: " + refObj);
                                                                     }
@@ -183,7 +180,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No waiting list found or empty");
                                                             }
 
-                                                            // MODIFIED: Create EventsModel with waitingList
+
                                                             EventsModel event = new EventsModel(
                                                                     eventDoc.getString("title"),
                                                                     eventDoc.getDate("registration_start"),
@@ -194,7 +191,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getLong("Signups"),
                                                                     waitingList, // ADDED: Pass waiting list
                                                                     eventDoc.getString("imageUrl"),
-                                                                    eventDoc.getId()
+                                                                    eventDoc.getId(),
+                                                                    finaList
                                                             );
                                                             eventsModels.add(event);
                                                             eventsAdapter.notifyDataSetChanged();
@@ -313,7 +311,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("Signups", eventsModel.getSignups());
         eventData.put("imageUrl", imageUrl); // Cloudinary URL
-        eventData.put("waitingList", new ArrayList<>()); // ADDED: Initialize with empty waiting list
+        eventData.put("waitingList", new ArrayList<>());
+        eventData.put("finaList", new ArrayList<>());
 
         db.collection("Events")
                 .add(eventData)
@@ -323,17 +322,14 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     eventsModel.setEventId(eventDocRef.getId());
                     eventsModel.setImageUrl(imageUrl);
 
-                    // MODIFIED: Changed "Events" to "events" (lowercase)
                     organizerRef.update("events", FieldValue.arrayUnion(eventDocRef))
                             .addOnSuccessListener(aVoid -> {
                                 Log.d(TAG, "Event reference added to organizer");
 
-                                // Add to local list
                                 eventsModels.add(0, eventsModel);
                                 eventsAdapter.notifyItemInserted(0);
                                 recyclerView.smoothScrollToPosition(0);
 
-                                // Show confirmation dialog
                                 EventCreatedDialogFragment confirmDialog =
                                         EventCreatedDialogFragment.newInstance(
                                                 eventsModel.getEventTitle(),
@@ -397,7 +393,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                             Toast.LENGTH_SHORT).show();
                                 });
                     } else {
-                        // No eventId, just remove from local list
                         eventsModels.remove(position);
                         eventsAdapter.notifyItemRemoved(position);
                         Toast.makeText(OrganizerHomeActivity.this,
