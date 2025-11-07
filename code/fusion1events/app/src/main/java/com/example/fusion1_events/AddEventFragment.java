@@ -159,6 +159,7 @@ public class AddEventFragment extends DialogFragment {
                             0L ,// signups starts at 0
                             new ArrayList<>(), // ADDED: Empty waiting list for new events
                             null, // imageUrl will be set after upload
+                            null,
                             null
                     );
 
