@@ -1,6 +1,9 @@
 package com.example.fusion1_events;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.firebase.Timestamp;
 
 public class Event implements Serializable {
@@ -46,6 +49,16 @@ public class Event implements Serializable {
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+
+    private List<String> waitingList;
+    public List<String> getWaitingList() {
+        if (waitingList == null) waitingList = new ArrayList<>();
+        return waitingList;
+    }
+    public void setWaitingList(List<String> waitingList) {
+        this.waitingList = waitingList;
+    }
+
 
     // class get Signups
 }

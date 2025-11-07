@@ -24,13 +24,15 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 public class EventCreatedDialogFragment extends DialogFragment {
 
     private static final String ARG_EVENT_TITLE = "event_title";
-    private static final String ARG_IMAGE_URI = "image_uri";
+    //private static final String ARG_IMAGE_URI = "image_uri";
+    private static final String ARG_EVENT_ID = "event_id";
 
-    public static EventCreatedDialogFragment newInstance(String eventTitle, Uri imageUri) {
+    public static EventCreatedDialogFragment newInstance(String eventTitle, String eventId) {
         EventCreatedDialogFragment fragment = new EventCreatedDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EVENT_TITLE, eventTitle);
         // imageUri parameter kept for backwards compatibility but not used
+        args.putString(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,8 +49,9 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         // Get arguments
         String eventTitle = getArguments() != null ? getArguments().getString(ARG_EVENT_TITLE) : "Event Created!";
+        String eventId = getArguments() != null ? getArguments().getString(ARG_EVENT_ID) : null;
 
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        /*MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             BitMatrix bitMatrix = multiFormatWriter.encode("TEST!", BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
@@ -57,7 +60,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         } catch(WriterException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         // Set the title
         titleText.setText(eventTitle + " Created!");
@@ -65,7 +68,23 @@ public class EventCreatedDialogFragment extends DialogFragment {
         titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleText.setPadding(0, 16, 0, 16);
 
-        // Keep placeholder image (no dynamic image loading)
+        // Generate QR that encodes the Firestore document id (eventId)
+        if (eventId != null) {
+            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+            try {
+                BitMatrix bitMatrix = multiFormatWriter.encode(eventId, BarcodeFormat.QR_CODE, 400, 400);
+                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                qrCode.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                // If QR generation fails, keep placeholder image (existing behavior)
+                e.printStackTrace();
+                qrCode.setImageResource(R.drawable.ic_launcher_background);
+            }
+        } else {
+            // keep placeholder if eventId missing
+            qrCode.setImageResource(R.drawable.ic_launcher_background);
+        }
 
         // Build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

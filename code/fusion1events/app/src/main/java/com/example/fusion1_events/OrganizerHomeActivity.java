@@ -224,10 +224,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                 recyclerView.smoothScrollToPosition(0);
 
                                 // Show confirmation dialog
-                                EventCreatedDialogFragment confirmDialog =
-                                        EventCreatedDialogFragment.newInstance(
-                                                eventsModel.getEventTitle(),
-                                                null);
+                                EventCreatedDialogFragment confirmDialog = EventCreatedDialogFragment.newInstance(
+                                        eventsModel.getEventTitle(), eventDocRef.getId());
                                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
                             })
                             .addOnFailureListener(e -> {

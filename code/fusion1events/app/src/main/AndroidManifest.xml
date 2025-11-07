@@ -30,7 +30,11 @@
         <activity android:name=".OrganizerHomeActivity"/>
         <activity android:name=".AdminHomeActivity"/>
 
+        <uses-permission android:name="android.permission.CAMERA" />
+
+
 
     </application>
+
 
 </manifest>

@@ -8,7 +8,6 @@ public class EventsModel {
     Date registrationEnd;
     String eventDescription;
     Date date;
-    Long attendees;
     Long signups;
 
     // Constructor without poster field
