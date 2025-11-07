@@ -13,7 +13,7 @@ public class ProfileTest {
 
         assertEquals("Tom", mockProfile.getName());
         assertEquals("tom@gmail.com", mockProfile.getEmail());
-        assertEquals("123456789", mockProfile.getNumber());
+        assertEquals("123456789", mockProfile.getPhone_num());
         assertEquals("ENTRANT", mockProfile.getRole());
         assertEquals("abcde",mockProfile.getDevice_id());
 
@@ -26,13 +26,13 @@ public class ProfileTest {
 
         mockProfile2.setName("Alan");
         mockProfile2.setEmail("alan@yahoo.com");
-        mockProfile2.setNumber("+1 123 4567");
+        mockProfile2.setPhone_num("+1 123 4567");
         mockProfile2.setRole("ADMIN");
         mockProfile2.setDevice_id("AbDeGf");
 
         assertEquals("Alan", mockProfile2.getName());
         assertEquals("alan@yahoo.com", mockProfile2.getEmail());
-        assertEquals("+1 123 4567", mockProfile2.getNumber());
+        assertEquals("+1 123 4567", mockProfile2.getPhone_num());
         assertEquals("ADMIN", mockProfile2.getRole());
         assertEquals("AbDeGf",mockProfile2.getDevice_id());
 

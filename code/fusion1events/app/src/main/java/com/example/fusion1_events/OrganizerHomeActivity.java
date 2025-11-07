@@ -351,6 +351,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 });
     }
 
+    // MODIFIED: Delete event and handle waiting list cleanup if needed
     private void deleteEvent(EventsModel event, int position) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Delete Event")

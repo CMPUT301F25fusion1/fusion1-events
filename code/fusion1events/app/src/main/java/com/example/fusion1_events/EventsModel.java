@@ -34,10 +34,10 @@ public class EventsModel {
         this.date = date;
         this.attendees = attendees;
         this.signups = signups;
-        this.waitingList = waitingList != null ? waitingList : new ArrayList<>(); // ADDED: Initialize waitingList with empty list if null
+        this.waitingList = waitingList != null ? waitingList : new ArrayList<>(); 
         this.imageUrl = imageUrl;
         this.eventId = eventId;
-        this.finalList = finalList != null ? finalList : new ArrayList<>();
+        this.finalList = finalList != null ? finalList : new ArrayList<>(); // ADDED: Initialize finalList with empty list if null
     }
 
     public ArrayList<String> getWaitingList() {
