@@ -34,10 +34,13 @@ android {
 
 dependencies {
     implementation(libs.qr.generator)
+    implementation("com.cloudinary:cloudinary-android:2.5.0")
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.2")
     implementation ("androidx.multidex:multidex:2.0.1")
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -55,7 +58,20 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
 
+    testImplementation("com.google.truth:truth:1.4.2")
+
     // QR scanning
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.4.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+
+    // Android instrumented tests
+    //androidTestImplementation("androidx.test:core:1.5.0")
+    //androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+
 }

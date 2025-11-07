@@ -1,7 +1,9 @@
 package com.example.fusion1_events;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -17,7 +19,12 @@ import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * EntrantHomeActivity is the main screen for users with the "entrant" role.
+ *
+ * It displays a list of events in a RecyclerView, allows navigation to
+ * the user's events, and retrieves the current user's profile from Firestore.
+ */
 public class EntrantHomeActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
@@ -26,6 +33,8 @@ public class EntrantHomeActivity extends AppCompatActivity {
     private EventAdapter adapter;
     private List<Event> eventList;
     private Profile currentUser;
+
+    private Button profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,12 @@ public class EntrantHomeActivity extends AppCompatActivity {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventList = new ArrayList<>();
 
+        Button lotteryGuidelinesBtn = findViewById(R.id.lottery_guidelines_btn);
+        lotteryGuidelinesBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(EntrantHomeActivity.this, GuidelinesActivity.class);
+            startActivity(intent);
+        });
+
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
             profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
@@ -48,6 +63,12 @@ public class EntrantHomeActivity extends AppCompatActivity {
 
                     TextView tvHome = findViewById(R.id.tvHome);
                     TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+                    TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+
+                    tvYourProfile.setOnClickListener(v -> {
+                        Intent intent = new Intent(EntrantHomeActivity.this, ProfileViewActivity.class);
+                        startActivity(intent);
+                    });
 
                     tvHome.setOnClickListener(v -> {
                         Intent intent = new Intent(EntrantHomeActivity.this, EntrantHomeActivity.class);
@@ -75,7 +96,10 @@ public class EntrantHomeActivity extends AppCompatActivity {
                             });
                 }
             });
-
         });
+
     }
-}
+
+    }
+
+

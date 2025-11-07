@@ -1,8 +1,8 @@
 package com.example.fusion1_events;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,16 +15,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * EventDetailActivity displays detailed information about a single event.
+ *
+ * Shows the event's title, description, date, signups, and image. Users
+ * can join or leave the event's waiting list and navigate back to the home
+ * screen or their events.
+ */
 public class EventDetailActivity extends AppCompatActivity {
-    private static final String TAG = "EventDetailActivity";
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
             tvDetailSignups;
@@ -53,193 +57,100 @@ public class EventDetailActivity extends AppCompatActivity {
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
 
-        TextView tvHome = findViewById(R.id.tvHome);
-        TextView tvYourEvents = findViewById(R.id.tvYourEvents);
-        tvHome.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EventActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            startActivity(intent);
-        });
-        tvYourEvents.setOnClickListener(v -> {
-            Intent intent = new Intent(this, YourEventsActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            startActivity(intent);
-        });
-
-        // Scan QR currently not used — keep placeholder
-        btnScanQR.setOnClickListener(v ->
-                Toast.makeText(this, "Scan QR functionality not enabled in this build.", Toast.LENGTH_SHORT).show()
-        );
-
-        // Set join/leave click listeners (these will check deviceId is ready)
-        btnJoinWaitingList.setOnClickListener(v -> joinWaitingListTransaction());
-        btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingListTransaction());
-
-        // Get device id then load event
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(id -> {
             deviceId = id;
-            if (eventId == null || eventId.isEmpty()) {
-                Toast.makeText(this, "No event selected.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            loadEventAndSetupUI(eventId);
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to get device id: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "FirebaseInstallations.getId() failed", e);
-        });
-    }
 
-    private void loadEventAndSetupUI(String id) {
-        DocumentReference docRef = db.collection("Events").document(id);
-        docRef.get()
-                .addOnSuccessListener(doc -> {
-                    if (!doc.exists()) {
-                        Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    currentEvent = doc.toObject(Event.class);
-                    if (currentEvent == null) {
-                        Toast.makeText(this, "Failed to parse event data", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+            db.collection("Events").document(eventId)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        currentEvent = doc.toObject(Event.class);
 
-                    // Populate UI
-                    tvDetailTitle.setText(currentEvent.getTitle() != null ? currentEvent.getTitle() : "Untitled");
-                    tvDetailDescription.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "");
+                        tvDetailTitle.setText(currentEvent.getTitle());
+                        tvDetailDescription.setText(currentEvent.getDescription());
 
-                    if (currentEvent.getDate() != null) {
                         Date date = currentEvent.getDate().toDate();
                         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault());
                         tvDetailDate.setText(sdf.format(date));
-                    } else {
-                        tvDetailDate.setText("TBA");
-                    }
 
-                    // Signups display (fallback to 0)
-                    tvDetailSignups.setText(String.valueOf(currentEvent.getSignups()));
+                        tvDetailSignups.setText(String.valueOf(currentEvent.getSignups()));
+                        ivDetailImage.setImageResource(R.drawable.ic_launcher_background);
 
+                        TextView tvHome = findViewById(R.id.tvHome);
+                        TextView tvYourEvents = findViewById(R.id.tvYourEvents);
 
-                    // Placeholder image
-                    ivDetailImage.setImageResource(R.drawable.ic_launcher_background);
+                        TextView tvYourProfile = findViewById(R.id.tvYourProfileEvent);
 
-                    // Show/hide join/leave depending on membership
-                    boolean isJoined = false;
-                    List<String> waiting = currentEvent.getWaitingList();
-                    if (waiting != null && deviceId != null) {
-                        isJoined = waiting.contains(deviceId);
-                    }
-                    btnJoinWaitingList.setVisibility(isJoined ? View.GONE : View.VISIBLE);
-                    btnLeaveWaitingList.setVisibility(isJoined ? View.VISIBLE : View.GONE);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "loadEvent error", e);
+                        tvYourProfile.setOnClickListener(v -> {
+                            Intent intent = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
+                            startActivity(intent);
+                        });
+
+                        tvHome.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, EntrantHomeActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
+                        });
+
+                        tvYourEvents.setOnClickListener(v -> {
+                            Intent intent = new Intent(this, YourEventsActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
+                        });
+
+                        btnScanQR.setOnClickListener(v ->
+                                Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
+                        );
+                        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+                        if (currentEvent.getWaitingList().contains(entrantRef)) {
+                            btnJoinWaitingList.setVisibility(View.GONE);
+                            btnLeaveWaitingList.setVisibility(View.VISIBLE);
+                        } else {
+                            btnJoinWaitingList.setVisibility(View.VISIBLE);
+                            btnLeaveWaitingList.setVisibility(View.GONE);
+                        }
+
+                        btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
+                        btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingList());
+                    });
+        });
+    }
+    /**
+     * Adds the current user to the event's waiting list.
+     */
+    private void joinWaitingList() {
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+        eventRef.update("waitingList", FieldValue.arrayUnion(entrantRef))
+                .addOnSuccessListener(aVoid -> {
+                    int newSignups = currentEvent.getWaitingList().size() + 1;
+                    currentEvent.getWaitingList().add(entrantRef);
+                    currentEvent.setSignups(newSignups);
+                    eventRef.update("Signups", newSignups);
+
+                    tvDetailSignups.setText(String.valueOf(newSignups));
+                    btnJoinWaitingList.setVisibility(View.GONE);
+                    btnLeaveWaitingList.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
                 });
     }
-
     /**
-     * Join waiting list using a transaction:
-     * - read document
-     * - if deviceId not present, add to waitingList and increment Signups
-     * - if already present, do nothing
+     * Removes the current user from the event's waiting list.
      */
-    private void joinWaitingListTransaction() {
-        if (deviceId == null || eventId == null) {
-            Toast.makeText(this, "Please wait — device or event not ready.", Toast.LENGTH_SHORT).show();
-            return;
+    private void leaveWaitingList() {
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+        eventRef.update("waitingList", FieldValue.arrayRemove(entrantRef))
+                .addOnSuccessListener(aVoid -> {
+                    currentEvent.getWaitingList().remove(entrantRef);
+                    int newSignups = currentEvent.getWaitingList().size();
+                    currentEvent.setSignups(newSignups);
+                    eventRef.update("Signups", newSignups);
+
+                    tvDetailSignups.setText(String.valueOf(newSignups));
+                    btnJoinWaitingList.setVisibility(View.VISIBLE);
+                    btnLeaveWaitingList.setVisibility(View.GONE);
+                    Toast.makeText(this, "You left the waiting list!", Toast.LENGTH_SHORT).show();
+                });
         }
 
-        // disable button to prevent multiple taps
-        btnJoinWaitingList.setEnabled(false);
-
-        DocumentReference docRef = db.collection("Events").document(eventId);
-        db.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(docRef);
-            if (!snapshot.exists()) {
-                throw new FirebaseFirestoreException("Event not found",
-                        FirebaseFirestoreException.Code.NOT_FOUND);
-            }
-
-            List<String> waiting = (List<String>) snapshot.get("waitingList");
-            Long signupsLong = snapshot.getLong("Signups");
-            long signups = signupsLong != null ? signupsLong : 0L;
-
-            // if waitingList already contains deviceId, nothing to do
-            if (waiting != null && waiting.contains(deviceId)) {
-                return "already_joined";
-            }
-
-            // perform atomic updates: arrayUnion and increment
-            transaction.update(docRef, "waitingList", FieldValue.arrayUnion(deviceId));
-            transaction.update(docRef, "Signups", FieldValue.increment(1));
-
-            return "joined";
-        }).addOnSuccessListener(result -> {
-            if ("already_joined".equals(result)) {
-                Toast.makeText(this, "You are already on the waiting list.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
-            }
-            // refresh UI
-            loadEventAndSetupUI(eventId);
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to join waiting list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "joinWaitingListTransaction failed", e);
-        }).addOnCompleteListener(task -> {
-            btnJoinWaitingList.setEnabled(true);
-        });
-    }
-
-    /**
-     * Leave waiting list using a transaction:
-     * - read document
-     * - if deviceId present, remove from waitingList and decrement Signups
-     * - if not present, do nothing
-     */
-    private void leaveWaitingListTransaction() {
-        if (deviceId == null || eventId == null) {
-            Toast.makeText(this, "Please wait — device or event not ready.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        btnLeaveWaitingList.setEnabled(false);
-
-        DocumentReference docRef = db.collection("Events").document(eventId);
-        db.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(docRef);
-            if (!snapshot.exists()) {
-                throw new FirebaseFirestoreException("Event not found",
-                        FirebaseFirestoreException.Code.NOT_FOUND);
-            }
-
-            List<String> waiting = (List<String>) snapshot.get("waitingList");
-            Long signupsLong = snapshot.getLong("Signups");
-            long signups = signupsLong != null ? signupsLong : 0L;
-
-            // if not present, nothing to do
-            if (waiting == null || !waiting.contains(deviceId)) {
-                return "not_joined";
-            }
-
-            // remove and decrement
-            transaction.update(docRef, "waitingList", FieldValue.arrayRemove(deviceId));
-            // ensure signups doesn't go below zero in semantic terms - decrement anyway
-            transaction.update(docRef, "Signups", FieldValue.increment(-1));
-
-            return "left";
-        }).addOnSuccessListener(result -> {
-            if ("not_joined".equals(result)) {
-                Toast.makeText(this, "You were not on the waiting list.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "You left the waiting list.", Toast.LENGTH_SHORT).show();
-            }
-            // refresh UI
-            loadEventAndSetupUI(eventId);
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to leave waiting list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "leaveWaitingListTransaction failed", e);
-        }).addOnCompleteListener(task -> {
-            btnLeaveWaitingList.setEnabled(true);
-        });
-    }
 }

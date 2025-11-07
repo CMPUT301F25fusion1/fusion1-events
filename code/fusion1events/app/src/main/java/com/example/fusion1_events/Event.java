@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.firebase.Timestamp;
-
+import com.google.firebase.firestore.DocumentReference;
+/**
+ * Represents an event with details such as signups, attendees, date, description,
+ * registration period, title, and a waiting list of users.
+ */
 public class Event implements Serializable {
     private int Signups;
     private int attendees;
@@ -14,11 +18,12 @@ public class Event implements Serializable {
     private Timestamp registration_end;
     private Timestamp registration_start;
     private String title;
+    private ArrayList<DocumentReference> waitingList;
 
     public Event(){}
 
     public Event(int signups, int attendees, Timestamp date, String description,
-                 Timestamp registration_start, Timestamp registration_end, String title) {
+                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -26,6 +31,7 @@ public class Event implements Serializable {
         this.registration_start = registration_start;
         this.registration_end = registration_end;
         this.title = title;
+        this.waitingList = waitingList;
     }
 
     //getters and setters
@@ -50,15 +56,10 @@ public class Event implements Serializable {
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
-    private List<String> waitingList;
-    public List<String> getWaitingList() {
-        if (waitingList == null) waitingList = new ArrayList<>();
+    public ArrayList<DocumentReference> getWaitingList() {
         return waitingList;
     }
-    public void setWaitingList(List<String> waitingList) {
+    public void setWaitingList(ArrayList<DocumentReference> waitingList) {
         this.waitingList = waitingList;
     }
-
-
-    // class get Signups
 }

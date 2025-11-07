@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.fusion1_events"
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
@@ -13,7 +14,6 @@
         android:theme="@style/Theme.Fusion1events">
         <activity
             android:name=".LoadAppActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,16 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventActivity" android:exported="false"/>
         <activity android:name=".EventDetailActivity" android:exported="false"/>
         <activity android:name=".YourEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
-        <activity android:name=".AdminHomeActivity"/>
-
-        <uses-permission android:name="android.permission.CAMERA" />
+        <activity android:name=".AdminHomeActivity" />
+        <activity android:name=".ProfileViewActivity" />
+        <activity android:name=".GuidelinesActivity" />
 
 
 
