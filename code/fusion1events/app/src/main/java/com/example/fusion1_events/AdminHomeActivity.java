@@ -26,9 +26,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         profileRef = DatabaseReferences.getProfileDatabase();
 
         TextView welcomeMessage = findViewById(R.id.welcomeText);
-        Button buttonBrowseProfiles = findViewById(R.id.buttonBrowseProfiles);
+        //Button buttonBrowseProfiles = findViewById(R.id.buttonBrowseProfiles);
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
-
             profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
 
                 if (profile.exists()) {
@@ -36,10 +35,6 @@ public class AdminHomeActivity extends AppCompatActivity {
                     welcomeMessage.setText("Welcome "+ name);
                 }
             });
-        });
-        buttonBrowseProfiles.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminHomeActivity.this, Browse_Class.class);
-            startActivity(intent);
         });
     }
 }
