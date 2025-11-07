@@ -15,6 +15,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity that allows an admin to browse all images stored in Firestore.
+ */
 public class AdminBrowseImagesActivity extends AppCompatActivity implements ImageAdapter.onImageActionListener {
     private RecyclerView recyclerView;
     private ImageAdapter adapter;
@@ -40,6 +43,13 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Imag
         backButton.setOnClickListener(v -> finish());
     }
 
+    /**
+     * Loads all images from the Firestore "Images" collection and populates the RecyclerView.
+     * <p>
+     * Clears the existing list, converts Firestore documents to Image objects, and notifies
+     * the adapter to refresh the view.
+     */
+
     private void loadImages() {
         db.collection("Images")
                 .get()
@@ -57,6 +67,13 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Imag
                         Log.e("Firestore", "Error loading images", e));
     }
 
+    /**
+     * Deletes the specified image from Firestore and removes it from the RecyclerView.
+     * <p>
+     * Triggered from the ImageAdapter when the admin requests to delete an image.
+     *
+     * @param image The Image object to delete.
+     */
     @Override
     public void onDeleteImage(Image image) {
         String id = image.getId();

@@ -11,19 +11,47 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Adapter for displaying a list of admin profiles in a RecyclerView.
+ * Provides buttons for deleting or viewing a profile's details.
+ */
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
+    /**
+     * Listener interface for profile actions.
+     */
     public interface onProfileActionListener {
+        /**
+         * Called when a profile should be deleted.
+         * @param profile the profile to delete
+         */
         void onDeleteProfile(AdminProfile profile);
+
+        /**
+         * Called when a profile's details should be viewed.
+         * @param profile the profile to view
+         */
         void onViewProfile(AdminProfile profile);
     }
     private List<AdminProfile> profiles;
     private onProfileActionListener listener;
 
+    /**
+     * Constructor for ProfileAdapter.
+     * @param profiles list of admin profiles to display
+     * @param listener listener for handling profile actions
+     */
     public ProfileAdapter(List<AdminProfile> profiles, onProfileActionListener listener) {
         this.profiles = profiles;
         this.listener = listener;
     }
 
+    /**
+     * Inflates the layout for each profile item.
+     *
+     * @param parent   the parent ViewGroup
+     * @param viewType the type of view
+     * @return a ViewHolder for the profile item
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,6 +59,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         return new ViewHolder(v);
     }
 
+    /**
+     * Binds profile data to the ViewHolder.
+     *
+     * @param holder   the ViewHolder to bind data to
+     * @param position the position of the profile in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdminProfile profile = profiles.get(position);
@@ -46,8 +80,18 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         });
     }
 
+    /**
+     * Returns the total number of profiles.
+     *
+     * @return the size of the profiles list
+     */
     @Override public int getItemCount() { return profiles.size(); }
 
+    /**
+     * ViewHolder class for an individual profile item.
+     * <p>
+     * Holds references to UI components for an profile item.
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, role;
         Button buttonDelete, buttonView;

@@ -16,6 +16,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity that allows an admin to browse all events stored in Firestore.
+ * Admins can view, and delete events from this screen.
+ */
 public class AdminBrowseEventsActivity extends AppCompatActivity implements AdminEventAdapter.onEventActionListener{
     private RecyclerView recyclerView;
     private AdminEventAdapter adapter;
@@ -27,26 +31,34 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_browse_events);
 
+        // Initialize recycler view and set its layout manager
         recyclerView = findViewById(R.id.recyclerEvents);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize the adapter with the list of events and event action listener
         adapter = new AdminEventAdapter(events, this);
         recyclerView.setAdapter(adapter);
 
+        // Set up navigation bar for admin users
         NavBarHelper.setupNavBar(this, AdminBrowseEventsActivity.class);
 
         loadEvents();
 
-        // back button
+        // Set up back button to return to the previous screen
         Button backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
     }
 
+    /**
+     * Loads all events from the Firestore "Events" collection and populates the RecyclerView.
+     */
     private void loadEvents() {
         db.collection("Events")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     events.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        // Convert each Firestore document into an Event object
                         Event event = doc.toObject(Event.class);
                         event.setId(doc.getId());
                         events.add(event);
@@ -64,6 +76,12 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
                         Log.e("Firestore", "Error loading events", e));
     }
 
+    /**
+     * Handles the deletion of an event when triggered from the adapter.
+     * Removes the event from Firestore and updates the list.
+     *
+     * @param event The Event object to delete.
+     */
     @Override
     public void onDeleteEvent(Event event) {
         String eventId = event.getId();
