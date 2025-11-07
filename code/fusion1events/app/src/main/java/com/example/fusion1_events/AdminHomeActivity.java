@@ -16,6 +16,8 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
 
+    private Button profileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,5 +38,13 @@ public class AdminHomeActivity extends AppCompatActivity {
                 }
             });
         });
+
+        profileButton = findViewById(R.id.buttonProfileAdminHome);
+        profileButton.setOnClickListener(v -> goProfileScreen());
+    }
+
+    private void goProfileScreen(){
+        startActivity(new android.content.Intent(this, ProfileViewActivity.class));
+        finish();
     }
 }

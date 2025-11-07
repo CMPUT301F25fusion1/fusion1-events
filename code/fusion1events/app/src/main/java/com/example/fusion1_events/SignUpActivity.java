@@ -11,11 +11,25 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.HashMap;
 import java.util.Map;
+
+/*
+ * File: SignUpActivity.java
+ *
+ * Role:
+ * - To get users information like device id, name, email, phone number, and their preferred role.
+ * - Add all of this information to a collection called Profile in firebase.
+ * - As per their selected role, add the same set of data to either Entrant, Admin
+ *   or Organizer collection respectively.
+ * - To start the home screen activity for the user after successful sign up as per their role
+ *
+ * Issues:
+ * - Assumes device is online.
+ *
+ */
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -66,18 +80,21 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         if(TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Please Enter a Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter a Name",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(this, "Please Enter an Email Address", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Enter an Email Address",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
 
         if(TextUtils.isEmpty(role)){
-            Toast.makeText(this, "Please select a Role", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select a Role",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -106,28 +123,36 @@ public class SignUpActivity extends AppCompatActivity {
 
             profileRef.document(device_id).set(profileData)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Sign-Up Successful!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Sign-Up Successful!!",
+                                Toast.LENGTH_SHORT).show();
                         submitButton.setEnabled(true);
+
                         if (finalRole.equals("ENTRANT")) {
                             entrantsRef.document(device_id).set(profileData);
-                            startActivity(new android.content.Intent(this, EntrantHomeActivity.class));
+                            startActivity(new android.content.Intent(this,
+                                    EntrantHomeActivity.class));
                             finish();
                         }
+
                         if (finalRole.equals("ORGANIZER")){
                             organizerRef.document(device_id).set(profileData);
-                            startActivity(new android.content.Intent(this, OrganizerHomeActivity.class));
+                            startActivity(new android.content.Intent(this,
+                                    OrganizerHomeActivity.class));
                             finish();
                         }
+
                         if (finalRole.equals("ADMIN")) {
                             adminRef.document(device_id).set(profileData);
-                            startActivity(new android.content.Intent(this, AdminHomeActivity.class));
+                            startActivity(new android.content.Intent(this,
+                                    AdminHomeActivity.class));
                             finish();
                         }
 
                     })
 
                     .addOnFailureListener(e ->{
-                        Toast.makeText(this, "Sign-Up Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Sign-Up Failed",
+                                Toast.LENGTH_SHORT).show();
                         submitButton.setEnabled(true);
 
                     });

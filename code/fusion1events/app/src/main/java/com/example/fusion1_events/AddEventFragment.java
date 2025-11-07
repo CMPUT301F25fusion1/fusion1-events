@@ -21,14 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class AddEventFragment extends DialogFragment {
 
-    interface AddEventDialogListener {
-        void addEvent(EventsModel eventsModel);
+    public interface AddEventDialogListener {
+        void addEvent(EventsModel eventsModel, Uri imageUri);
     }
 
     private AddEventDialogListener listener;
@@ -155,11 +156,14 @@ public class AddEventFragment extends DialogFragment {
                             description,
                             eventDate,
                             Long.valueOf(peopleCount),
-                            0L // signups starts at 0
+                            0L ,// signups starts at 0
+                            new ArrayList<>(), // ADDED: Empty waiting list for new events
+                            null, // imageUrl will be set after upload
+                            null
                     );
 
                     // Pass event to listener (no image URI)
-                    listener.addEvent(event);
+                    listener.addEvent(event, selectedImageUri);
                 })
                 .setNegativeButton("Cancel", null)
                 .create();

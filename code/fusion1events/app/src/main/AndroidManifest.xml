@@ -30,7 +30,8 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
-        <activity android:name=".AdminHomeActivity"/>
+        <activity android:name=".AdminHomeActivity" />
+        <activity android:name=".ProfileViewActivity"/>
 
 
     </application>
