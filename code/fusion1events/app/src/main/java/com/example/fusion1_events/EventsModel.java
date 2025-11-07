@@ -24,7 +24,6 @@ public class EventsModel {
         this.finalList = finalList;
     }
 
-    // MODIFIED: Constructor now includes waitingList parameter
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId, ArrayList<String> finalList) {
@@ -41,34 +40,28 @@ public class EventsModel {
         this.finalList = finalList != null ? finalList : new ArrayList<>();
     }
 
-    // ADDED: Getter for waitingList
     public ArrayList<String> getWaitingList() {
         return waitingList;
     }
 
-    // ADDED: Setter for waitingList
     public void setWaitingList(ArrayList<String> waitingList) {
         this.waitingList = waitingList;
     }
 
-    // ADDED: Add entrant to waiting list
     public void addToWaitingList(String entrantId) {
         if (!waitingList.contains(entrantId)) {
             waitingList.add(entrantId);
         }
     }
 
-    // ADDED: Remove entrant from waiting list
     public void removeFromWaitingList(String entrantId) {
         waitingList.remove(entrantId);
     }
 
-    // ADDED: Check if entrant is in waiting list
     public boolean isInWaitingList(String entrantId) {
         return waitingList.contains(entrantId);
     }
 
-    // ADDED: Get waiting list size
     public int getWaitingListSize() {
         return waitingList.size();
     }
