@@ -20,7 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * EventDetailActivity displays detailed information about a single event.
+ *
+ * Shows the event's title, description, date, signups, and image. Users
+ * can join or leave the event's waiting list and navigate back to the home
+ * screen or their events.
+ */
 public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
@@ -100,6 +106,9 @@ public class EventDetailActivity extends AppCompatActivity {
                     });
         });
     }
+    /**
+     * Adds the current user to the event's waiting list.
+     */
     private void joinWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -116,6 +125,9 @@ public class EventDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
                 });
     }
+    /**
+     * Removes the current user from the event's waiting list.
+     */
     private void leaveWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);

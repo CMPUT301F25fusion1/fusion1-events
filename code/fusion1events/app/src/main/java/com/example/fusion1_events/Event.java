@@ -5,7 +5,10 @@ import java.util.ArrayList;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-
+/**
+ * Represents an event with details such as signups, attendees, date, description,
+ * registration period, title, and a waiting list of users.
+ */
 public class Event implements Serializable {
     private int Signups;
     private int attendees;

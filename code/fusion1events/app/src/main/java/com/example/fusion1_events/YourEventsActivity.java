@@ -17,7 +17,12 @@ import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * YourEventsActivity displays the list of events the current user has joined or is on the waiting list for.
+ *
+ * The activity retrieves the user's events from Firestore, shows them in a RecyclerView using EventAdapter,
+ * and allows navigation back to the home screen.
+ */
 public class YourEventsActivity extends AppCompatActivity {
     private RecyclerView yourEventsRecyclerView;
     private EventAdapter adapter;
