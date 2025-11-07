@@ -7,8 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,15 +23,21 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class EventCreatedDialogFragment extends DialogFragment {
 
     private static final String ARG_EVENT_TITLE = "event_title";
+    private static EventsModel createdEvent ;
     private static final String ARG_IMAGE_URI = "image_uri";
 
-    public static EventCreatedDialogFragment newInstance(String eventTitle, Uri imageUri) {
+    public static EventCreatedDialogFragment newInstance(EventsModel event, Uri imageUri) {
+        createdEvent = event;
         EventCreatedDialogFragment fragment = new EventCreatedDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_EVENT_TITLE, eventTitle);
+        args.putString(ARG_EVENT_TITLE, event.getEventTitle());
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,12 +47,12 @@ public class EventCreatedDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.event_created_dialog, null);
-
         TextView titleText = view.findViewById(R.id.inputTitle);
         ImageView qrCode = view.findViewById(R.id.generatedQrImage);
         Button backButton = view.findViewById(R.id.btnAddImage);
+        TextView attendeesText = view.findViewById(R.id.attendeesText);
+        ListView attendeesList = view.findViewById(R.id.attendeesList);
 
-        String eventTitle = getArguments() != null ? getArguments().getString(ARG_EVENT_TITLE) : "Event Created!";
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -57,10 +65,29 @@ public class EventCreatedDialogFragment extends DialogFragment {
             throw new RuntimeException(e);
         }
 
-        titleText.setText(eventTitle + " Created!");
+        titleText.setText("Event Created!\n"+ createdEvent.getEventTitle());
         titleText.setTextSize(20);
         titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleText.setPadding(0, 16, 0, 16);
+
+        ArrayList<String> finalListTest = createdEvent.getFinalList();
+        Date registrationDeadline = createdEvent.getRegistrationEnd();
+
+        if (finalListTest.isEmpty()) {
+            attendeesText.setText("registration deadline: "+registrationDeadline);
+        } else {
+            attendeesText.setText("Invited attendees:");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    getContext(),
+                    android.R.layout.simple_list_item_1,
+                    finalListTest
+            );
+            attendeesList.setAdapter(adapter);
+
+        }
+
+
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

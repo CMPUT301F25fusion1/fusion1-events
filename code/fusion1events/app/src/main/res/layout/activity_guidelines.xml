@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Top navigation bar -->
+        <LinearLayout
+            android:id="@+id/top_menu_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:background="#D3D3D3">
+
+            <TextView
+                android:id="@+id/tvHome"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Home"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvYourEvents"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Your Events"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Scan"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Profile"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Notifications"
+                android:gravity="center"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Guidelines title -->
+        <TextView
+            android:id="@+id/guidelinesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guidelines for Lottery System"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+        <!-- Guidelines content -->
+        <TextView
+            android:id="@+id/guidelinesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EDEDED"
+            android:padding="12dp"
+            android:text="1. Ensure equal chance for all entrants.\n2. Use a secure, automated random draw.\n3. Enforce registration start and end periods.\n4. Allow only one entry per verified user.\n5. Optionally verify entrant location.\n6. Select entrants only up to event capacity.\n7. Automatically replace declined entrants.\n8. Log every draw for transparency and auditing.\n9. Notify winners and non-winners immediately.\n10. Require winners to confirm within a set timeframe.\n11. Protect data with strong security and privacy rules.\n12. Use Firebase for real-time updates and storage."
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

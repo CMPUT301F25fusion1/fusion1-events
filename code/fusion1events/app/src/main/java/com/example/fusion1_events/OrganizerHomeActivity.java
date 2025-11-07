@@ -97,7 +97,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
             @Override
             public void onEventClick(EventsModel event, int position) {
                 EventCreatedDialogFragment confirmDialog =
-                        EventCreatedDialogFragment.newInstance(event.getEventTitle(), null);
+                        EventCreatedDialogFragment.newInstance(event, null);
                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
             }
 
@@ -311,8 +311,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("Signups", eventsModel.getSignups());
         eventData.put("imageUrl", imageUrl); // Cloudinary URL
-        eventData.put("waitingList", new ArrayList<>());
-        eventData.put("finaList", new ArrayList<>());
+        eventData.put("waitingList", new ArrayList<>()); // ADDED: Initialize with empty waiting list
 
         db.collection("Events")
                 .add(eventData)
@@ -332,7 +331,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                 EventCreatedDialogFragment confirmDialog =
                                         EventCreatedDialogFragment.newInstance(
-                                                eventsModel.getEventTitle(),
+                                                eventsModel,
                                                 null);
                                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
                             })

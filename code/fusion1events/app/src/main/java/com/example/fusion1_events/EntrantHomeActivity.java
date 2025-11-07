@@ -62,7 +62,11 @@ public class EntrantHomeActivity extends AppCompatActivity {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventList = new ArrayList<>();
 
-
+        Button lotteryGuidelinesBtn = findViewById(R.id.lottery_guidelines_btn);
+        lotteryGuidelinesBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(EntrantHomeActivity.this, GuidelinesActivity.class);
+            startActivity(intent);
+        });
 
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
