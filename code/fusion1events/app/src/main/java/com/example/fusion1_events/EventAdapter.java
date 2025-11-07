@@ -18,12 +18,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Adapter for displaying a list of Event objects in a RecyclerView.
+ *
+ * Each item shows the event title, description, date, and an image.
+ * Clicking an event opens its detail screen.
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> eventList;
     private Context context;
     private Profile currentUser;
-
+    /**
+     * Creates an EventAdapter.
+     *
+     * @param context the context in which the adapter is used
+     * @param eventList the list of events to display
+     * @param currentUser the current user's profile
+     */
     public EventAdapter(Context context, List<Event> eventList, Profile currentUser) {
         this.context = context;
         this.eventList = eventList;
