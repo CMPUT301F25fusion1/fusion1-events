@@ -270,13 +270,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     @Override
                     public void onProgress(String requestId, long bytes, long totalBytes) {
                         double progress = (double) bytes / totalBytes * 100;
-                        Log.d(TAG, "Upload progress: " + progress + "%");
+                        Log.d(TAG, " progress: " + progress + "%");
                     }
 
                     @Override
                     public void onSuccess(String requestId, Map resultData) {
                         String imageUrl = (String) resultData.get("secure_url");
-                        Log.d(TAG, "Cloudinary upload successful. URL: " + imageUrl);
+                        Log.d(TAG, "Cloudinary upload URL: " + imageUrl);
 
                         runOnUiThread(() -> createEventInFirestore(eventsModel, imageUrl));
                     }
@@ -374,7 +374,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                         // TODO: Implement notification to entrants
                                     }
 
-                                    // Note: Cloudinary images remain (see previous implementation notes)
+                                    //Cloudinary images remain (see previous implementation notes)
                                     if (imageUrl != null && !imageUrl.isEmpty()) {
                                         Log.d(TAG, "Image remains in Cloudinary: " + imageUrl);
                                     }
@@ -402,5 +402,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+
+        //TODO: add editing events functions
     }
 }

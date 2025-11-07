@@ -28,11 +28,13 @@ public class Event implements Serializable {
     private Timestamp registration_start;
     private String title;
     private ArrayList<DocumentReference> waitingList;
+    private String imageUrl;
 
     public Event(){}
 
+
     public Event(int signups, int attendees, Timestamp date, String description,
-                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList) {
+                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList, String imageUrl) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -41,7 +43,10 @@ public class Event implements Serializable {
         this.registration_end = registration_end;
         this.title = title;
         this.waitingList = waitingList;
+        this.imageUrl = imageUrl;
     }
+
+
 
     //getters and setters
     /**
@@ -49,6 +54,14 @@ public class Event implements Serializable {
      *
      * @return number of signups
      */
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     public int getSignups() { return Signups; }
     /**
      * Sets the number of users currently signed up.

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -81,7 +82,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         Date date = event.getDate().toDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault());
         holder.tvDate.setText(sdf.format(date));
-        holder.ivImage.setImageResource(R.drawable.ic_launcher_background);
+
+        if (event.getImageUrl() != null ) {
+            Glide.with(context).load(event.getImageUrl()).into(holder.ivImage);
+        } else {
+            holder.ivImage.setImageResource(R.drawable.logo_loading);
+        }
         holder.itemView.setOnClickListener(v -> {
             FirebaseFirestore.getInstance()
                     .collection("Events")
