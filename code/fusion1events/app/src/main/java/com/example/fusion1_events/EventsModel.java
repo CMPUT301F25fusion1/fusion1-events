@@ -1,8 +1,11 @@
 package com.example.fusion1_events;
-
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Model class representing an event with its details and participant lists.
+ * Stores event information including title, dates, attendees, waiting list, and image URL.
+ */
 public class EventsModel {
     String eventTitle;
     Date registrationStart;
@@ -16,17 +19,25 @@ public class EventsModel {
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
 
-    public ArrayList<String> getFinalList() {
-        return finalList;
-    }
-
-    public void setFinalList(ArrayList<String> finalList) {
-        this.finalList = finalList;
-    }
-
+    /**
+     * Constructor to create an EventsModel with all fields.
+     *
+     * @param eventTitle The title of the event
+     * @param registrationStart The date when registration opens
+     * @param registrationEnd The date when registration closes
+     * @param eventDescription A description of the event
+     * @param date The date when the event takes place
+     * @param attendees The maximum number of attendees allowed
+     * @param signups The current number of signups
+     * @param waitingList List of entrant IDs on the waiting list
+     * @param imageUrl The Cloudinary URL for the event image
+     * @param eventId The Firestore document ID
+     * @param finalList List of entrant IDs selected for the event
+     */
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
-                       ArrayList<String> waitingList, String imageUrl, String eventId, ArrayList<String> finalList) {
+                       ArrayList<String> waitingList, String imageUrl, String eventId,
+                       ArrayList<String> finalList) {
         this.eventTitle = eventTitle;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
@@ -37,104 +48,244 @@ public class EventsModel {
         this.waitingList = waitingList != null ? waitingList : new ArrayList<>();
         this.imageUrl = imageUrl;
         this.eventId = eventId;
-        this.finalList = finalList != null ? finalList : new ArrayList<>(); // ADDED: Initialize finalList with empty list if null
+        this.finalList = finalList != null ? finalList : new ArrayList<>();
     }
 
+    /**
+     * Gets the event title.
+     *
+     * @return The title of the event
+     */
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    /**
+     * Sets the event title.
+     *
+     * @param eventTitle The title to set
+     */
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    /**
+     * Gets the registration start date.
+     *
+     * @return The date when registration opens
+     */
+    public Date getRegistrationStart() {
+        return registrationStart;
+    }
+
+    /**
+     * Sets the registration start date.
+     *
+     * @param registrationStart The date when registration opens
+     */
+    public void setRegistrationStart(Date registrationStart) {
+        this.registrationStart = registrationStart;
+    }
+
+    /**
+     * Gets the registration end date.
+     *
+     * @return The date when registration closes
+     */
+    public Date getRegistrationEnd() {
+        return registrationEnd;
+    }
+
+    /**
+     * Sets the registration end date.
+     *
+     * @param registrationEnd The date when registration closes
+     */
+    public void setRegistrationEnd(Date registrationEnd) {
+        this.registrationEnd = registrationEnd;
+    }
+
+    /**
+     * Gets the event description.
+     *
+     * @return The description of the event
+     */
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    /**
+     * Sets the event description.
+     *
+     * @param eventDescription The description to set
+     */
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    /**
+     * Gets the event date.
+     *
+     * @return The date when the event takes place
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * Sets the event date.
+     *
+     * @param date The date when the event takes place
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * Gets the maximum number of attendees.
+     *
+     * @return The maximum number of attendees allowed
+     */
+    public Long getAttendees() {
+        return attendees;
+    }
+
+    /**
+     * Sets the maximum number of attendees.
+     *
+     * @param attendees The maximum number of attendees allowed
+     */
+    public void setAttendees(Long attendees) {
+        this.attendees = attendees;
+    }
+
+    /**
+     * Gets the current number of signups.
+     *
+     * @return The current number of signups
+     */
+    public Long getSignups() {
+        return signups;
+    }
+
+    /**
+     * Sets the current number of signups.
+     *
+     * @param signups The current number of signups
+     */
+    public void setSignups(Long signups) {
+        this.signups = signups;
+    }
+
+    /**
+     * Gets the waiting list of entrant IDs.
+     *
+     * @return ArrayList of entrant IDs on the waiting list
+     */
     public ArrayList<String> getWaitingList() {
         return waitingList;
     }
 
+    /**
+     * Sets the waiting list.
+     *
+     * @param waitingList ArrayList of entrant IDs to set as the waiting list
+     */
     public void setWaitingList(ArrayList<String> waitingList) {
         this.waitingList = waitingList;
     }
 
+    /**
+     * Adds an entrant to the waiting list if they are not already present.
+     * Prevents duplicate entries in the waiting list.
+     *
+     * @param entrantId The ID of the entrant to add
+     */
     public void addToWaitingList(String entrantId) {
         if (!waitingList.contains(entrantId)) {
             waitingList.add(entrantId);
         }
     }
 
+    /**
+     * Removes an entrant from the waiting list.
+     *
+     * @param entrantId The ID of the entrant to remove
+     */
     public void removeFromWaitingList(String entrantId) {
         waitingList.remove(entrantId);
     }
 
+    /**
+     * Checks if an entrant is in the waiting list.
+     *
+     * @param entrantId The ID of the entrant to check
+     * @return true if the entrant is in the waiting list, false otherwise
+     */
     public boolean isInWaitingList(String entrantId) {
         return waitingList.contains(entrantId);
     }
 
+    /**
+     * Gets the size of the waiting list.
+     *
+     * @return The number of entrants in the waiting list
+     */
     public int getWaitingListSize() {
         return waitingList.size();
     }
 
+    /**
+     * Gets the final list of selected entrant IDs.
+     *
+     * @return ArrayList of entrant IDs selected for the event
+     */
+    public ArrayList<String> getFinalList() {
+        return finalList;
+    }
+
+    /**
+     * Sets the final list of selected entrants.
+     *
+     * @param finalList ArrayList of entrant IDs selected for the event
+     */
+    public void setFinalList(ArrayList<String> finalList) {
+        this.finalList = finalList;
+    }
+
+    /**
+     * Gets the Cloudinary URL for the event image.
+     *
+     * @return The URL of the event image
+     */
     public String getImageUrl() {
         return imageUrl;
     }
 
+    /**
+     * Sets the Cloudinary URL for the event image.
+     *
+     * @param imageUrl The URL of the event image
+     */
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
+    /**
+     * Gets the Firestore document ID.
+     *
+     * @return The Firestore document ID
+     */
     public String getEventId() {
         return eventId;
     }
 
+    /**
+     * Sets the Firestore document ID.
+     *
+     * @param eventId The Firestore document ID
+     */
     public void setEventId(String eventId) {
         this.eventId = eventId;
-    }
-
-    public String getEventTitle() {
-        return eventTitle;
-    }
-
-    public void setEventTitle(String eventTitle) {
-        this.eventTitle = eventTitle;
-    }
-
-    public Date getRegistrationStart() {
-        return registrationStart;
-    }
-
-    public void setRegistrationStart(Date registrationStart) {
-        this.registrationStart = registrationStart;
-    }
-
-    public Date getRegistrationEnd() {
-        return registrationEnd;
-    }
-
-    public void setRegistrationEnd(Date registrationEnd) {
-        this.registrationEnd = registrationEnd;
-    }
-
-    public String getEventDescription() {
-        return eventDescription;
-    }
-
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Long getAttendees() {
-        return attendees;
-    }
-
-    public void setAttendees(Long attendees) {
-        this.attendees = attendees;
-    }
-
-    public Long getSignups() {
-        return signups;
-    }
-
-    public void setSignups(Long signups) {
-        this.signups = signups;
     }
 }
