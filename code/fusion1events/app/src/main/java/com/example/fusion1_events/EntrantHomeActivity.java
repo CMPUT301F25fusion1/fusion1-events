@@ -20,10 +20,22 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * EntrantHomeActivity is the main screen for users with the "entrant" role.
+ * File: EntrantHomeActivity.java
  *
- * It displays a list of events in a RecyclerView, allows navigation to
- * the user's events, and retrieves the current user's profile from Firestore.
+ * Role:
+ * - Acts as the home screen for users with the Entrant role.
+ * - Retrieves the current user’s profile using their device ID.
+ * - Displays a list of all available events from Firestore.
+ * - Provides navigation to:
+ *      - Home screen
+ *      - Entrant's events screen
+ *      - Entrant's profile screen
+ * - Initializes and binds an EventAdapter to show event cards for the entrant.
+ *
+ * Issues:
+ * - Assumes successful retrieval of the Firebase Installation ID.
+ * - Assumes device is online for Firestore operations.
+ * - No explicit error handling for missing profiles or failed Firestore queries.
  */
 public class EntrantHomeActivity extends AppCompatActivity {
 

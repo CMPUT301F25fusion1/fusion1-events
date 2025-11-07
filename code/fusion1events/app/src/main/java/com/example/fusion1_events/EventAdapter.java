@@ -19,10 +19,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 /**
- * Adapter for displaying a list of Event objects in a RecyclerView.
+ * File: EventAdapter.java
  *
- * Each item shows the event title, description, date, and an image.
- * Clicking an event opens its detail screen.
+ * Role:
+ * - Serves as the RecyclerView adapter for displaying event cards to an Entrant.
+ * - Binds event data (title, description, date, image) to UI components.
+ * - Handles navigation to the EventDetailActivity when an event card is clicked.
+ * - Provides the ViewHolder implementation for event card layouts.
+ *
+ * Issues:
+ * - Uses event title to query Firestore, which may cause issues if titles are not unique.
+ * - Assumes Firestore queries succeed.
+ * - No error handling for empty Firestore responses or failed queries.
+ *
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
     private List<Event> eventList;
@@ -40,7 +49,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.eventList = eventList;
         this.currentUser = currentUser;
     }
-
+    /**
+     * Inflates the event card layout and creates a new EventViewHolder.
+     *
+     * @param parent the parent view that will contain the new view
+     * @param viewType unused view type parameter
+     * @return a new EventViewHolder instance
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,7 +63,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 .inflate(R.layout.item_event, parent, false);
         return new EventViewHolder(view);
     }
-
+    /**
+     * Binds event data to the provided EventViewHolder.
+     * Sets the event title, description, date, and image.
+     * Handles click events to navigate to EventDetailActivity.
+     *
+     * @param holder the view holder to bind data to
+     * @param position the position of the event in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
@@ -74,6 +96,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     });
         });
     }
+    /**
+     * Returns the number of events in the list.
+     *
+     * @return the size of the event list
+     */
     @Override
     public int getItemCount() {
         return eventList.size();

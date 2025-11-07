@@ -9,16 +9,24 @@ public class EventsModel {
     Date registrationEnd;
     String eventDescription;
     Date date;
-    Long signups;
     Long attendees;
+    Long signups;
     ArrayList<String> waitingList; // ADDED: Store entrant IDs from waiting list
+    ArrayList<String> finalList;
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
 
-    // MODIFIED: Constructor now includes waitingList parameter
+    public ArrayList<String> getFinalList() {
+        return finalList;
+    }
+
+    public void setFinalList(ArrayList<String> finalList) {
+        this.finalList = finalList;
+    }
+
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
-                       ArrayList<String> waitingList, String imageUrl, String eventId) {
+                       ArrayList<String> waitingList, String imageUrl, String eventId, ArrayList<String> finalList) {
         this.eventTitle = eventTitle;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
@@ -26,39 +34,34 @@ public class EventsModel {
         this.date = date;
         this.attendees = attendees;
         this.signups = signups;
-        this.waitingList = waitingList != null ? waitingList : new ArrayList<>(); // ADDED: Initialize waitingList with empty list if null
+        this.waitingList = waitingList != null ? waitingList : new ArrayList<>();
         this.imageUrl = imageUrl;
         this.eventId = eventId;
+        this.finalList = finalList != null ? finalList : new ArrayList<>(); // ADDED: Initialize finalList with empty list if null
     }
 
-    // ADDED: Getter for waitingList
     public ArrayList<String> getWaitingList() {
         return waitingList;
     }
 
-    // ADDED: Setter for waitingList
     public void setWaitingList(ArrayList<String> waitingList) {
         this.waitingList = waitingList;
     }
 
-    // ADDED: Add entrant to waiting list
     public void addToWaitingList(String entrantId) {
         if (!waitingList.contains(entrantId)) {
             waitingList.add(entrantId);
         }
     }
 
-    // ADDED: Remove entrant from waiting list
     public void removeFromWaitingList(String entrantId) {
         waitingList.remove(entrantId);
     }
 
-    // ADDED: Check if entrant is in waiting list
     public boolean isInWaitingList(String entrantId) {
         return waitingList.contains(entrantId);
     }
 
-    // ADDED: Get waiting list size
     public int getWaitingListSize() {
         return waitingList.size();
     }
