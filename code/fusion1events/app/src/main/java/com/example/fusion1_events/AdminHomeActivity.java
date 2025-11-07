@@ -1,6 +1,7 @@
 package com.example.fusion1_events;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,6 +14,8 @@ import com.google.firebase.installations.FirebaseInstallations;
 public class AdminHomeActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
+
+    private Button profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,5 +41,13 @@ public class AdminHomeActivity extends AppCompatActivity {
             });
 
         });
+
+        profileButton = findViewById(R.id.buttonProfileAdminHome);
+        profileButton.setOnClickListener(v -> goProfileScreen());
+    }
+
+    private void goProfileScreen(){
+        startActivity(new android.content.Intent(this, ProfileViewActivity.class));
+        finish();
     }
 }
