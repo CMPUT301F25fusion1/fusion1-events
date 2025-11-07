@@ -75,14 +75,6 @@ public class Event implements Serializable {
      *
      * @return number of signups
      */
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
     public int getSignups() { return Signups; }
     /**
      * Sets the number of users currently signed up.
@@ -120,7 +112,6 @@ public class Event implements Serializable {
      *
      * @return description of the event
      */
-
     public String getDescription() { return description; }
     /**
      * Sets the event description.
