@@ -32,6 +32,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         void onEventClick(EventsModel event, int position);
         void onEditClick(EventsModel event, int position);
         void onDeleteClick(EventsModel event, int position);
+        void onSampleClick(EventsModel event, int position);
+
     }
 
     public EventsAdapter(ArrayList<EventsModel> events, OnEventClickListener listener) {
@@ -115,7 +117,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
                             listener.onDeleteClick(event, position);
                         }
                         return true;
+                    } else if (itemId == R.id.action_sample) {
+                        if (listener != null) {
+                            listener.onSampleClick(event, position);
+                        }
+                        return true;
                     }
+
                     return false;
                 });
 

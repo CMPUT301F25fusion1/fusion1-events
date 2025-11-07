@@ -42,11 +42,6 @@ public class AdminHomeActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.buttonProfileAdminHome);
         profileButton.setOnClickListener(v -> goProfileScreen());
 
-        Button browseImagesButton = findViewById(R.id.buttonBrowseImages);
-        browseImagesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminHomeActivity.this, AdminImageBrowserActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void goProfileScreen(){

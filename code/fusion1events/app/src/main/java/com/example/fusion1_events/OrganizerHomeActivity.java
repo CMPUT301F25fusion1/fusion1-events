@@ -3,6 +3,7 @@ package com.example.fusion1_events;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,6 +115,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 // Handle delete click
                 deleteEvent(event, position);
             }
+            @Override
+            public void onSampleClick(EventsModel event, int position) {
+                Intent intent = new Intent(OrganizerHomeActivity.this, SampleEntrantsActivity.class);
+                intent.putExtra("eventId", event.getEventId());
+                startActivity(intent);
+            }
+
         });
         recyclerView.setAdapter(eventsAdapter);
     }
@@ -295,6 +303,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     public void onReschedule(String requestId, ErrorInfo error) {
                         Log.w(TAG, "Cloudinary upload rescheduled: " + error.getDescription());
                     }
+
                 })
                 .dispatch();
         }

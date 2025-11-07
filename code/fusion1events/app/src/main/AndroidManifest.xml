@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Browse_Class" />
 
         <activity android:name=".EventDetailActivity" android:exported="false"/>
         <activity android:name=".YourEventsActivity" />
@@ -32,10 +31,7 @@
         <activity android:name=".OrganizerHomeActivity"/>
         <activity android:name=".AdminHomeActivity" />
         <activity android:name=".ProfileViewActivity"/>
-        <activity android:name=".AdminImageBrowserActivity"/>
-
-
-
+        <activity android:name=".SampleEntrantsActivity"/>
 
 
     </application>
