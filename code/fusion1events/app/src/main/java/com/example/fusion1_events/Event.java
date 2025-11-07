@@ -11,11 +11,13 @@ public class Event implements Serializable {
     private Timestamp registration_end;
     private Timestamp registration_start;
     private String title;
+    private String imageUrl;
 
     public Event(){}
 
+
     public Event(int signups, int attendees, Timestamp date, String description,
-                 Timestamp registration_start, Timestamp registration_end, String title) {
+                 Timestamp registration_start, Timestamp registration_end, String title, String imageUrl) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -23,9 +25,20 @@ public class Event implements Serializable {
         this.registration_start = registration_start;
         this.registration_end = registration_end;
         this.title = title;
+        this.imageUrl = imageUrl;
     }
 
+
+
     //getters and setters
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     public int getSignups() { return Signups; }
     public void setSignups(int signups) { this.Signups = signups; }
 
