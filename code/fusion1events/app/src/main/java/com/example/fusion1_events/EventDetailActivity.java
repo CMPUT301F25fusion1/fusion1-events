@@ -308,6 +308,9 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
+
+                    DrawHelper.runDraw(eventId, FirebaseFirestore.getInstance(), null);
+
                 });
     }
     private void cancelInvitation(){

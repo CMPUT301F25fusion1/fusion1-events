@@ -17,11 +17,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class CancelledEntrantsDialogFragment extends DialogFragment {
-    public static CancelledEntrantsDialogFragment newInstance(String eventId, ArrayList<String> cancelledList) {
+    public static CancelledEntrantsDialogFragment newInstance(String eventId, ArrayList<String> cancelled) {
         CancelledEntrantsDialogFragment fragment = new CancelledEntrantsDialogFragment();
         Bundle b = new Bundle();
         b.putString("eventId", eventId);
-        b.putStringArrayList("cancelledList", cancelledList);
+        b.putStringArrayList("cancelled", cancelled);
         fragment.setArguments(b);
         return fragment;
     }
@@ -34,14 +34,14 @@ public class CancelledEntrantsDialogFragment extends DialogFragment {
         RecyclerView recyclerView = view.findViewById(R.id.cancelledList);
         Button back = view.findViewById(R.id.btnBackCancelled);
 
-        ArrayList<String> cancelledList = getArguments().getStringArrayList("cancelledList");
+        ArrayList<String> cancelled = getArguments().getStringArrayList("cancelled");
         String eventId = getArguments().getString("eventId");
 
         UsersAdapter adapter = new UsersAdapter(
                 requireContext(),
-                cancelledList != null ? cancelledList : new ArrayList<>(),
+                cancelled != null ? cancelled : new ArrayList<>(),
                 eventId,
-                true
+                false
         );
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);

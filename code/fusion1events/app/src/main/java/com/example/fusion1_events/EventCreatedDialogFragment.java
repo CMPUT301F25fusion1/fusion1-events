@@ -126,12 +126,12 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         //TODO: add the ability to cancel users invites
         if (createdEvent.getInvitedList().isEmpty()){
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), true);
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), false);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Current Waiting List:");
         } else {
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList(), createdEvent.getEventId(), false);
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList(), createdEvent.getEventId(), true);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Invited Users:");

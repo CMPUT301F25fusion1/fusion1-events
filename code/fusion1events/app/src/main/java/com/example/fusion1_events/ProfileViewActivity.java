@@ -1,6 +1,5 @@
 package com.example.fusion1_events;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +12,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.example.fusion1_events.admin.AdminHomeActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;

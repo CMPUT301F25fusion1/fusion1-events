@@ -1,18 +1,18 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import com.google.firebase.Timestamp;
 
 /**
  * Model class representing an image uploaded for an event in the admin interface.
  */
-public class Image {
+public class Admin {
     private String id;
     private String imageUrl;
     private String eventTitle;
     private String organizer;
     private Timestamp registration_end;
 
-    public Image() {}
+    public Admin() {}
 
     // getters and setters
     /**

@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fusion1_events.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**

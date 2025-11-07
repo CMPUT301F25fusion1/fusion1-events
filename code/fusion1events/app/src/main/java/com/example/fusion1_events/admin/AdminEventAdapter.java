@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.Event;
+import com.example.fusion1_events.R;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -20,29 +23,17 @@ import java.util.Locale;
  * Handles displaying the title, description, registration end date, and provides a button to view event details.
  */
 public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.ViewHolder> {
-    /**
-     * Listener interface for handling actions on events.
-     */
-    public interface onEventActionListener {
-        /**
-         * Called when an admin wants to delete an event.
-         *
-         * @param event the event to delete
-         */
-        void onDeleteEvent(Event event);
-    }
+
+
     private List<Event> events;
-    private onEventActionListener listener;
 
     /**
      * Constructor for AdminEventAdapter.
      *
      * @param events   list of events to display
-     * @param listener listener for handling event actions
      */
-    public AdminEventAdapter(List<Event> events, onEventActionListener listener) {
+    public AdminEventAdapter(List<Event> events) {
         this.events = events;
-        this.listener = listener;
     }
 
     /**

@@ -185,13 +185,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                                         try {
                                                             Object waitingListObj = eventDoc.get("waitingList");
-                                                            Object invitedListObj = eventDoc.get("InvitedList");
+                                                            Object invitedListObj = eventDoc.get("invitedList");  //changed
                                                             Object keyWordsListObj = eventDoc.get("Keywords");
-                                                            Object cancelledListObj = eventDoc.get("cancelled");
+                                                            Object cancelledObj = eventDoc.get("cancelled");
                                                             ArrayList<String> keyWords = new ArrayList<>();
                                                             ArrayList<String> waitingList = new ArrayList<>();
                                                             ArrayList<String> invitedList = new ArrayList<>();
-                                                            ArrayList<String> cancelledList = new ArrayList<>();
+                                                            ArrayList<String> cancelled = new ArrayList<>();
 
                                                             //fill waitingList
                                                             if (waitingListObj instanceof List) {
@@ -247,19 +247,19 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No invited list found or empty");
                                                             }
 
-                                                            //fill cancelledList
-                                                            if (cancelledListObj instanceof List) {
-                                                                List<Object> cancelledListRefs = (List<Object>) cancelledListObj;
-                                                                Log.d(TAG, "Found " + cancelledListRefs.size() + " entrants in cancelled list");
+                                                            //fill cancelled
+                                                            if (cancelledObj instanceof List) {
+                                                                List<Object> cancelledRefs = (List<Object>) cancelledObj;
+                                                                Log.d(TAG, "Found " + cancelledRefs.size() + " entrants in cancelled list");
 
-                                                                for (Object refObj : cancelledListRefs) {
+                                                                for (Object refObj : cancelledRefs) {
                                                                     if (refObj instanceof DocumentReference) {
                                                                         DocumentReference entrantRef = (DocumentReference) refObj;
                                                                         String entrantId = entrantRef.getId();
-                                                                        cancelledList.add(entrantId);
+                                                                        cancelled.add(entrantId);
                                                                         Log.d(TAG, "Added entrant to cancelled list: " + entrantId);
                                                                     } else if (refObj instanceof String) {
-                                                                        cancelledList.add((String) refObj);
+                                                                        cancelled.add((String) refObj);
                                                                         Log.d(TAG, "Added entrant ID to cancelled list: " + refObj);
                                                                     }
                                                                 }
@@ -282,7 +282,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getId(),
                                                                     invitedList,
                                                                     eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
-                                                                    cancelledList
+                                                                    cancelled
 
 
 
@@ -487,6 +487,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("imageUrl", imageUrl);
         eventData.put("waitingList", new ArrayList<>());
         eventData.put("cancelled", new ArrayList<>());
+        eventData.put("invitedList", new ArrayList<>());
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
 
         db.collection("Events")

@@ -88,33 +88,77 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                         user.setText("Error loading user");
                     });
 
+            if (!enableCancel) {
+                cancelButton.setVisibility(View.GONE);
+                return;
+            } else {
+                cancelButton.setVisibility(View.VISIBLE);
+            }
+
             cancelButton.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos == RecyclerView.NO_POSITION) return;
 
-                String userToCancel = users.get(pos);
+                String userToCancelId = users.get(pos);
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference eventRef = db.collection("Events").document(eventId);
+                // This is the DocumentReference we want to store for this entrant
+                DocumentReference entrantRefToCancel =
+                        db.collection("Entrants").document(userToCancelId);
 
                 db.runTransaction(transaction -> {
-                    EventsModel event = transaction.get(eventRef).toObject(EventsModel.class);
-                    if (event == null) return null;
+                    // Get current snapshot
+                    com.google.firebase.firestore.DocumentSnapshot snapshot = transaction.get(eventRef);
 
-                    ArrayList<String> invited = event.getInvitedList();
-                    ArrayList<String> cancelled = event.getCancelled();
+                    // Raw lists from Firestore – may contain DocumentReferences or legacy Strings
+                    java.util.List<Object> invitedRaw =
+                            (java.util.List<Object>) snapshot.get("invitedList");
+                    java.util.List<Object> cancelledRaw =
+                            (java.util.List<Object>) snapshot.get("cancelled");
 
-                    if (invited == null) invited = new ArrayList<>();
-                    if (cancelled == null) cancelled = new ArrayList<>();
-
-                    invited.remove(userToCancel);
-
-                    if (!cancelled.contains(userToCancel)) {
-                        cancelled.add(userToCancel);
+                    // Normalize invited → List<DocumentReference>
+                    java.util.List<DocumentReference> invited = new java.util.ArrayList<>();
+                    if (invitedRaw != null) {
+                        for (Object o : invitedRaw) {
+                            if (o instanceof DocumentReference) {
+                                invited.add((DocumentReference) o);
+                            } else if (o instanceof String) {   // legacy: convert String ID to DocumentReference
+                                invited.add(db.collection("Entrants").document((String) o));
+                            }
+                        }
                     }
 
+                    // Normalize cancelled → List<DocumentReference>
+                    java.util.List<DocumentReference> cancelled = new java.util.ArrayList<>();
+                    if (cancelledRaw != null) {
+                        for (Object o : cancelledRaw) {
+                            if (o instanceof DocumentReference) {
+                                cancelled.add((DocumentReference) o);
+                            } else if (o instanceof String) {   // legacy: convert String ID to DocumentReference
+                                cancelled.add(db.collection("Entrants").document((String) o));
+                            }
+                        }
+                    }
+
+                    // Remove this entrant from invited (by ID to avoid instance mismatch)
+                    invited.removeIf(ref -> ref.getId().equals(userToCancelId));
+
+                    // Add to cancelled if not already there
+                    boolean alreadyCancelled = false;
+                    for (DocumentReference ref : cancelled) {
+                        if (ref.getId().equals(userToCancelId)) {
+                            alreadyCancelled = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyCancelled) {
+                        cancelled.add(entrantRefToCancel);
+                    }
+
+                    // Write updated lists back as DocumentReferences
                     transaction.update(eventRef, "invitedList", invited);
-                    transaction.update(eventRef, "entrantsCancelled", cancelled);
+                    transaction.update(eventRef, "cancelled", cancelled);
 
                     return null;
                 }).addOnSuccessListener(unused -> {

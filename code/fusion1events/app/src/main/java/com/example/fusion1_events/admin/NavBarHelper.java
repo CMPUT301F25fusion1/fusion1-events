@@ -1,9 +1,11 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.example.fusion1_events.R;
 
 /**
  * Helper class to set up the navigation bar in the admin interface.
