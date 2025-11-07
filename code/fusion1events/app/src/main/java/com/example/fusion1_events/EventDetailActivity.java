@@ -22,11 +22,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 /**
- * EventDetailActivity displays detailed information about a single event.
+ * File: EventDetailActivity.java
  *
- * Shows the event's title, description, date, signups, and image. Users
- * can join or leave the event's waiting list and navigate back to the home
- * screen or their events.
+ * Role:
+ * - Displays full details for a selected event: title, description, date, signups, and image.
+ * - Loads event data from Firestore based on the event ID passed through the intent.
+ * - Allows entrant users to join or leave the event's waiting list.
+ * - Provides navigation to the home screen, the user's events, or the user's profile.
+ * - Handles UI state changes (e.g., showing/hiding Join/Leave buttons).
+ *
+ * Issues:
+ * - Assumes device is online and Firestore requests succeed.
+ * - Assumes event titles, IDs, and waiting list references are valid.
+ * - No error handling for missing event documents or Firestore failures.
+ * - joinWaitingList() and leaveWaitingList() assume Firestore operations always return success.
+ *
  */
 public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
@@ -38,7 +48,12 @@ public class EventDetailActivity extends AppCompatActivity {
     private String eventId;
     private String deviceId;
     private Event currentEvent;
-
+    /**
+     * Initializes the activity, loads event details from Firestore, sets up UI components,
+     * and configures navigation and waiting list button logic.
+     *
+     * @param savedInstanceState the previously saved state of the activity, or null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +130,9 @@ public class EventDetailActivity extends AppCompatActivity {
         });
     }
     /**
-     * Adds the current user to the event's waiting list.
+     * Adds the current entrant to the event's waiting list in Firestore.
+     * Updates the signups count locally and remotely, adjusts button visibility,
+     * and provides user feedback via a Toast.
      */
     private void joinWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
@@ -134,7 +151,9 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
     }
     /**
-     * Removes the current user from the event's waiting list.
+     * Removes the current entrant from the event's waiting list in Firestore.
+     * Updates the signups count locally and remotely, adjusts button visibility,
+     * and provides user feedback via a Toast.
      */
     private void leaveWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
