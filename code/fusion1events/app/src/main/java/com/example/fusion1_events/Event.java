@@ -47,6 +47,7 @@ public class Event implements Serializable {
         this.imageUrl = imageUrl;
         this.registration_start = registration_start;
         this.registration_end = registration_end;
+        this.title = title;
         this.date = date;
         this.attendees = attendees;
         this.Signups = signups;

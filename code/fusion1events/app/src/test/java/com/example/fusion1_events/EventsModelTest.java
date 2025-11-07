@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class EventsModelTest {
 
@@ -12,8 +13,9 @@ public class EventsModelTest {
 
     @Before
     public void setup() {
-        event = new EventsModel("Concert", null, null, "Music Event", null,
-                100L, 80L, new ArrayList<>(), null, "event123");
+        Date now = new Date();
+        event = new EventsModel("Concert", now, now, "Music Event", now,
+                100L, 80L, new ArrayList<>(), null, "event123", new ArrayList<>());
     }
 
     @Test
