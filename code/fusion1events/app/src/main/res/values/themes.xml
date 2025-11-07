@@ -6,4 +6,22 @@
     </style>
 
     <style name="Theme.Fusion1events" parent="Base.Theme.Fusion1events" />
+
+    <style name="DashboardButton">
+        <item name="android:textColor">#212121</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:paddingVertical">35dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+    </style>
+
+    <style name="NavigationBarButton">
+        <item name="android:textColor">#212121</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">none</item>
+        <item name="android:background">@drawable/nav_bar_drawable</item>
+        <item name="backgroundTint">@null</item>
+    </style>
 </resources>
