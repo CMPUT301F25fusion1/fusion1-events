@@ -49,7 +49,7 @@ public class AddEventFragment extends DialogFragment {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
-    // Image picker launcher (kept for UI preview only)
+    // Image picker launcher
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     public static AddEventFragment newInstance(EventsModel eventsModel) {
@@ -63,7 +63,7 @@ public class AddEventFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize image picker (kept for UI preview only)
+        // Initialize image picker
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -123,7 +123,6 @@ public class AddEventFragment extends DialogFragment {
             }
         });
 
-        // Set up image picker (kept for UI preview only)
         addImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
@@ -159,10 +158,10 @@ public class AddEventFragment extends DialogFragment {
                             0L ,// signups starts at 0
                             new ArrayList<>(), // ADDED: Empty waiting list for new events
                             null, // imageUrl will be set after upload
+                            null,
                             null
                     );
 
-                    // Pass event to listener (no image URI)
                     listener.addEvent(event, selectedImageUri);
                 })
                 .setNegativeButton("Cancel", null)
@@ -196,9 +195,6 @@ public class AddEventFragment extends DialogFragment {
         });
     }
 
-    /**
-     * Interface for date selection callback
-     */
     private interface DateSelectedListener {
         void onDateSelected(Date date);
     }

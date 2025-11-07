@@ -18,10 +18,19 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * YourEventsActivity displays the list of events the current user has joined or is on the waiting list for.
+ * File: YourEventsActivity.java
  *
- * The activity retrieves the user's events from Firestore, shows them in a RecyclerView using EventAdapter,
- * and allows navigation back to the home screen.
+ * Role:
+ * - Display the list of events the current user has joined or is on the waiting list for.
+ * - Retrieve relevant events from Firestore using the user's device ID as the identifier.
+ * - Populate a RecyclerView using EventAdapter to show these events.
+ * - Provide navigation back to the Entrant home screen.
+ *
+ * Issues:
+ * - Assumes Firestore read succeeds (no offline handling or error UI).
+ * - Reloads the activity when "Your Events" is clicked, potentially stacking activities.
+ * - Uses device installation ID as the unique user identifier, which may change if the app is reinstalled.
+ *
  */
 public class YourEventsActivity extends AppCompatActivity {
     private RecyclerView yourEventsRecyclerView;
