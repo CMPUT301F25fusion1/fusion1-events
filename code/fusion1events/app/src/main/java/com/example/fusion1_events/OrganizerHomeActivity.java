@@ -35,7 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 
-public class OrganizerHomeActivity extends AppCompatActivity implements AddEventFragment.AddEventDialogListener {
+public class OrganizerHomeActivity extends AppCompatActivity implements AddEventFragment.AddEventDialogListener{
+    /**
+ * Main activity for organizers to manage their events.
+ * Displays a list of events created by the organizer and provides functionality
+ * to add, view, edit, and delete events.
+ */
+
     private static final String TAG = "OrganizerHomeActivity";
     private FirebaseFirestore db;
     private FloatingActionButton addEventButton;
@@ -46,6 +52,12 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
     private String deviceId;
     private Button profileButton;
 
+    /**
+     * Called when the activity is first created.
+     * Initializes UI components, Firebase, Cloudinary, and loads events.
+     *
+     * @param savedInstanceState Bundle containing the activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +66,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
         profileButton = findViewById(R.id.buttonProfileOrganizerHome);
         profileButton.setOnClickListener(v -> goProfileScreen());
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -70,11 +80,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         db = FirebaseFirestore.getInstance();
         organizerRef = db.collection("Organizers").document(deviceId);
 
-
-
         addEventButton = findViewById(R.id.fabAddEvent);
         recyclerView = findViewById(R.id.recyclerEvents);
-
 
         setupRecyclerView();
 
@@ -86,11 +93,17 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         loadEvents();
     }
 
-    private void goProfileScreen(){
+    /**
+     * Navigates to the profile view screen.
+     */
+    private void goProfileScreen() {
         startActivity(new android.content.Intent(this, ProfileViewActivity.class));
-
     }
 
+    /**
+     * Configures the RecyclerView with a LinearLayoutManager and EventsAdapter.
+     * Sets up click listeners for viewing, editing, and deleting events.
+     */
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventsAdapter = new EventsAdapter(eventsModels, new EventsAdapter.OnEventClickListener() {
@@ -111,13 +124,17 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
             @Override
             public void onDeleteClick(EventsModel event, int position) {
-                // Handle delete click
                 deleteEvent(event, position);
             }
         });
         recyclerView.setAdapter(eventsAdapter);
     }
 
+    /**
+     * Loads all events associated with the current organizer from Firestore.
+     * Retrieves event details including waiting lists and updates the RecyclerView.
+     * Displays appropriate messages if no events are found or if errors occur.
+     */
     private void loadEvents() {
         Log.d(TAG, "Loading events for organizer: " + organizerRef.getPath());
 
@@ -129,7 +146,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                         Log.d(TAG, "Organizer document exists");
                         Log.d(TAG, "Document data: " + documentSnapshot.getData());
 
-
                         Object eventsObj = documentSnapshot.get("events");
                         Log.d(TAG, "Events object type: " + (eventsObj != null ? eventsObj.getClass().getName() : "null"));
                         Log.d(TAG, "Events object: " + eventsObj);
@@ -140,7 +156,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                             if (!eventsList.isEmpty()) {
                                 eventsModels.clear();
                                 Log.d(TAG, "Found " + eventsList.size() + " event references");
-
 
                                 for (Object eventObj : eventsList) {
                                     if (eventObj instanceof DocumentReference) {
@@ -162,16 +177,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 List<Object> waitingListRefs = (List<Object>) waitingListObj;
                                                                 Log.d(TAG, "Found " + waitingListRefs.size() + " entrants in waiting list");
 
-
                                                                 for (Object refObj : waitingListRefs) {
                                                                     if (refObj instanceof DocumentReference) {
                                                                         DocumentReference entrantRef = (DocumentReference) refObj;
-
                                                                         String entrantId = entrantRef.getId();
                                                                         waitingList.add(entrantId);
                                                                         Log.d(TAG, "Added entrant to waiting list: " + entrantId);
                                                                     } else if (refObj instanceof String) {
-
                                                                         waitingList.add((String) refObj);
                                                                         Log.d(TAG, "Added entrant ID to waiting list: " + refObj);
                                                                     }
@@ -179,7 +191,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                             } else {
                                                                 Log.d(TAG, "No waiting list found or empty");
                                                             }
-
 
                                                             EventsModel event = new EventsModel(
                                                                     eventDoc.getString("title"),
@@ -189,7 +200,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getDate("date"),
                                                                     eventDoc.getLong("attendees"),
                                                                     eventDoc.getLong("Signups"),
-                                                                    waitingList, // ADDED: Pass waiting list
+                                                                    waitingList,
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
                                                                     finaList
@@ -239,19 +250,30 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 });
     }
 
+    /**
+     * Callback method for adding a new event.
+     * If an image is provided, uploads it to Cloudinary before creating the event.
+     * Otherwise, creates the event without an image.
+     *
+     * @param eventsModel The event model containing event details
+     * @param imageUri The URI of the event image, or null if no image was selected
+     */
     @Override
     public void addEvent(EventsModel eventsModel, Uri imageUri) {
-        // Check if user selected an image
         if (imageUri != null) {
-            // Upload image to Cloudinary first, then create event with URL
             uploadImageToCloudinaryAndCreateEvent(eventsModel, imageUri);
         } else {
-            // No image selected, create event without image
             createEventInFirestore(eventsModel, null);
         }
     }
 
-    // ADDED: Upload to Cloudinary
+    /**
+     * Uploads an event image to Cloudinary and creates the event upon successful upload.
+     * Displays progress and error messages during the upload process.
+     *
+     * @param eventsModel The event model containing event details
+     * @param imageUri The URI of the image to upload
+     */
     private void uploadImageToCloudinaryAndCreateEvent(EventsModel eventsModel, Uri imageUri) {
         Log.d(TAG, "Uploading image to Cloudinary: " + imageUri);
 
@@ -297,11 +319,17 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     }
                 })
                 .dispatch();
-        }
+    }
 
-
+    /**
+     * Creates a new event in Firestore and links it to the organizer.
+     * Initializes the event with an empty waiting list and adds it to the local list.
+     * Displays a confirmation dialog upon successful creation.
+     *
+     * @param eventsModel The event model containing event details
+     * @param imageUrl The Cloudinary URL of the event image, or null if no image
+     */
     private void createEventInFirestore(EventsModel eventsModel, String imageUrl) {
-        // Create event data map matching database field names
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("title", eventsModel.getEventTitle());
         eventData.put("registration_start", eventsModel.getRegistrationStart());
@@ -310,8 +338,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("date", eventsModel.getDate());
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("Signups", eventsModel.getSignups());
-        eventData.put("imageUrl", imageUrl); // Cloudinary URL
-        eventData.put("waitingList", new ArrayList<>()); // ADDED: Initialize with empty waiting list
+        eventData.put("imageUrl", imageUrl);
+        eventData.put("waitingList", new ArrayList<>());
 
         db.collection("Events")
                 .add(eventData)
@@ -350,7 +378,14 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 });
     }
 
-    // MODIFIED: Delete event and handle waiting list cleanup if needed
+    /**
+     * Displays a confirmation dialog and deletes an event from Firestore.
+     * Removes the event from the local list and logs information about waiting list cleanup.
+     * The event's image remains in Cloudinary after deletion.
+     *
+     * @param event The event to delete
+     * @param position The position of the event in the RecyclerView
+     */
     private void deleteEvent(EventsModel event, int position) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Delete Event")
@@ -360,25 +395,21 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                     String imageUrl = event.getImageUrl();
 
                     if (eventId != null) {
-                        // Delete from Firestore
                         db.collection("Events").document(eventId)
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d(TAG, "Event deleted from Firestore");
 
-                                    // ADDED: Log waiting list cleanup
                                     if (event.getWaitingListSize() > 0) {
                                         Log.d(TAG, "Event had " + event.getWaitingListSize() +
                                                 " entrants in waiting list. Consider notifying them.");
                                         // TODO: Implement notification to entrants
                                     }
 
-                                    //Cloudinary images remain (see previous implementation notes)
                                     if (imageUrl != null && !imageUrl.isEmpty()) {
                                         Log.d(TAG, "Image remains in Cloudinary: " + imageUrl);
                                     }
 
-                                    // Remove from local list
                                     eventsModels.remove(position);
                                     eventsAdapter.notifyItemRemoved(position);
                                     Toast.makeText(OrganizerHomeActivity.this,
@@ -402,6 +433,6 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 .setNegativeButton("Cancel", null)
                 .show();
 
-        //TODO: add editing events functions
+        // TODO: add editing events functions
     }
 }
