@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9F9F9"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Grey rectangular Home button -->
+    <Button
+        android:id="@+id/buttonHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#B0B0B0"
+        android:text="Home"
+        android:textColor="@android:color/white"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Entrants"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/sampleNumberInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter sample size"
+        android:inputType="number"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"/>
+
+    <Button
+        android:id="@+id/sampleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Draw Entrants"
+        android:backgroundTint="#673AB7"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"/>
+</LinearLayout>

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fusion1_events"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +14,7 @@
         android:theme="@style/Theme.Fusion1events">
         <activity
             android:name=".LoadAppActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,14 +31,16 @@
         <activity android:name=".AdminHomeActivity" />
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".GuidelinesActivity" />
-      
+
         <activity android:name=".AdminBrowseEventsActivity" />
         <activity android:name=".AdminBrowseProfilesActivity" />
         <activity android:name=".AdminBrowseImagesActivity" />
         <activity android:name=".AdminEventDetailsActivity" />
         <activity android:name=".AdminProfileDetailsActivity"/>
+        <activity android:name=".ProfileViewActivity"/>
+        <activity android:name=".SampleEntrantsActivity"/>
 
-  
+
 
     </application>
 
