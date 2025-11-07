@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.fusion1_events"
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
@@ -13,7 +14,6 @@
         android:theme="@style/Theme.Fusion1events">
         <activity
             android:name=".LoadAppActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,9 +28,12 @@
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
         <activity android:name=".AdminHomeActivity" />
-        <activity android:name=".ProfileViewActivity"/>
+        <activity android:name=".ProfileViewActivity" />
+        <activity android:name=".GuidelinesActivity" />
+
 
 
     </application>
+
 
 </manifest>

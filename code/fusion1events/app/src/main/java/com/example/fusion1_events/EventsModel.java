@@ -11,7 +11,7 @@ public class EventsModel {
     Date date;
     Long attendees;
     Long signups;
-    ArrayList<String> waitingList;
+    ArrayList<String> waitingList; // ADDED: Store entrant IDs from waiting list
     ArrayList<String> finalList;
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
@@ -34,7 +34,7 @@ public class EventsModel {
         this.date = date;
         this.attendees = attendees;
         this.signups = signups;
-        this.waitingList = waitingList != null ? waitingList : new ArrayList<>(); 
+        this.waitingList = waitingList != null ? waitingList : new ArrayList<>();
         this.imageUrl = imageUrl;
         this.eventId = eventId;
         this.finalList = finalList != null ? finalList : new ArrayList<>(); // ADDED: Initialize finalList with empty list if null

@@ -2,6 +2,7 @@ package com.example.fusion1_events;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
