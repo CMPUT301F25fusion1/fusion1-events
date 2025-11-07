@@ -35,4 +35,17 @@
         android:text="@string/Profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <Button
+        android:id="@+id/buttonBrowseImages"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Browse Images"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonProfileAdminHome"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
