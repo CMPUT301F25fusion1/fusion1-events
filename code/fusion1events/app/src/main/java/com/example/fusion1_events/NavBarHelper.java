@@ -5,7 +5,17 @@ import android.content.Intent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+/**
+ * Helper class to set up the navigation bar in the admin interface.
+ */
 public class NavBarHelper {
+    /**
+     * Sets up the navigation bar buttons for an activity.
+     * Each button navigates to the corresponding admin page unless the user is already on that page.
+     *
+     * @param activity the current activity where the nav bar is displayed
+     * @param currentPage the class of the current page to prevent re-navigation
+     */
     public static void setupNavBar(Activity activity, Class<?> currentPage) {
         LinearLayout navBar = activity.findViewById(R.id.NavBar);
 
@@ -34,5 +44,7 @@ public class NavBarHelper {
                 activity.startActivity(new Intent(activity, AdminBrowseImagesActivity.class));
             }
         });
+
+        // TODO: notifications
     }
 }

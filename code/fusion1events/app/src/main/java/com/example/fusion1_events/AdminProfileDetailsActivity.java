@@ -9,6 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Activity that displays the details of an admin profile.
+ * <p>
+ * Loads profile information from Firestore and shows name, email, role, and phone number.
+ */
 public class AdminProfileDetailsActivity extends AppCompatActivity {
     private TextView tvName, tvEmail, tvRole, tvPhone;
     private Button buttonBack;
@@ -31,6 +36,11 @@ public class AdminProfileDetailsActivity extends AppCompatActivity {
         if (profileId != null) loadProfile(profileId);
     }
 
+    /**
+     * Loads the admin profile from Firestore by ID and displays the information.
+     *
+     * @param id the Firestore document ID of the profile
+     */
     private void loadProfile(String id) {
         db.collection("Profile").document(id)
                 .get()

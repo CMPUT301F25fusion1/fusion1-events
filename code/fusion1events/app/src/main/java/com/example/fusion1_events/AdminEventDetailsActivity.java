@@ -15,6 +15,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * Activity that displays detailed information about a single event to an admin.
+ * <p>
+ * Shows the event image, title, description, registration start and end dates,
+ * and the number of attendees. Admins can also delete the event from this screen.
+ */
 public class AdminEventDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -40,6 +46,7 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
 
         buttonBack.setOnClickListener(v -> finish());
 
+        // Get event ID passed via Intent
         eventId = getIntent().getStringExtra("eventId");
         if (eventId == null || eventId.isEmpty()) {
             Log.e("Firestore", "Missing event ID");
@@ -49,9 +56,13 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
 
         loadEventDetails();
 
+        // Delete button
         buttonDelete.setOnClickListener(v -> onDeleteEvent());
     }
 
+    /**
+     * Loads event details from Firestore based on eventId.
+     */
     private void loadEventDetails() {
         db.collection("Events").document(eventId)
                 .get()
@@ -69,6 +80,11 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Displays event details in the UI.
+     *
+     * @param doc the Firestore document containing the event data
+     */
     private void displayEvent(DocumentSnapshot doc) {
         String title = doc.getString("title");
         String desc = doc.getString("description");
@@ -88,6 +104,9 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
         // TODO: image
     }
 
+    /**
+     * Deletes the current event from Firestore and finishes the activity.
+     */
     private void onDeleteEvent() {
         db.collection("Events").document(eventId)
                 .delete()

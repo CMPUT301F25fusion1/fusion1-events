@@ -19,14 +19,6 @@ public class EventsModel {
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
 
-    public ArrayList<String> getFinalList() {
-        return finalList;
-    }
-
-    public void setFinalList(ArrayList<String> finalList) {
-        this.finalList = finalList;
-    }
-
     /**
      * Constructor to create an EventsModel with all fields.
      *
