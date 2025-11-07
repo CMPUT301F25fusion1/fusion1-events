@@ -1,53 +1,32 @@
 package com.example.fusion1_events;
-
+// change to admin_home
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.installations.FirebaseInstallations;
-
-
 public class AdminHomeActivity extends AppCompatActivity {
-
-    private CollectionReference profileRef;
-
-    private Button profileButton;
+    Button buttonBrowseEvents, buttonBrowseImages, buttonViewNotifications, buttonBrowseProfiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_home);
 
+        buttonBrowseEvents = findViewById(R.id.buttonBrowseEvents);
+        buttonBrowseImages = findViewById(R.id.buttonBrowseImages);
+        buttonViewNotifications = findViewById(R.id.buttonViewNotifications);
+        buttonBrowseProfiles = findViewById(R.id.buttonBrowseProfiles);
 
-        profileRef = DatabaseReferences.getProfileDatabase();
+        buttonBrowseEvents.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminBrowseEventsActivity.class)));
 
-        FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
+        buttonBrowseProfiles.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminBrowseProfilesActivity.class)));
 
-            profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
+        buttonBrowseImages.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
 
-                if (profile.exists()) {
-                    String name = profile.getString("name");
-
-                    TextView welcomeMessage = findViewById(R.id.welcomeText);
-
-                    welcomeMessage.setText("Welcome "+ name);
-
-                }
-            });
-
-        });
-
-        profileButton = findViewById(R.id.buttonProfileAdminHome);
-        profileButton.setOnClickListener(v -> goProfileScreen());
-    }
-
-    private void goProfileScreen(){
-        startActivity(new android.content.Intent(this, ProfileViewActivity.class));
-        finish();
     }
 }

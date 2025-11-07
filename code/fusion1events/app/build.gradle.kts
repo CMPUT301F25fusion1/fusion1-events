@@ -59,4 +59,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     testImplementation("com.google.truth:truth:1.4.2")
+
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
 }
