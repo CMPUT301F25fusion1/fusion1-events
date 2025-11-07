@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -88,7 +89,12 @@ public class EventDetailActivity extends AppCompatActivity {
                         tvDetailDate.setText(sdf.format(date));
 
                         tvDetailSignups.setText(String.valueOf(currentEvent.getSignups()));
-                        ivDetailImage.setImageResource(R.drawable.ic_launcher_background);
+                        if (currentEvent.getImageUrl() != null ) {
+                            Glide.with(this).load(currentEvent.getImageUrl()).into(ivDetailImage);
+                        } else {
+                            ivDetailImage.setImageResource(R.drawable.logo_loading);
+                        }
+
 
                         TextView tvHome = findViewById(R.id.tvHome);
                         TextView tvYourEvents = findViewById(R.id.tvYourEvents);

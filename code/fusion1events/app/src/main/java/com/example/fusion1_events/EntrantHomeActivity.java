@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -76,6 +78,8 @@ public class EntrantHomeActivity extends AppCompatActivity {
                     TextView tvHome = findViewById(R.id.tvHome);
                     TextView tvYourEvents = findViewById(R.id.tvYourEvents);
                     TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+                    ImageView tvDetailImage = findViewById(R.id.ivDetailImage);
+
 
                     tvYourProfile.setOnClickListener(v -> {
                         Intent intent = new Intent(EntrantHomeActivity.this, ProfileViewActivity.class);

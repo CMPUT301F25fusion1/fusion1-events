@@ -7,6 +7,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.installations.FirebaseInstallations;
 
 /*
@@ -41,39 +42,50 @@ public class LoadAppActivity extends AppCompatActivity {
 
                 profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
 
+
                     if (profile.exists()) {
-                        String role = profile.getString("role");
-                        String device_id = profile.getString("device_id");
-
-                        if (role.equals("ENTRANT")) {
-                            Intent intent = new Intent(this, EntrantHomeActivity.class);
-                            intent.putExtra("device_id", device_id);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        if (role.equals("ORGANIZER")) {
-                            Intent intent = new Intent(this, OrganizerHomeActivity.class);
-                            intent.putExtra("device_id", device_id);
-                            startActivity(intent);
-                            finish();
-                        }
-
-                        if (role.equals("ADMIN")) {
-                            Intent intent = new Intent(this, AdminHomeActivity.class);
-                            intent.putExtra("device_id", device_id);
-                            startActivity(intent);
-                            finish();
-                        }
+                        profileExists(profile);
 
                     } else {
-                        startActivity(new android.content.Intent(this, SignUpActivity.class));
-                        finish();
+                        profileDoesNotExist();
                     }
                 });
 
 
             });
         }, 2000);
+    }
+
+    public void profileExists(DocumentSnapshot profile){
+
+            String role = profile.getString("role");
+            String device_id = profile.getString("device_id");
+
+            if (role.equals("ENTRANT")) {
+                Intent intent = new Intent(this, EntrantHomeActivity.class);
+                intent.putExtra("device_id", device_id);
+                startActivity(intent);
+                finish();
+            }
+
+            if (role.equals("ORGANIZER")) {
+                Intent intent = new Intent(this, OrganizerHomeActivity.class);
+                intent.putExtra("device_id", device_id);
+                startActivity(intent);
+                finish();
+            }
+
+            if (role.equals("ADMIN")) {
+                Intent intent = new Intent(this, AdminHomeActivity.class);
+                intent.putExtra("device_id", device_id);
+                startActivity(intent);
+                finish();
+            }
+
+    }
+
+    public void profileDoesNotExist(){
+        startActivity(new android.content.Intent(this, SignUpActivity.class));
+        finish();
     }
 }
