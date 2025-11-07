@@ -171,4 +171,12 @@ public class Event implements Serializable {
     public void setWaitingList(ArrayList<DocumentReference> waitingList) {
         this.waitingList = waitingList;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
 }
