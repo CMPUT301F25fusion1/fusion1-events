@@ -6,7 +6,15 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+/**
+ * Home screen activity for admins.
+ * <p>
+ * Provides buttons to navigate to different admin management screens:
+ * events, images, profiles, and notifications.
+ */
 public class AdminHomeActivity extends AppCompatActivity {
+    // Buttons for navigating to different admin screens
     Button buttonBrowseEvents, buttonBrowseImages, buttonViewNotifications, buttonBrowseProfiles;
 
     @Override
@@ -19,6 +27,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         buttonViewNotifications = findViewById(R.id.buttonViewNotifications);
         buttonBrowseProfiles = findViewById(R.id.buttonBrowseProfiles);
 
+        // Set click listeners to navigate to respective activities
         buttonBrowseEvents.setOnClickListener(v ->
                 startActivity(new Intent(this, AdminBrowseEventsActivity.class)));
 
@@ -28,5 +37,6 @@ public class AdminHomeActivity extends AppCompatActivity {
         buttonBrowseImages.setOnClickListener(v ->
                 startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
 
+        // TODO: implement notification button
     }
 }
