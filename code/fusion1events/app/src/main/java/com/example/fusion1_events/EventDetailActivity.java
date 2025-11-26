@@ -1,8 +1,11 @@
 package com.example.fusion1_events;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -122,7 +125,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
                         );
                         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
-                        if (currentEvent.getWaitingList().contains(entrantRef)) {
+                        if (currentEvent.getWaitingList().contains(entrantRef)) {//TODO: Check if waitlistsize is not null and signups isnt bigger than waitlistsize in or statement
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.VISIBLE);
                         } else {
@@ -142,6 +145,23 @@ public class EventDetailActivity extends AppCompatActivity {
      */
     private void joinWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
+
+        eventRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Long maxWaitingListSize = documentSnapshot.getLong("maxWaitingListSize");
+                Long signups = documentSnapshot.getLong("Signups");
+
+                if (maxWaitingListSize == null) maxWaitingListSize = 0L;
+                if (signups == null) signups = 0L;
+
+                if (maxWaitingListSize < signups && maxWaitingListSize != 0) {
+                    Toast.makeText(this, "Waiting list is currently full!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error fetching event", e);
+            Toast.makeText(this, "Failed to check waiting list status", Toast.LENGTH_SHORT).show();
+        });
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
         eventRef.update("waitingList", FieldValue.arrayUnion(entrantRef))
                 .addOnSuccessListener(aVoid -> {
