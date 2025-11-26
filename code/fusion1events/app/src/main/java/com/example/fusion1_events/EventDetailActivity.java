@@ -1,8 +1,11 @@
 package com.example.fusion1_events;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +22,7 @@ import com.google.firebase.installations.FirebaseInstallations;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +46,9 @@ import java.util.Locale;
 public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
-            tvDetailSignups;
-    private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList;
+            tvDetailSignups, tvCancelledMessage;
+    private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList,
+            btnAcceptInvite, btnDeclineInvite, btnCancelInvite;
     private Profile currentUser;
     private FirebaseFirestore db;
     private String eventId;
@@ -69,9 +74,13 @@ public class EventDetailActivity extends AppCompatActivity {
         tvDetailDate = findViewById(R.id.tvDetailDate);
         tvDetailDescription = findViewById(R.id.tvDetailDescription);
         tvDetailSignups = findViewById(R.id.tvDetailSignups);
+        tvCancelledMessage = findViewById(R.id.tvCancelledMessage);
         btnScanQR = findViewById(R.id.btnScanQR);
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
+        btnAcceptInvite = findViewById(R.id.btnAcceptInvite);
+        btnDeclineInvite = findViewById(R.id.btnDeclineInvite);
+        btnCancelInvite = findViewById(R.id.btnCancelInvite);
 
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(id -> {
             deviceId = id;
@@ -122,12 +131,60 @@ public class EventDetailActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
                         );
                         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
-                        if (currentEvent.getWaitingList().contains(entrantRef)) {
+                        if (currentEvent.getWaitingList().contains(entrantRef)) {//TODO: Check if waitlistsize is not null and signups isnt bigger than waitlistsize in or statement
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.VISIBLE);
                         } else {
                             btnJoinWaitingList.setVisibility(View.VISIBLE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
+                        }
+
+                        // new
+                        boolean isConfirmed = currentEvent.getConfirmed() != null &&
+                                currentEvent.getConfirmed().contains(entrantRef);
+
+                        boolean isInFinalList = currentEvent.getFinaList() != null &&
+                                currentEvent.getFinaList().contains(entrantRef);
+
+                        boolean isCancelled = currentEvent.getCancelled() != null &&
+                                currentEvent.getCancelled().contains(entrantRef);
+
+                        if (isConfirmed) {
+                            btnScanQR.setVisibility(View.GONE);
+                            btnJoinWaitingList.setVisibility(View.GONE);
+                            btnLeaveWaitingList.setVisibility(View.GONE);
+                            btnAcceptInvite.setVisibility(View.GONE);
+                            btnDeclineInvite.setVisibility(View.GONE);
+                            btnCancelInvite.setVisibility(View.VISIBLE);
+
+                            btnCancelInvite.setOnClickListener(v -> cancelInvitation());
+                        }
+
+                        else if (isInFinalList) {
+                            btnScanQR.setVisibility(View.GONE);
+                            btnJoinWaitingList.setVisibility(View.GONE);
+                            btnLeaveWaitingList.setVisibility(View.GONE);
+                            btnAcceptInvite.setVisibility(View.VISIBLE);
+                            btnDeclineInvite.setVisibility(View.VISIBLE);
+
+                            btnAcceptInvite.setOnClickListener(v -> {
+                                    acceptInvitation();
+                                    btnAcceptInvite.setVisibility(View.GONE);
+                                    btnDeclineInvite.setVisibility(View.GONE);
+                                    btnCancelInvite.setVisibility(View.VISIBLE);
+
+                                    btnCancelInvite.setOnClickListener(v2 -> cancelInvitation());
+                            });
+
+                            btnDeclineInvite.setOnClickListener(v -> declineInvitation());
+                        }
+                        else if (isCancelled) {
+                            btnScanQR.setVisibility(View.GONE);
+                            btnJoinWaitingList.setVisibility(View.GONE);
+                            btnLeaveWaitingList.setVisibility(View.GONE);
+                            btnAcceptInvite.setVisibility(View.GONE);
+                            btnDeclineInvite.setVisibility(View.GONE);
+                            tvCancelledMessage.setVisibility(View.VISIBLE);
                         }
 
                         btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
@@ -142,6 +199,23 @@ public class EventDetailActivity extends AppCompatActivity {
      */
     private void joinWaitingList() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
+
+        eventRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Long maxWaitingListSize = documentSnapshot.getLong("maxWaitingListSize");
+                Long signups = documentSnapshot.getLong("Signups");
+
+                if (maxWaitingListSize == null) maxWaitingListSize = 0L;
+                if (signups == null) signups = 0L;
+
+                if (maxWaitingListSize < signups && maxWaitingListSize != 0) {
+                    Toast.makeText(this, "Waiting list is currently full!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error fetching event", e);
+            Toast.makeText(this, "Failed to check waiting list status", Toast.LENGTH_SHORT).show();
+        });
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
         eventRef.update("waitingList", FieldValue.arrayUnion(entrantRef))
                 .addOnSuccessListener(aVoid -> {
@@ -178,4 +252,49 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
         }
 
+    //new stuff
+    private void acceptInvitation() {
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+
+        eventRef.update("confirmed", FieldValue.arrayUnion(entrantRef))
+                .addOnSuccessListener(aVoid -> {
+                Toast.makeText(this, "Invitation accepted!", Toast.LENGTH_SHORT).show();
+
+                    if (currentEvent.getConfirmed() == null) {
+                        currentEvent.setConfirmed(new ArrayList<>());
+                    }
+                    currentEvent.getConfirmed().add(entrantRef);
+
+                    btnAcceptInvite.setVisibility(View.GONE);
+                    btnDeclineInvite.setVisibility(View.GONE);
+                    btnCancelInvite.setVisibility(View.VISIBLE);
+        });
+    }
+    private void declineInvitation() {
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+
+        eventRef.update("finaList", FieldValue.arrayRemove(entrantRef))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "You declined the invitation.", Toast.LENGTH_SHORT).show();
+
+                    btnAcceptInvite.setVisibility(View.GONE);
+                    btnDeclineInvite.setVisibility(View.GONE);
+                });
+    }
+    private void cancelInvitation(){
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+
+        eventRef.update("confirmed", FieldValue.arrayRemove(entrantRef))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Invitation canceled!", Toast.LENGTH_SHORT).show();
+
+                    eventRef.update("finaList", FieldValue.arrayRemove(entrantRef));
+                    eventRef.update("cancelled", FieldValue.arrayUnion(entrantRef));
+                    btnCancelInvite.setVisibility(View.GONE);
+                    tvCancelledMessage.setVisibility(View.VISIBLE);
+                });
+    }
 }

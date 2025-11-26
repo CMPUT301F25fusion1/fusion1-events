@@ -2,9 +2,7 @@ package com.example.fusion1_events;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,22 +16,8 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-/**
- * File: YourEventsActivity.java
- *
- * Role:
- * - Display the list of events the current user has joined or is on the waiting list for.
- * - Retrieve relevant events from Firestore using the user's device ID as the identifier.
- * - Populate a RecyclerView using EventAdapter to show these events.
- * - Provide navigation back to the Entrant home screen.
- *
- * Issues:
- * - Assumes Firestore read succeeds (no offline handling or error UI).
- * - Reloads the activity when "Your Events" is clicked, potentially stacking activities.
- * - Uses device installation ID as the unique user identifier, which may change if the app is reinstalled.
- *
- */
-public class YourEventsActivity extends AppCompatActivity {
+
+public class YourPastEventsActivity extends AppCompatActivity {
     private RecyclerView yourEventsRecyclerView;
     private EventAdapter adapter;
     private List<Event> userEventList;
@@ -44,19 +28,18 @@ public class YourEventsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_events);
+        setContentView(R.layout.activity_your_past_events);
 
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
         db = FirebaseFirestore.getInstance();
         userEventList = new ArrayList<>();
 
-        yourEventsRecyclerView = findViewById(R.id.your_events_recycler_view);
+        yourEventsRecyclerView = findViewById(R.id.past_events_recycler_view);
         yourEventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         TextView tvHome = findViewById(R.id.tvHome);
         TextView tvYourEvents = findViewById(R.id.tvYourEvents);
-        TextView tvCurrentEvents = findViewById(R.id.current_events);
-        TextView tvPastEvents = findViewById(R.id.past_events);
+        TextView tvCurrentEvents = findViewById(R.id.tvCurrentEvents);
         TextView tvYourProfile = findViewById(R.id.tvYourProfile);
 
         // Menu listeners
@@ -77,14 +60,8 @@ public class YourEventsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        tvCurrentEvents.setOnClickListener(v ->{
+        tvCurrentEvents.setOnClickListener(v -> {
             Intent intent = new Intent(this, YourEventsActivity.class);
-            intent.putExtra("currentUser", currentUser);
-            startActivity(intent);
-        });
-
-        tvPastEvents.setOnClickListener(v ->{
-            Intent intent = new Intent(this, YourPastEventsActivity.class);
             intent.putExtra("currentUser", currentUser);
             startActivity(intent);
         });
@@ -107,7 +84,7 @@ public class YourEventsActivity extends AppCompatActivity {
                                 boolean inWaitingList = event.getWaitingList() != null && event.getWaitingList().contains(userRef);
                                 boolean inFinalList   = event.getFinaList() != null && event.getFinaList().contains(userRef);
                                 if (inWaitingList || inFinalList) {
-                                    if (currentDate.before(eventDate)) {
+                                    if (currentDate.after(eventDate)) {
                                         userEventList.add(event);
                                     }
                                 }

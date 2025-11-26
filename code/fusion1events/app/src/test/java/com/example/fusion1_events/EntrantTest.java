@@ -20,7 +20,7 @@ public class EntrantTest {
     public void setUpEvent() {
         waitingList = new ArrayList<>();
         Timestamp now = Timestamp.now();
-        event = new Event(5, 3, now, "Test event", now, now, "Title", waitingList);
+        event = new Event(5, 3, now, "id", "Test event", now, now, "Title", waitingList, null, null, null, null, null);
     }
 
     @Test

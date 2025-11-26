@@ -2,10 +2,10 @@ package com.example.fusion1_events;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+
 /**
  * File: Event.java
  *
@@ -31,14 +31,20 @@ public class Event implements Serializable {
     private int attendees;
     private int Signups;
     private ArrayList<DocumentReference> waitingList;
+    // new
+    private ArrayList<DocumentReference> invitedList;
+    private ArrayList<DocumentReference> confirmed;
+    private ArrayList<DocumentReference> cancelled;
+    private ArrayList<String> keywords;
 
 
     public Event(){}
 
 
-
     public Event(int signups, int attendees, Timestamp date,String id, String description,
-                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList, String imageUrl) {
+                 Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList,
+                 String imageUrl, ArrayList<DocumentReference> invitedList, ArrayList<DocumentReference> confirmed,
+                 ArrayList<DocumentReference> cancelled, ArrayList<String> keywords) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -47,11 +53,17 @@ public class Event implements Serializable {
         this.imageUrl = imageUrl;
         this.registration_start = registration_start;
         this.registration_end = registration_end;
+        this.title = title;
         this.date = date;
         this.attendees = attendees;
         this.Signups = signups;
         this.waitingList = waitingList;
         this.imageUrl = imageUrl;
+        // new
+        this.invitedList = invitedList;
+        this.confirmed = confirmed;
+        this.cancelled = cancelled;
+        this.keywords = keywords;
     }
 
 
@@ -178,5 +190,28 @@ public class Event implements Serializable {
 
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
+    }
+
+    // new code
+    public ArrayList<DocumentReference> getFinaList() { return invitedList; }
+
+    public void setFinaList(ArrayList<DocumentReference> finaList) {
+        this.invitedList = finaList;
+    }
+
+    public ArrayList<DocumentReference> getConfirmed() { return confirmed; }
+
+    public void setConfirmed(ArrayList<DocumentReference> confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public ArrayList<DocumentReference> getCancelled() { return cancelled; }
+    public void setCancelled(ArrayList<DocumentReference> cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    public ArrayList<String> getKeyword() { return keywords; }
+    public void setKeyword(String keyword) {
+        this.keywords = keywords;
     }
 }

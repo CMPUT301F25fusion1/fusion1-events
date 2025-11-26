@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".EventDetailActivity" android:exported="false"/>
         <activity android:name=".YourEventsActivity" />
+        <activity android:name=".YourPastEventsActivity" />
         <activity android:name=".MainActivity" android:exported="false"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
