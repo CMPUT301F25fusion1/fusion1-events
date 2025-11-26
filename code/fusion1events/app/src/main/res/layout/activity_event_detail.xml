@@ -377,6 +377,47 @@
                     android:visibility="gone"
                     android:backgroundTint="@android:color/holo_red_light" />
 
+                <!-- new stuff -->
+                <Button
+                    android:id="@+id/btnAcceptInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Accept Invite"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnDeclineInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Decline Invite"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/btnCancelInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:visibility="gone"
+                    android:backgroundTint="@android:color/holo_red_light" />
+
+                <TextView
+                    android:id="@+id/tvCancelledMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Invitation Cancelled"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
