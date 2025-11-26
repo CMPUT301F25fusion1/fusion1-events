@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 /**
  * File: YourEventsActivity.java
@@ -54,7 +55,11 @@ public class YourEventsActivity extends AppCompatActivity {
 
         TextView tvHome = findViewById(R.id.tvHome);
         TextView tvYourEvents = findViewById(R.id.tvYourEvents);
+        TextView tvCurrentEvents = findViewById(R.id.current_events);
+        TextView tvPastEvents = findViewById(R.id.past_events);
+        TextView tvYourProfile = findViewById(R.id.tvYourProfile);
 
+        // Menu listeners
         tvHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, EntrantHomeActivity.class);
             intent.putExtra("currentUser", currentUser);
@@ -63,6 +68,23 @@ public class YourEventsActivity extends AppCompatActivity {
 
         tvYourEvents.setOnClickListener(v -> {
             Intent intent = new Intent(this, YourEventsActivity.class);
+            intent.putExtra("currentUser", currentUser);
+            startActivity(intent);
+        });
+
+        tvYourProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileViewActivity.class);
+            startActivity(intent);
+        });
+
+        tvCurrentEvents.setOnClickListener(v ->{
+            Intent intent = new Intent(this, YourEventsActivity.class);
+            intent.putExtra("currentUser", currentUser);
+            startActivity(intent);
+        });
+
+        tvPastEvents.setOnClickListener(v ->{
+            Intent intent = new Intent(this, YourPastEventsActivity.class);
             intent.putExtra("currentUser", currentUser);
             startActivity(intent);
         });
@@ -79,9 +101,15 @@ public class YourEventsActivity extends AppCompatActivity {
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             Event event = doc.toObject(Event.class);
-                            if (event != null && event.getWaitingList() != null) {
-                                if (event.getWaitingList().contains(userRef)) {
-                                    userEventList.add(event);
+                            if (event != null) {
+                                Date currentDate = new Date();
+                                Date eventDate = event.getDate().toDate();
+                                boolean inWaitingList = event.getWaitingList() != null && event.getWaitingList().contains(userRef);
+                                boolean inFinalList   = event.getFinaList() != null && event.getFinaList().contains(userRef);
+                                if (inWaitingList || inFinalList) {
+                                    if (currentDate.before(eventDate)) {
+                                        userEventList.add(event);
+                                    }
                                 }
                             }
                         }
