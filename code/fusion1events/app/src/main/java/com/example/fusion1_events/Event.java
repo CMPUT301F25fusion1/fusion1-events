@@ -32,7 +32,7 @@ public class Event implements Serializable {
     private int Signups;
     private ArrayList<DocumentReference> waitingList;
     // new
-    private ArrayList<DocumentReference> finaList;
+    private ArrayList<DocumentReference> invitedList;
     private ArrayList<DocumentReference> confirmed;
     private ArrayList<DocumentReference> cancelled;
     private ArrayList<String> keywords;
@@ -43,7 +43,7 @@ public class Event implements Serializable {
 
     public Event(int signups, int attendees, Timestamp date,String id, String description,
                  Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList,
-                 String imageUrl, ArrayList<DocumentReference> finaList, ArrayList<DocumentReference> confirmed,
+                 String imageUrl, ArrayList<DocumentReference> invitedList, ArrayList<DocumentReference> confirmed,
                  ArrayList<DocumentReference> cancelled, ArrayList<String> keywords) {
         this.Signups = signups;
         this.attendees = attendees;
@@ -60,7 +60,7 @@ public class Event implements Serializable {
         this.waitingList = waitingList;
         this.imageUrl = imageUrl;
         // new
-        this.finaList = finaList;
+        this.invitedList = invitedList;
         this.confirmed = confirmed;
         this.cancelled = cancelled;
         this.keywords = keywords;
@@ -193,10 +193,10 @@ public class Event implements Serializable {
     }
 
     // new code
-    public ArrayList<DocumentReference> getFinaList() { return finaList; }
+    public ArrayList<DocumentReference> getFinaList() { return invitedList; }
 
     public void setFinaList(ArrayList<DocumentReference> finaList) {
-        this.finaList = finaList;
+        this.invitedList = finaList;
     }
 
     public ArrayList<DocumentReference> getConfirmed() { return confirmed; }
