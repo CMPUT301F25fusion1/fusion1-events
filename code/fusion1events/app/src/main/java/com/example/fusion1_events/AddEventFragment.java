@@ -152,6 +152,9 @@ public class AddEventFragment extends DialogFragment {
         Button btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
         LinearLayout waitingListContainer = view.findViewById(R.id.waitingListContainer);
 
+        //dropdown menu
+
+
         increase = view.findViewById(R.id.btnIncrease);
         decrease = view.findViewById(R.id.btnDecrease);
         addImage = view.findViewById(R.id.btnAddImage);
@@ -160,8 +163,6 @@ public class AddEventFragment extends DialogFragment {
 
         //set template image
         imagePreview.setImageResource(R.drawable.logo_loading);
-
-
 
         // Set up date pickers
         setupDatePicker(inputRegStartDate, date -> regStartDate = date);
