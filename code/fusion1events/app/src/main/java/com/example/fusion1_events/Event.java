@@ -193,9 +193,9 @@ public class Event implements Serializable {
     }
 
     // new code
-    public ArrayList<DocumentReference> getFinaList() { return invitedList; }
+    public ArrayList<DocumentReference> getInvitedList() { return invitedList; }
 
-    public void setFinaList(ArrayList<DocumentReference> finaList) {
+    public void setInvitedList(ArrayList<DocumentReference> finaList) {
         this.invitedList = finaList;
     }
 
