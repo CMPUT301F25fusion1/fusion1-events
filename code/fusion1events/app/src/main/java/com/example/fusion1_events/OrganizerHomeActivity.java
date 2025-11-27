@@ -184,9 +184,12 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                         try {
                                                             Object waitingListObj = eventDoc.get("waitingList");
                                                             Object invitedListObj = eventDoc.get("InvitedList");
+                                                            Object keyWordsListObj = eventDoc.get("Keywords");
+                                                            ArrayList<String> keyWords = new ArrayList<>();
                                                             ArrayList<String> waitingList = new ArrayList<>();
                                                             ArrayList<String> invitedList = new ArrayList<>();
 
+                                                            //fill waitingList
                                                             if (waitingListObj instanceof List) {
                                                                 List<Object> waitingListRefs = (List<Object>) waitingListObj;
                                                                 Log.d(TAG, "Found " + waitingListRefs.size() + " entrants in waiting list");
@@ -206,6 +209,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No waiting list found or empty");
                                                             }
 
+                                                            //fill invitedList
                                                             if (invitedListObj instanceof List) {
                                                                 List<Object> invitedListRefs = (List<Object>) invitedListObj;
                                                                 Log.d(TAG, "Found " + invitedListRefs.size() + " entrants in waiting list");
@@ -225,9 +229,24 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No invited list found or empty");
                                                             }
 
+                                                            //fill keyWords
+                                                            if (keyWordsListObj instanceof List) {
+                                                                List<Object> keyWordsListRefs = (List<Object>) keyWordsListObj;
+                                                                Log.d(TAG, "Found " + keyWordsListRefs.size() + " entrants in waiting list");
+
+                                                                for (Object refObj : keyWordsListRefs) {
+                                                                        keyWords.add((String) refObj);
+                                                                        Log.d(TAG, "Added keyword: " + refObj);
+                                                                    }
+
+                                                            } else {
+                                                                Log.d(TAG, "No invited list found or empty");
+                                                            }
+
                                                             EventsModel event = new EventsModel(
 
                                                                     eventDoc.getString("title"),
+                                                                    keyWords,
                                                                     eventDoc.getDate("registration_start"),
                                                                     eventDoc.getDate("registration_end"),
                                                                     eventDoc.getString("description"),
@@ -430,6 +449,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
     private void createEventInFirestore(EventsModel eventsModel, String imageUrl) {
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("title", eventsModel.getEventTitle());
+        eventData.put("Keywords", eventsModel.getSelectedTags());
         eventData.put("registration_start", eventsModel.getRegistrationStart());
         eventData.put("registration_end", eventsModel.getRegistrationEnd());
         eventData.put("description", eventsModel.getEventDescription());
@@ -480,6 +500,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         String eventId = eventsModel.getEventId();
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("title", eventsModel.getEventTitle());
+        eventData.put("Keywords", eventsModel.getSelectedTags());
         eventData.put("registration_start", eventsModel.getRegistrationStart());
         eventData.put("registration_end", eventsModel.getRegistrationEnd());
         eventData.put("description", eventsModel.getEventDescription());

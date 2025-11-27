@@ -14,6 +14,7 @@
 
 <!--    Admin Strings-->
     <string name="browse_events">Browse Events</string>
+    <string name="select_tags">select Keywords</string>
     <string name="browse_images">Browse Images</string>
     <string name="view_notifications">View Notifications</string>
     <string name="browse_profiles">Browse Profiles</string>
