@@ -147,13 +147,13 @@ public class SampleEntrantsActivity extends AppCompatActivity {
             return;
         }
 
-        eventRef.update("InvitedList", sampled)
+        eventRef.update("invitedList", sampled)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Sampled " + sampled.size() + " entrants", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to update sampled list", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error updating InvitedList", e);
+                    Log.e(TAG, "Error updating invitedList", e);
                 });
     }
 }
