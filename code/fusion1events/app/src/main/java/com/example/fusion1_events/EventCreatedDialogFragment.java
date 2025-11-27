@@ -124,7 +124,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
 
         //Set attendees
-        attendeesCount.setText(String.valueOf(createdEvent.getAttendees())+" attendees registered");
+        attendeesCount.setText(String.valueOf(createdEvent.getSignups())+" attendees registered");
 
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();

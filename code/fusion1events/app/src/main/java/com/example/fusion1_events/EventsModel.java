@@ -17,10 +17,10 @@ public class EventsModel {
     ArrayList<String> waitingList;
     ArrayList<String> invitedList;
     String imageUrl; // Store Cloudinary URL for event image
-    String eventId; // Store Firestore document ID for updates/deletes
-    Long maxWaitList; //ADDED: stores the maximum allowed number of
+    String eventId;
+    Long maxWaitList;
+    ArrayList<String> selectedTags;
 
-    ArrayList<String> keywords;
 
 
 
@@ -46,11 +46,12 @@ public class EventsModel {
      * @param invitedList List of entrant IDs selected for the event
      * @param maxWaitList The maximum number of entrants on the waiting list
      */
-    public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
+    public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
                        ArrayList<String> invitedList, Long maxWaitList) {
         this.eventTitle = eventTitle;
+        this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
         this.eventDescription = eventDescription;
@@ -62,6 +63,12 @@ public class EventsModel {
         this.eventId = eventId;
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
+    }
+    public ArrayList<String> getSelectedTags(){
+        return this.selectedTags;
+    }
+    public void setSelectedTags(ArrayList<String> selectedTags){
+        this.selectedTags = selectedTags;
     }
 
     public Long getMaxWaitList() {

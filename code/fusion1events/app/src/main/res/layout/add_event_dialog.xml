@@ -75,21 +75,36 @@
                 android:focusable="false"
                 android:layout_marginBottom="12dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/filterBar"
+
+            <LinearLayout
+                android:id="@+id/tagSelectorContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:endIconMode="dropdown_menu">
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp">
 
-                <AutoCompleteTextView
-                    android:id="@+id/dropdownTags"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tagSelector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/inputTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select tags"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Select tags"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:paddingTop="8dp"
+                    app:singleLine="false"
+                    app:chipSpacing="8dp" />
 
+            </LinearLayout>
 
 
 
@@ -147,7 +162,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-
             <Button
                 android:id="@+id/btnShowWaitingList"
                 android:layout_width="wrap_content"
@@ -155,7 +169,6 @@
                 android:text="Add Waiting List Limit"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
-
 
             <!-- HIDDEN WAITING LIST SECTION -->
             <LinearLayout
