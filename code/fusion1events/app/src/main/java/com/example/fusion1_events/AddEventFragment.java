@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -57,10 +58,10 @@ public class AddEventFragment extends DialogFragment {
     }
 
     private AddEventDialogListener listener;
-    private Button increase;
-    private Button decrease;
-    private Button waitIncrease;
-    private Button waitDecrease;
+    private ImageButton increase;
+    private ImageButton decrease;
+    private ImageButton waitIncrease;
+    private ImageButton waitDecrease;
     private Button addImage;
     private ImageView imagePreview;
     private EditText inputRegStartDate;
