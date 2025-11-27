@@ -143,8 +143,8 @@ public class EventDetailActivity extends AppCompatActivity {
                         boolean isConfirmed = currentEvent.getConfirmed() != null &&
                                 currentEvent.getConfirmed().contains(entrantRef);
 
-                        boolean isInFinalList = currentEvent.getFinaList() != null &&
-                                currentEvent.getFinaList().contains(entrantRef);
+                        boolean isInFinalList = currentEvent.getInvitedList() != null &&
+                                currentEvent.getInvitedList().contains(entrantRef);
 
                         boolean isCancelled = currentEvent.getCancelled() != null &&
                                 currentEvent.getCancelled().contains(entrantRef);
@@ -213,7 +213,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e -> {
-            Log.e(TAG, "Error fetching event", e);
             Toast.makeText(this, "Failed to check waiting list status", Toast.LENGTH_SHORT).show();
         });
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -275,10 +274,14 @@ public class EventDetailActivity extends AppCompatActivity {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
 
-        eventRef.update("finaList", FieldValue.arrayRemove(entrantRef))
+        eventRef.update("invitedList", FieldValue.arrayRemove(entrantRef))
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "You declined the invitation.", Toast.LENGTH_SHORT).show();
 
+                    eventRef.update("cancelled", FieldValue.arrayUnion(entrantRef));
+                    btnScanQR.setVisibility(View.GONE);
+                    btnJoinWaitingList.setVisibility(View.GONE);
+                    btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
                 });
@@ -291,7 +294,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Invitation canceled!", Toast.LENGTH_SHORT).show();
 
-                    eventRef.update("finaList", FieldValue.arrayRemove(entrantRef));
+                    eventRef.update("invitedList", FieldValue.arrayRemove(entrantRef));
                     eventRef.update("cancelled", FieldValue.arrayUnion(entrantRef));
                     btnCancelInvite.setVisibility(View.GONE);
                     tvCancelledMessage.setVisibility(View.VISIBLE);
