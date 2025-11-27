@@ -46,7 +46,7 @@ import java.util.Locale;
 public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
-            tvDetailSignups, tvCancelledMessage;
+            tvDetailSignups, tvCancelledMessage, tvDetailDeadline, tvDetailTime, tvPastDeadline;
     private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList,
             btnAcceptInvite, btnDeclineInvite, btnCancelInvite;
     private Profile currentUser;
@@ -70,11 +70,14 @@ public class EventDetailActivity extends AppCompatActivity {
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
         ivDetailImage = findViewById(R.id.ivDetailImage);
+        tvDetailDeadline = findViewById(R.id.tvDetailDeadline);
+        tvDetailTime = findViewById(R.id.tvDetailTime);
         tvDetailTitle = findViewById(R.id.tvDetailTitle);
         tvDetailDate = findViewById(R.id.tvDetailDate);
         tvDetailDescription = findViewById(R.id.tvDetailDescription);
         tvDetailSignups = findViewById(R.id.tvDetailSignups);
         tvCancelledMessage = findViewById(R.id.tvCancelledMessage);
+        tvPastDeadline = findViewById(R.id.tvPastDeadline);
         btnScanQR = findViewById(R.id.btnScanQR);
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
@@ -92,10 +95,15 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         tvDetailTitle.setText(currentEvent.getTitle());
                         tvDetailDescription.setText(currentEvent.getDescription());
+                        Date registrationDate = currentEvent.getRegistration_end().toDate();
+                        SimpleDateFormat reg = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+                        tvDetailDeadline.setText(reg.format(registrationDate));
 
                         Date date = currentEvent.getDate().toDate();
-                        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy h:mm a", Locale.getDefault());
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+                        SimpleDateFormat time = new SimpleDateFormat("h:mm a", Locale.getDefault());
                         tvDetailDate.setText(sdf.format(date));
+                        tvDetailTime.setText(time.format(date));
 
                         tvDetailSignups.setText(String.valueOf(currentEvent.getSignups()));
                         if (currentEvent.getImageUrl() != null ) {
@@ -104,8 +112,7 @@ public class EventDetailActivity extends AppCompatActivity {
                             ivDetailImage.setImageResource(R.drawable.logo_loading);
                         }
 
-
-                        TextView tvHome = findViewById(R.id.tvHome);
+                            TextView tvHome = findViewById(R.id.tvHome);
                         TextView tvYourEvents = findViewById(R.id.tvYourEvents);
 
                         TextView tvYourProfile = findViewById(R.id.tvYourProfileEvent);
@@ -143,13 +150,31 @@ public class EventDetailActivity extends AppCompatActivity {
                         boolean isConfirmed = currentEvent.getConfirmed() != null &&
                                 currentEvent.getConfirmed().contains(entrantRef);
 
-                        boolean isInFinalList = currentEvent.getFinaList() != null &&
-                                currentEvent.getFinaList().contains(entrantRef);
+                        boolean isInFinalList = currentEvent.getInvitedList() != null &&
+                                currentEvent.getInvitedList().contains(entrantRef);
 
                         boolean isCancelled = currentEvent.getCancelled() != null &&
                                 currentEvent.getCancelled().contains(entrantRef);
 
-                        if (isConfirmed) {
+                        // new entrants can't join waiting list after reg deadline
+                        Date currentDate = new Date();
+                        Date regDate = currentEvent.getRegistration_end().toDate();
+                        boolean afterRegistration = currentDate.after(regDate);
+                        boolean waiting = currentEvent.getWaitingList() != null &&
+                                currentEvent.getWaitingList().contains(entrantRef);
+                        boolean invited = currentEvent.getInvitedList() != null &&
+                                currentEvent.getInvitedList().contains(entrantRef);
+
+                        if (afterRegistration && !waiting && !invited) {
+                            btnScanQR.setVisibility(View.GONE);
+                            btnJoinWaitingList.setVisibility(View.GONE);
+                            btnLeaveWaitingList.setVisibility(View.GONE);
+                            btnAcceptInvite.setVisibility(View.GONE);
+                            btnDeclineInvite.setVisibility(View.GONE);
+                            tvPastDeadline.setVisibility(View.VISIBLE);
+                        }
+
+                        else if (isConfirmed) {
                             btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
@@ -213,7 +238,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e -> {
-            Log.e(TAG, "Error fetching event", e);
             Toast.makeText(this, "Failed to check waiting list status", Toast.LENGTH_SHORT).show();
         });
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -223,8 +247,8 @@ public class EventDetailActivity extends AppCompatActivity {
                     currentEvent.getWaitingList().add(entrantRef);
                     currentEvent.setSignups(newSignups);
                     eventRef.update("Signups", newSignups);
-
                     tvDetailSignups.setText(String.valueOf(newSignups));
+
                     btnJoinWaitingList.setVisibility(View.GONE);
                     btnLeaveWaitingList.setVisibility(View.VISIBLE);
                     Toast.makeText(this, "You joined the waiting list!", Toast.LENGTH_SHORT).show();
@@ -275,10 +299,13 @@ public class EventDetailActivity extends AppCompatActivity {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
 
-        eventRef.update("finaList", FieldValue.arrayRemove(entrantRef))
+        eventRef.update("invitedList", FieldValue.arrayRemove(entrantRef))
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "You declined the invitation.", Toast.LENGTH_SHORT).show();
 
+                    btnScanQR.setVisibility(View.GONE);
+                    btnJoinWaitingList.setVisibility(View.GONE);
+                    btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
                 });
@@ -291,8 +318,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Invitation canceled!", Toast.LENGTH_SHORT).show();
 
-                    eventRef.update("finaList", FieldValue.arrayRemove(entrantRef));
-                    eventRef.update("cancelled", FieldValue.arrayUnion(entrantRef));
+                    eventRef.update("invitedList", FieldValue.arrayRemove(entrantRef));
                     btnCancelInvite.setVisibility(View.GONE);
                     tvCancelledMessage.setVisibility(View.VISIBLE);
                 });

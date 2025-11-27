@@ -17,11 +17,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+
     <EditText
         android:id="@+id/profileEditEmail"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="44dp"
         android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,12 +32,11 @@
         android:id="@+id/profileEditNumber"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileEditEmail" />
-
 
     <TextView
         android:id="@+id/textViewProfileName"
@@ -51,16 +51,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+
     <TextView
         android:id="@+id/textViewProfileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="32dp"
         android:text="Email: "
         android:textColor="#673AB7"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/profileEditEmail"
-        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintHorizontal_bias="0.535"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewProfileName" />
 
@@ -68,26 +69,25 @@
         android:id="@+id/textViewProfileNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="44dp"
         android:text="Phone (Optional): "
         android:textColor="#673AB7"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/profileEditNumber"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewProfileEmail" />
-
 
     <Button
         android:id="@+id/buttonEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:text="Edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewProfileNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/switchAllowNotification" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -158,6 +158,26 @@
             android:visibility="visible"
             app:cornerRadius="0dp" />
     </LinearLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchAllowNotification"
+        android:layout_width="206dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="28dp"
+        android:text="Allow Notification:   "
+        android:textColor="#673AB7"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.078"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProfileNumber"
+
+        android:visibility="gone"
+        android:enabled="false"
+
+        android:thumbTint="@color/allow_notif_switch_thumb"
+        android:trackTint="@color/allow_notif_switch_tracker"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
