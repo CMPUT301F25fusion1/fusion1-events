@@ -14,10 +14,14 @@ public class EventsModel {
     Date date;
     Long attendees;
     Long signups;
-    ArrayList<String> waitingList; // ADDED: Store entrant IDs from waiting list
+    ArrayList<String> waitingList;
     ArrayList<String> finalList;
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
+    Long maxWaitList; //ADDED: stores the maximum allowed number of
+
+
+
 
     /**
      * Constructor to create an EventsModel with all fields.
@@ -33,11 +37,12 @@ public class EventsModel {
      * @param imageUrl The Cloudinary URL for the event image
      * @param eventId The Firestore document ID
      * @param finalList List of entrant IDs selected for the event
+     * @param maxWaitList The maximum number of entrants on the waiting list
      */
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> finalList) {
+                       ArrayList<String> finalList, Long maxWaitList) {
         this.eventTitle = eventTitle;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
@@ -49,6 +54,15 @@ public class EventsModel {
         this.imageUrl = imageUrl;
         this.eventId = eventId;
         this.finalList = finalList != null ? finalList : new ArrayList<>();
+        this.maxWaitList = maxWaitList;
+    }
+
+    public Long getMaxWaitList() {
+        return maxWaitList;
+    }
+
+    public void setMaxWaitList(Long maxWaitList) {
+        this.maxWaitList = maxWaitList;
     }
 
     /**

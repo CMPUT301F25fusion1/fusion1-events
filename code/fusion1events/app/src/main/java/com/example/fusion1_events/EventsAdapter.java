@@ -1,5 +1,6 @@
 package com.example.fusion1_events;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     private ArrayList<EventsModel> events;
     private OnEventClickListener listener;
+    private Context context;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     public interface OnEventClickListener {
@@ -36,7 +40,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     }
 
-    public EventsAdapter(ArrayList<EventsModel> events, OnEventClickListener listener) {
+    public EventsAdapter(Context context, ArrayList<EventsModel> events, OnEventClickListener listener) {
+        this.context = context;
         this.events = events;
         this.listener = listener;
     }
@@ -76,7 +81,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             btnEventOptions = itemView.findViewById(R.id.btnEventOptions);
         }
 
-        public void bind(EventsModel event, int position) {
+        public void bind( EventsModel event, int position) {
             // Set title
             textEventTitle.setText(event.getEventTitle());
 
@@ -91,7 +96,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
             // Set banner image (you can load from URI or use placeholder)
             // For now using placeholder - implement image loading if needed
-            imageBanner.setImageResource(R.drawable.ic_image_placeholder);
+            if (event.getImageUrl() != null ) {
+                Glide.with(context).load(event.getImageUrl()).into(imageBanner);
+            } else {
+                imageBanner.setImageResource(R.drawable.logo_loading);
+            }
+
 
             // Set click listener for the entire card
             itemView.setOnClickListener(v -> {
