@@ -213,6 +213,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error fetching event", e);
             Toast.makeText(this, "Failed to check waiting list status", Toast.LENGTH_SHORT).show();
         });
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);

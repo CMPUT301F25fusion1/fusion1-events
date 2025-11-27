@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,12 +36,11 @@ import java.util.Date;
  * Shows event details, a QR code for the event, and either the registration deadline
  * or a list of invited attendees depending on the event state.
  */
-public class EventCreatedDialogFragment extends DialogFragment {
+public class EventDetailsDialogFragment extends DialogFragment {
 
     private static final String ARG_EVENT_TITLE = "event_title";
     private static EventsModel createdEvent;
     private static final String ARG_IMAGE_URI = "image_uri";
-
     private UsersAdapter usersAdapter;
 
     /**
@@ -85,6 +85,23 @@ public class EventCreatedDialogFragment extends DialogFragment {
         // Generate QR code for the event
         generateQRCode(qrCode);
 
+        //TODO: consider a lottery occurred bool to check which list to display
+        if (!createdEvent.getFinalList().isEmpty()){
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
+            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            attendeesList.setAdapter(usersAdapter);
+            listTitle.setText("Current Waiting List:");
+        } else {
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getFinalList());
+            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            attendeesList.setAdapter(usersAdapter);
+            listTitle.setText("Invited Users:");
+        }
+
+
+
+
+
 
         // Set event title
         titleText.setText(createdEvent.getEventTitle());
@@ -109,23 +126,9 @@ public class EventCreatedDialogFragment extends DialogFragment {
         regEnd.setText(regsEnd);
         eventDate.setText(regsDate);
 
-        //TODO: consider a lottery occurred bool to check which list to display
-        if (!createdEvent.getFinalList().isEmpty()){
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
-            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
-            attendeesList.setAdapter(usersAdapter);
-            listTitle.setText("Current Waiting List:");
-        } else {
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getFinalList());
-            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
-            attendeesList.setAdapter(usersAdapter);
-            listTitle.setText("Invited Users:");
-        }
-
 
         //Set attendees
-        attendeesCount.setText(String.valueOf(createdEvent.getAttendees())+" attendees registered");
-
+        attendeesCount.setText(String.valueOf(createdEvent.getAttendees())+ " attendees registered");
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
