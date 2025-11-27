@@ -88,6 +88,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         db = FirebaseFirestore.getInstance();
         organizerRef = db.collection("Organizers").document(deviceId);
 
+
         addEventButton = findViewById(R.id.fabAddEvent);
         recyclerView = findViewById(R.id.recyclerEvents);
 
@@ -149,6 +150,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
      * Displays appropriate messages if no events are found or if errors occur.
      */
     private void loadEvents() {
+
         Log.d(TAG, "Loading events for organizer: " + organizerRef.getPath());
 
         organizerRef.get()
@@ -304,6 +306,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                             "Failed to load events: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 });
+
+
     }
 
     /**

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,10 +57,10 @@ public class EditEventFragment extends DialogFragment {
     }
 
     private EditEventDialogListener listener;
-    private Button increase;
-    private Button decrease;
-    private Button waitIncrease;
-    private Button waitDecrease;
+    private ImageButton increase;
+    private ImageButton decrease;
+    private ImageButton waitIncrease;
+    private ImageButton waitDecrease;
     private Button addImage;
     private ImageView imagePreview;
     private EditText inputRegStartDate;
@@ -71,13 +72,10 @@ public class EditEventFragment extends DialogFragment {
     private Date regStartDate;
     private Date regEndDate;
     private Date eventDate;
-
     private Uri selectedImageUri;
-
     private static EventsModel eventsModel;
-    private ArrayList<String> selectedTags = new ArrayList<>();
+    private final ArrayList<String> selectedTags = eventsModel.getSelectedTags();
     private static int position;
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -110,8 +108,6 @@ public class EditEventFragment extends DialogFragment {
             selectedImageUri = Uri.parse(eventsModel.getImageUrl());
 
         }
-
-
 
         // Initialize image picker
         imagePickerLauncher = registerForActivityResult(
@@ -189,7 +185,7 @@ public class EditEventFragment extends DialogFragment {
         eventDate = eventsModel.getDate();
 
         imagePreview = view.findViewById(R.id.imagePreview);
-        //imagePreview.setImageBitmap(eventsModel);
+
 
         increase = view.findViewById(R.id.btnIncrease);
         decrease = view.findViewById(R.id.btnDecrease);
@@ -211,6 +207,25 @@ public class EditEventFragment extends DialogFragment {
         //set the keywords
         String[] tagItems = {"Chill", "Sports", "Educational"};
         boolean[] selectedFlags = {false, false, false};
+
+        for (int i = 0; i < selectedTags.size(); i++){
+            selectedFlags[i] = true;
+            Chip chip = new Chip(requireContext());
+            chip.setText(selectedTags.get(i));
+            chip.setCloseIconVisible(true);
+
+            chip.setOnCloseIconClickListener(view1 -> {
+                int index = selectedTags.indexOf(chip.getText());
+                selectedTags.remove(chip.getText());
+                selectedFlags[index] = false;  // uncheck it in the dialog
+                chipGroupTags.removeView(chip);
+            });
+
+            chipGroupTags.addView(chip);
+        }
+
+
+
 
 
         inputTags.setOnClickListener(v -> {
