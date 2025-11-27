@@ -15,10 +15,17 @@ public class EventsModel {
     Long attendees;
     Long signups;
     ArrayList<String> waitingList;
-    ArrayList<String> finalList;
+    ArrayList<String> invitedList;
     String imageUrl; // Store Cloudinary URL for event image
     String eventId; // Store Firestore document ID for updates/deletes
     Long maxWaitList; //ADDED: stores the maximum allowed number of
+
+    ArrayList<String> keywords;
+
+
+
+
+    // Sports, Chill, Party, Seasonal, Educational,
 
 
 
@@ -36,13 +43,13 @@ public class EventsModel {
      * @param waitingList List of entrant IDs on the waiting list
      * @param imageUrl The Cloudinary URL for the event image
      * @param eventId The Firestore document ID
-     * @param finalList List of entrant IDs selected for the event
+     * @param invitedList List of entrant IDs selected for the event
      * @param maxWaitList The maximum number of entrants on the waiting list
      */
     public EventsModel(String eventTitle, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> finalList, Long maxWaitList) {
+                       ArrayList<String> invitedList, Long maxWaitList) {
         this.eventTitle = eventTitle;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
@@ -53,7 +60,7 @@ public class EventsModel {
         this.waitingList = waitingList != null ? waitingList : new ArrayList<>();
         this.imageUrl = imageUrl;
         this.eventId = eventId;
-        this.finalList = finalList != null ? finalList : new ArrayList<>();
+        this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
     }
 
@@ -254,17 +261,17 @@ public class EventsModel {
      *
      * @return ArrayList of entrant IDs selected for the event
      */
-    public ArrayList<String> getFinalList() {
-        return finalList;
+    public ArrayList<String> getInvitedList() {
+        return invitedList;
     }
 
     /**
      * Sets the final list of selected entrants.
      *
-     * @param finalList ArrayList of entrant IDs selected for the event
+     * @param invitedList ArrayList of entrant IDs selected for the event
      */
-    public void setFinalList(ArrayList<String> finalList) {
-        this.finalList = finalList;
+    public void setInvitedList(ArrayList<String> invitedList) {
+        this.invitedList = invitedList;
     }
 
     /**

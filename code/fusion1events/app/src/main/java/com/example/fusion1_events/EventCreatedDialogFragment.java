@@ -109,14 +109,14 @@ public class EventCreatedDialogFragment extends DialogFragment {
         regEnd.setText(regsEnd);
         eventDate.setText(regsDate);
 
-        //TODO: consider a lottery occurred bool to check which list to display
-        if (!createdEvent.getFinalList().isEmpty()){
+        //TODO: add the ability to cancel users invites
+        if (createdEvent.getInvitedList().isEmpty()){
             usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Current Waiting List:");
         } else {
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getFinalList());
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList());
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Invited Users:");
