@@ -37,7 +37,7 @@ public class SampleEntrantsActivity extends AppCompatActivity {
     private TextView titleText;
 
     private List<String> waitingList = new ArrayList<>();
-    private List<String> finalList = new ArrayList<>();
+    private List<String> invitedList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,15 +95,15 @@ public class SampleEntrantsActivity extends AppCompatActivity {
                 waitingList = new ArrayList<>();
             }
 
-            Object finalObj = doc.get("finaList");
+            Object finalObj = doc.get("invitedList");
             if (finalObj instanceof List) {
-                finalList = (List<String>) finalObj;
+                invitedList = (List<String>) finalObj;
             } else {
-                finalList = new ArrayList<>();
+                invitedList = new ArrayList<>();
             }
 
             List<String> sampledEntrants = sampleEntrants(waitingList, sampleSize);
-            updateFinalListInFirestore(eventRef, sampledEntrants);
+            UpdateInvitedListInFirestore(eventRef, sampledEntrants);
         }).addOnFailureListener(e -> {
             Log.e(TAG, "Error fetching event", e);
             Toast.makeText(this, "Error loading event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -141,19 +141,19 @@ public class SampleEntrantsActivity extends AppCompatActivity {
     /**
      * Updates Firestore with sampled entrants.
      */
-    private void updateFinalListInFirestore(DocumentReference eventRef, List<String> sampled) {
+    private void UpdateInvitedListInFirestore(DocumentReference eventRef, List<String> sampled) {
         if (sampled.isEmpty()) {
             Toast.makeText(this, "No entrants sampled.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        eventRef.update("finaList", sampled)
+        eventRef.update("InvitedList", sampled)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Sampled " + sampled.size() + " entrants", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to update sampled list", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error updating finaList", e);
+                    Log.e(TAG, "Error updating InvitedList", e);
                 });
     }
 }

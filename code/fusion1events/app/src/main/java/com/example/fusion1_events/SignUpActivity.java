@@ -16,6 +16,8 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 /*
  * File: SignUpActivity.java
  *
@@ -85,17 +87,35 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
+        if (!name.matches(".*[a-zA-Z].*")) {
+            Toast.makeText(this, "Name must contain letters in it.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Please Enter an Email Address",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
 
         if(TextUtils.isEmpty(role)){
             Toast.makeText(this, "Please select a Role",
                     Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        if (!TextUtils.isEmpty(number)) {
+            if (!number.matches("\\d{10}")) {
+                Toast.makeText(this, "Phone number must be of 10 digits", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         submitButton.setEnabled(false);
@@ -129,6 +149,17 @@ public class SignUpActivity extends AppCompatActivity {
 
                         if (finalRole.equals("ENTRANT")) {
                             entrantsRef.document(device_id).set(profileData);
+
+                            FirebaseMessaging.getInstance().getToken()
+                                    .addOnSuccessListener(token -> {
+                                        entrantsRef.document(device_id)
+                                                .update(
+                                                        "allowNotification", true,
+                                                        "fcmToken", token
+                                                );
+                                    });
+
+
                             startActivity(new android.content.Intent(this,
                                     EntrantHomeActivity.class));
                             finish();

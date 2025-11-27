@@ -82,7 +82,7 @@ public class YourPastEventsActivity extends AppCompatActivity {
                                 Date currentDate = new Date();
                                 Date eventDate = event.getDate().toDate();
                                 boolean inWaitingList = event.getWaitingList() != null && event.getWaitingList().contains(userRef);
-                                boolean inFinalList   = event.getFinaList() != null && event.getFinaList().contains(userRef);
+                                boolean inFinalList   = event.getInvitedList() != null && event.getInvitedList().contains(userRef);
                                 if (inWaitingList || inFinalList) {
                                     if (currentDate.after(eventDate)) {
                                         userEventList.add(event);
