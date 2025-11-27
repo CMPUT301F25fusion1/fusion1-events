@@ -268,7 +268,7 @@ public class EventsModel {
     /**
      * Sets the final list of selected entrants.
      *
-     * @param finalList ArrayList of entrant IDs selected for the event
+     * @param invitedList ArrayList of entrant IDs selected for the event
      */
     public void setInvitedList(ArrayList<String> invitedList) {
         this.invitedList = invitedList;
