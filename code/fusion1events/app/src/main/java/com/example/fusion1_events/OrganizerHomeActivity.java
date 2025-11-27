@@ -183,8 +183,9 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                                         try {
                                                             Object waitingListObj = eventDoc.get("waitingList");
+                                                            Object invitedListObj = eventDoc.get("InvitedList");
                                                             ArrayList<String> waitingList = new ArrayList<>();
-                                                            ArrayList<String> finaList = new ArrayList<>();
+                                                            ArrayList<String> invitedList = new ArrayList<>();
 
                                                             if (waitingListObj instanceof List) {
                                                                 List<Object> waitingListRefs = (List<Object>) waitingListObj;
@@ -205,6 +206,25 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No waiting list found or empty");
                                                             }
 
+                                                            if (invitedListObj instanceof List) {
+                                                                List<Object> invitedListRefs = (List<Object>) invitedListObj;
+                                                                Log.d(TAG, "Found " + invitedListRefs.size() + " entrants in waiting list");
+
+                                                                for (Object refObj : invitedListRefs) {
+                                                                    if (refObj instanceof DocumentReference) {
+                                                                        DocumentReference entrantRef = (DocumentReference) refObj;
+                                                                        String entrantId = entrantRef.getId();
+                                                                        invitedList.add(entrantId);
+                                                                        Log.d(TAG, "Added entrant to invited list: " + entrantId);
+                                                                    } else if (refObj instanceof String) {
+                                                                        invitedList.add((String) refObj);
+                                                                        Log.d(TAG, "Added entrant ID to invited list: " + refObj);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Log.d(TAG, "No invited list found or empty");
+                                                            }
+
                                                             EventsModel event = new EventsModel(
 
                                                                     eventDoc.getString("title"),
@@ -217,7 +237,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     waitingList,
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
-                                                                    finaList,
+                                                                    invitedList,
                                                                     eventDoc.getLong("maxWaitingListSize")//TODO: if an event is legacy, set maxWaitingListSize to null
 
 
