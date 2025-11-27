@@ -75,6 +75,24 @@
                 android:focusable="false"
                 android:layout_marginBottom="12dp" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filterBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdownTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Select tags"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
             <!-- IMAGE PREVIEW -->
             <ImageView
                 android:id="@+id/imagePreview"
