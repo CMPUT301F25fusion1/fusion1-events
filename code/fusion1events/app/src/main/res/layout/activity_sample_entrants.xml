@@ -22,24 +22,24 @@
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Entrants"
+        android:text="Selected Entrants"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#000"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"/>
 
-    <EditText
+    <!--<EditText
         android:id="@+id/sampleNumberInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter sample size"
         android:inputType="number"
         android:background="@android:drawable/edit_text"
-        android:padding="12dp"/>
+        android:padding="12dp"/>-->
 
     <Button
-        android:id="@+id/sampleButton"
+        android:id="@+id/drawButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Draw Entrants"
