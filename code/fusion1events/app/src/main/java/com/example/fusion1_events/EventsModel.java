@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 import java.util.ArrayList;
 import java.util.Date;
+import com.google.firebase.firestore.PropertyName;
+
 
 /**
  * Model class representing an event with its details and participant lists.
@@ -16,20 +18,15 @@ public class EventsModel {
     Long signups;
     ArrayList<String> waitingList;
     ArrayList<String> invitedList;
+    ArrayList<String> cancelled;
+
+
     String imageUrl; // Store Cloudinary URL for event image
     String eventId;
     Long maxWaitList;
     ArrayList<String> selectedTags;
 
-
-
-
-
     // Sports, Chill, Party, Seasonal, Educational,
-
-
-
-
     /**
      * Constructor to create an EventsModel with all fields.
      *
@@ -46,6 +43,7 @@ public class EventsModel {
      * @param invitedList List of entrant IDs selected for the event
      * @param maxWaitList The maximum number of entrants on the waiting list
      */
+
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
@@ -63,7 +61,18 @@ public class EventsModel {
         this.eventId = eventId;
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
+
     }
+
+    public ArrayList<String> getCancelled() {
+        if (cancelled == null) cancelled = new ArrayList<>();
+        return cancelled;
+    }
+
+    public void setCancelled(ArrayList<String> cancelled) {
+        this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
+    }
+
     public ArrayList<String> getSelectedTags(){
         return this.selectedTags;
     }

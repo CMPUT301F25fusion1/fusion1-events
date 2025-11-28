@@ -1,6 +1,6 @@
 package com.example.fusion1_events;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -38,10 +38,11 @@ import java.util.Date;
 public class EventCreatedDialogFragment extends DialogFragment {
 
     private static final String ARG_EVENT_TITLE = "event_title";
-    private static EventsModel createdEvent;
+    private EventsModel createdEvent;
     private static final String ARG_IMAGE_URI = "image_uri";
 
     private UsersAdapter usersAdapter;
+    private String eventId;
 
     /**
      * Creates a new instance of EventCreatedDialogFragment.
@@ -50,14 +51,19 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
-    public static EventCreatedDialogFragment newInstance(EventsModel event, Uri imageUri) {
-        createdEvent = event;
+    public static EventCreatedDialogFragment newInstance(EventsModel event) {
         EventCreatedDialogFragment fragment = new EventCreatedDialogFragment();
+
         Bundle args = new Bundle();
-        args.putString(ARG_EVENT_TITLE, event.getEventTitle());
+        args.putString("eventId", event.getEventId());
         fragment.setArguments(args);
+
+        fragment.createdEvent = event;
+
         return fragment;
     }
+
+
 
     /**
      * Creates and configures the dialog to display event creation confirmation.
@@ -81,6 +87,16 @@ public class EventCreatedDialogFragment extends DialogFragment {
         TextView attendeesCount= view.findViewById(R.id.attendeesCount);
         RecyclerView attendeesList = view.findViewById(R.id.attendeesList);
         TextView listTitle = view.findViewById(R.id.listTitle);
+
+        Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
+
+        btnViewCancelled.setOnClickListener(v -> {
+            CancelledEntrantsDialogFragment
+                    .newInstance(eventId)
+                    .show(getParentFragmentManager(), "cancelled_dialog");
+        });
+
+
 
         // Generate QR code for the event
         generateQRCode(qrCode);
@@ -111,12 +127,12 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         //TODO: add the ability to cancel users invites
         if (createdEvent.getInvitedList().isEmpty()){
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), true);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Current Waiting List:");
         } else {
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList());
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList(), createdEvent.getEventId(), false);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Invited Users:");
@@ -151,6 +167,14 @@ public class EventCreatedDialogFragment extends DialogFragment {
         backButton.setOnClickListener(v -> dismiss());
 
         return dialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null)
+            eventId = getArguments().getString("eventId");
     }
 
 

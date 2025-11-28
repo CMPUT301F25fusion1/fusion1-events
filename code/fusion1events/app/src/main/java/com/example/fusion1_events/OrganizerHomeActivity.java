@@ -119,7 +119,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
             @Override
             public void onEventClick(EventsModel event, int position) {
                 EventCreatedDialogFragment confirmDialog =
-                        EventCreatedDialogFragment.newInstance(event, null);
+                        EventCreatedDialogFragment.newInstance(event);
                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
             }
 
@@ -462,6 +462,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("Signups", eventsModel.getSignups());
         eventData.put("imageUrl", imageUrl);
         eventData.put("waitingList", new ArrayList<>());
+        eventData.put("cancelled", new ArrayList<>());
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
 
         db.collection("Events")
@@ -482,8 +483,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                 EventCreatedDialogFragment confirmDialog =
                                         EventCreatedDialogFragment.newInstance(
-                                                eventsModel,
-                                                null);
+                                                eventsModel);
                                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
                             })
                             .addOnFailureListener(e -> {
