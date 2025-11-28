@@ -8,10 +8,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +27,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,10 +58,10 @@ public class AddEventFragment extends DialogFragment {
     }
 
     private AddEventDialogListener listener;
-    private Button increase;
-    private Button decrease;
-    private Button waitIncrease;
-    private Button waitDecrease;
+    private ImageButton increase;
+    private ImageButton decrease;
+    private ImageButton waitIncrease;
+    private ImageButton waitDecrease;
     private Button addImage;
     private ImageView imagePreview;
     private EditText inputRegStartDate;
@@ -68,7 +76,7 @@ public class AddEventFragment extends DialogFragment {
     private Uri selectedImageUri;
     private Button btnShowWaitingList;
     private LinearLayout waitingListContainer ;
-
+    private ArrayList<String> selectedTags = new ArrayList<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -151,8 +159,60 @@ public class AddEventFragment extends DialogFragment {
         imagePreview = view.findViewById(R.id.imagePreview);
         Button btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
         LinearLayout waitingListContainer = view.findViewById(R.id.waitingListContainer);
+        ChipGroup chipGroupTags = view.findViewById(R.id.chipGroupTags);
+        TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
+        AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
 
-        //dropdown menu
+        //set spinner listener and chips adapter
+        String[] tagItems = {"Chill", "Sports", "Educational"};
+        boolean[] selectedFlags = {false, false, false};
+
+
+        inputTags.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Select Tags");
+
+            builder.setMultiChoiceItems(tagItems, selectedFlags, (dialog, i, isChecked) -> {
+                selectedFlags[i] = isChecked;
+            });
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                chipGroupTags.removeAllViews();
+                selectedTags.clear();
+
+                for (int i = 0; i < tagItems.length; i++) {
+                    if (selectedFlags[i]) {
+                        selectedTags.add(tagItems[i]);
+                        Chip chip = new Chip(requireContext());
+                        chip.setText(tagItems[i]);
+                        chip.setCloseIconVisible(true);
+
+                        chip.setOnCloseIconClickListener(view1 -> {
+                            int index = selectedTags.indexOf(chip.getText());
+                            selectedTags.remove(chip.getText());
+                            selectedFlags[index] = false;  // uncheck it in the dialog
+                            chipGroupTags.removeView(chip);
+                        });
+
+                        chipGroupTags.addView(chip);
+                    }
+                }
+            });
+
+            builder.setNegativeButton("Cancel", null);
+
+            builder.show();
+        });
+
+
+
+
+
+
+
+
+
 
 
         increase = view.findViewById(R.id.btnIncrease);
@@ -296,8 +356,10 @@ public class AddEventFragment extends DialogFragment {
      * @return A new EventsModel with the provided data
      */
     private EventsModel createEventModel(String title, String description) {
+        // add selectedTags
         return new EventsModel(
                 title,
+                selectedTags,
                 regStartDate,
                 regEndDate,
                 description,

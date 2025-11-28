@@ -91,7 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             textEventDate.setText(dateRange);
 
             // Set attendees
-            String attendeesText = "Attendees: " + event.getSignups() + " / " + event.getAttendees();
+            String attendeesText = "Attendees: " + event.getSignups() + " / " + event.getAttendees();//TODO: make the signups live
             textEventAttendees.setText(attendeesText);
 
             // Set banner image (you can load from URI or use placeholder)

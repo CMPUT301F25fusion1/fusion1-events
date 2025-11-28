@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -52,10 +57,10 @@ public class EditEventFragment extends DialogFragment {
     }
 
     private EditEventDialogListener listener;
-    private Button increase;
-    private Button decrease;
-    private Button waitIncrease;
-    private Button waitDecrease;
+    private ImageButton increase;
+    private ImageButton decrease;
+    private ImageButton waitIncrease;
+    private ImageButton waitDecrease;
     private Button addImage;
     private ImageView imagePreview;
     private EditText inputRegStartDate;
@@ -67,13 +72,10 @@ public class EditEventFragment extends DialogFragment {
     private Date regStartDate;
     private Date regEndDate;
     private Date eventDate;
-
     private Uri selectedImageUri;
-
     private static EventsModel eventsModel;
-
+    private final ArrayList<String> selectedTags = eventsModel.getSelectedTags();
     private static int position;
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -106,8 +108,6 @@ public class EditEventFragment extends DialogFragment {
             selectedImageUri = Uri.parse(eventsModel.getImageUrl());
 
         }
-
-
 
         // Initialize image picker
         imagePickerLauncher = registerForActivityResult(
@@ -167,6 +167,10 @@ public class EditEventFragment extends DialogFragment {
         editPeopleCount.setText(eventsModel.getAttendees().toString());
         editMaxListCount.setText(eventsModel.getMaxWaitList().toString());
 
+        ChipGroup chipGroupTags = view.findViewById(R.id.chipGroupTags);
+        TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
+        AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
+
 
         inputRegStartDate = view.findViewById(R.id.inputRegStartDate);
         inputRegStartDate.setText(dateFormat.format(eventsModel.getRegistrationStart()));
@@ -181,7 +185,7 @@ public class EditEventFragment extends DialogFragment {
         eventDate = eventsModel.getDate();
 
         imagePreview = view.findViewById(R.id.imagePreview);
-        //imagePreview.setImageBitmap(eventsModel);
+
 
         increase = view.findViewById(R.id.btnIncrease);
         decrease = view.findViewById(R.id.btnDecrease);
@@ -199,6 +203,67 @@ public class EditEventFragment extends DialogFragment {
         } else {
             imagePreview.setImageResource(R.drawable.logo_loading);
         }
+
+        //set the keywords
+        String[] tagItems = {"Chill", "Sports", "Educational"};
+        boolean[] selectedFlags = {false, false, false};
+
+        for (int i = 0; i < selectedTags.size(); i++){
+            selectedFlags[i] = true;
+            Chip chip = new Chip(requireContext());
+            chip.setText(selectedTags.get(i));
+            chip.setCloseIconVisible(true);
+
+            chip.setOnCloseIconClickListener(view1 -> {
+                int index = selectedTags.indexOf(chip.getText());
+                selectedTags.remove(chip.getText());
+                selectedFlags[index] = false;  // uncheck it in the dialog
+                chipGroupTags.removeView(chip);
+            });
+
+            chipGroupTags.addView(chip);
+        }
+
+
+
+
+
+        inputTags.setOnClickListener(v -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Select Tags");
+
+            builder.setMultiChoiceItems(tagItems, selectedFlags, (dialog, i, isChecked) -> {
+                selectedFlags[i] = isChecked;
+            });
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                chipGroupTags.removeAllViews();
+                selectedTags.clear();
+
+                for (int i = 0; i < tagItems.length; i++) {
+                    if (selectedFlags[i]) {
+                        selectedTags.add(tagItems[i]);
+                        Chip chip = new Chip(requireContext());
+                        chip.setText(tagItems[i]);
+                        chip.setCloseIconVisible(true);
+
+                        chip.setOnCloseIconClickListener(view1 -> {
+                            int index = selectedTags.indexOf(chip.getText());
+                            selectedTags.remove(chip.getText());
+                            selectedFlags[index] = false;  // uncheck it in the dialog
+                            chipGroupTags.removeView(chip);
+                        });
+
+                        chipGroupTags.addView(chip);
+                    }
+                }
+            });
+
+            builder.setNegativeButton("Cancel", null);
+
+            builder.show();
+        });
 
         // Set up people count buttons
         setupPeopleCountButtons(editPeopleCount);
@@ -329,6 +394,7 @@ public class EditEventFragment extends DialogFragment {
     private EventsModel createEventModel(String title, String description) {
         return new EventsModel(
                 title,
+                selectedTags,
                 regStartDate,
                 regEndDate,
                 description,

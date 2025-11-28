@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:padding="16dp"
+    android:padding="20dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
+    app:cardElevation="10dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,8 +17,9 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:gravity="center_horizontal">
+            android:padding="12dp"
+            android:gravity="center_horizontal"
+            android:dividerPadding="16dp">
 
             <!-- Title -->
             <EditText
@@ -26,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Event Title"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
             <!-- Description -->
             <EditText
@@ -36,14 +37,14 @@
                 android:minLines="3"
                 android:hint="Description"
                 android:gravity="top"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
             <!-- Registration Dates -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="12dp">
 
                 <EditText
                     android:id="@+id/inputRegStartDate"
@@ -54,7 +55,7 @@
                     android:focusable="false" />
 
                 <View
-                    android:layout_width="8dp"
+                    android:layout_width="12dp"
                     android:layout_height="match_parent" />
 
                 <EditText
@@ -73,25 +74,38 @@
                 android:layout_height="wrap_content"
                 android:hint="Event Date"
                 android:focusable="false"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/filterBar"
+            <!-- TAG SELECTOR SECTION -->
+            <LinearLayout
+                android:id="@+id/tagSelectorContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:endIconMode="dropdown_menu">
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
 
-                <AutoCompleteTextView
-                    android:id="@+id/dropdownTags"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tagSelector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/inputTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select tags"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Select tags"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:paddingTop="12dp"
+                    app:singleLine="false"
+                    app:chipSpacing="10dp" />
 
-
-
+            </LinearLayout>
 
             <!-- IMAGE PREVIEW -->
             <ImageView
@@ -100,14 +114,14 @@
                 android:layout_height="220dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_image_placeholder"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp" />
 
             <Button
                 android:id="@+id/btnAddImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Image"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="20dp" />
 
             <!-- Label -->
             <TextView
@@ -115,21 +129,22 @@
                 android:layout_height="wrap_content"
                 android:text="Number of Attendees:"
                 android:textSize="16sp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="6dp" />
 
             <!-- Attendees Counter -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnDecrease"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text="-"
-                    android:textSize="20sp" />
+                    android:src="@drawable/ic_remove"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
                 <TextView
                     android:id="@+id/txtPeopleCount"
@@ -139,14 +154,13 @@
                     android:textSize="20sp"
                     android:padding="12dp" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnIncrease"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text="+"
-                    android:textSize="20sp" />
+                    android:src="@drawable/ic_add"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
             </LinearLayout>
-
 
             <Button
                 android:id="@+id/btnShowWaitingList"
@@ -154,8 +168,7 @@
                 android:layout_height="wrap_content"
                 android:text="Add Waiting List Limit"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp" />
-
+                android:layout_marginBottom="12dp" />
 
             <!-- HIDDEN WAITING LIST SECTION -->
             <LinearLayout
@@ -171,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:text="Max Waiting List Size:"
                     android:textSize="16sp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="6dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -179,12 +192,12 @@
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnWaitDecrease"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:text="-"
-                        android:textSize="20sp" />
+                        android:src="@drawable/ic_remove"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
 
                     <TextView
                         android:id="@+id/txtWaitCount"
@@ -194,12 +207,12 @@
                         android:textSize="20sp"
                         android:padding="12dp" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnWaitIncrease"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:text="+"
-                        android:textSize="20sp" />
+                        android:src="@drawable/ic_add"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
                 </LinearLayout>
             </LinearLayout>
 
