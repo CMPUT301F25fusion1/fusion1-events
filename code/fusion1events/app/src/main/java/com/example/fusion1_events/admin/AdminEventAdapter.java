@@ -23,29 +23,17 @@ import java.util.Locale;
  * Handles displaying the title, description, registration end date, and provides a button to view event details.
  */
 public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.ViewHolder> {
-    /**
-     * Listener interface for handling actions on events.
-     */
-    public interface onEventActionListener {
-        /**
-         * Called when an admin wants to delete an event.
-         *
-         * @param event the event to delete
-         */
-        void onDeleteEvent(Event event);
-    }
+
+
     private List<Event> events;
-    private onEventActionListener listener;
 
     /**
      * Constructor for AdminEventAdapter.
      *
      * @param events   list of events to display
-     * @param listener listener for handling event actions
      */
-    public AdminEventAdapter(List<Event> events, onEventActionListener listener) {
+    public AdminEventAdapter(List<Event> events) {
         this.events = events;
-        this.listener = listener;
     }
 
     /**
