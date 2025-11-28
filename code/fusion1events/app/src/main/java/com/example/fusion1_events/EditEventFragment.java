@@ -405,7 +405,8 @@ public class EditEventFragment extends DialogFragment {
                 null, // imageUrl will be set after upload
                 eventsModel.getEventId(),
                 null,
-                Long.valueOf(maxListCount)
+                Long.valueOf(maxListCount),
+                null
         );
     }
 

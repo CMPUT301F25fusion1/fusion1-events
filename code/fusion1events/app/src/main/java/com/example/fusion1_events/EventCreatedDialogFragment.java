@@ -48,7 +48,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * Creates a new instance of EventCreatedDialogFragment.
      *
      * @param event The event that was created or is being displayed
-     * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
     public static EventCreatedDialogFragment newInstance(EventsModel event) {
@@ -92,8 +91,8 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         btnViewCancelled.setOnClickListener(v -> {
             CancelledEntrantsDialogFragment
-                    .newInstance(eventId)
-                    .show(getParentFragmentManager(), "cancelled_dialog");
+                    .newInstance(createdEvent.getEventId(), createdEvent.getCancelled())
+                    .show(getChildFragmentManager(), "cancelled_dialog");
         });
 
 

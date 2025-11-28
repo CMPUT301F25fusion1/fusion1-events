@@ -47,7 +47,7 @@ public class EventsModel {
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -61,6 +61,7 @@ public class EventsModel {
         this.eventId = eventId;
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
+        this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
 
     }
 

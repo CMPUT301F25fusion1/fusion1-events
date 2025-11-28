@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class CancelledEntrantsDialogFragment extends DialogFragment {
+import java.util.ArrayList;
 
-    public static CancelledEntrantsDialogFragment newInstance(String eventId) {
+public class CancelledEntrantsDialogFragment extends DialogFragment {
+    public static CancelledEntrantsDialogFragment newInstance(String eventId, ArrayList<String> cancelledList) {
         CancelledEntrantsDialogFragment fragment = new CancelledEntrantsDialogFragment();
         Bundle b = new Bundle();
         b.putString("eventId", eventId);
+        b.putStringArrayList("cancelledList", cancelledList);
         fragment.setArguments(b);
         return fragment;
     }
@@ -32,21 +34,17 @@ public class CancelledEntrantsDialogFragment extends DialogFragment {
         RecyclerView recyclerView = view.findViewById(R.id.cancelledList);
         Button back = view.findViewById(R.id.btnBackCancelled);
 
-        FirebaseFirestore.getInstance()
-                .collection("Events")
-                .document(getArguments().getString("eventId"))
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    EventsModel model = snapshot.toObject(EventsModel.class);
-                    UsersAdapter adapter = new UsersAdapter(
-                            requireContext(),
-                            model.getCancelled(),
-                            model.getEventId(),
-                            true
-                    );
-                    recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-                    recyclerView.setAdapter(adapter);
-                });
+        ArrayList<String> cancelledList = getArguments().getStringArrayList("cancelledList");
+        String eventId = getArguments().getString("eventId");
+
+        UsersAdapter adapter = new UsersAdapter(
+                requireContext(),
+                cancelledList != null ? cancelledList : new ArrayList<>(),
+                eventId,
+                true
+        );
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(adapter);
 
         AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setView(view)
