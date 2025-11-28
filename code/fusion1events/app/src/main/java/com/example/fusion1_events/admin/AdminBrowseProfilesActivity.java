@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -21,9 +22,9 @@ import java.util.List;
  * Displays all profiles stored in Firestore using a RecyclerView with a custom ProfileAdapter.
  * Supports deleting profiles and viewing detailed profile information.
  */
-public class AdminBrowseProfilesActivity extends AppCompatActivity implements ProfileAdapter.onProfileActionListener {
+public class AdminBrowseProfilesActivity extends AppCompatActivity implements AdminProfileAdapter.onProfileActionListener {
     private RecyclerView recyclerView;
-    private ProfileAdapter adapter;
+    private AdminProfileAdapter adapter;
     private List<AdminProfile> profiles = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -34,7 +35,7 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Pr
 
         recyclerView = findViewById(R.id.recyclerProfiles);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProfileAdapter(profiles, this);
+        adapter = new AdminProfileAdapter(profiles, this);
         recyclerView.setAdapter(adapter);
 
         NavBarHelper.setupNavBar(this, AdminBrowseProfilesActivity.class);

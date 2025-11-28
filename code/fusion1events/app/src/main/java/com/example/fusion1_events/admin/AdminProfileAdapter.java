@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.R;
+
 import java.util.List;
 
 /**
  * Adapter for displaying a list of admin profiles in a RecyclerView.
  * Provides buttons for deleting or viewing a profile's details.
  */
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
+public class AdminProfileAdapter extends RecyclerView.Adapter<AdminProfileAdapter.ViewHolder> {
     /**
      * Listener interface for profile actions.
      */
@@ -40,7 +42,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
      * @param profiles list of admin profiles to display
      * @param listener listener for handling profile actions
      */
-    public ProfileAdapter(List<AdminProfile> profiles, onProfileActionListener listener) {
+    public AdminProfileAdapter(List<AdminProfile> profiles, onProfileActionListener listener) {
         this.profiles = profiles;
         this.listener = listener;
     }
