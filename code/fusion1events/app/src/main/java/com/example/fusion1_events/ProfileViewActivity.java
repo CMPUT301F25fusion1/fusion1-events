@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.fusion1_events.admin.AdminHomeActivity;
 import com.google.firebase.firestore.CollectionReference;
@@ -46,6 +47,9 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private String preEditName, preEditEmail, preEditNum;
 
+    private SwitchCompat allowNotifSwitch;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,12 @@ public class ProfileViewActivity extends AppCompatActivity {
         emailProfileEditText = findViewById(R.id.profileEditEmail);
         numProfileEditText = findViewById(R.id.profileEditNumber);
 
+        allowNotifSwitch = findViewById(R.id.switchAllowNotification);
+
+        allowNotifSwitch.setVisibility(View.GONE);
+        allowNotifSwitch.setEnabled(false);
+
+
         editMode(false);
 
 
@@ -87,6 +97,31 @@ public class ProfileViewActivity extends AppCompatActivity {
                 nameProfileEditText.setText(preEditName);
                 emailProfileEditText.setText(preEditEmail);
                 numProfileEditText.setText(preEditNum);
+
+                String role = profile.getString("role");
+
+                if ("ENTRANT".equals(role)) {
+                    // Show and enable switch for entrants
+                    allowNotifSwitch.setVisibility(View.VISIBLE);
+                    allowNotifSwitch.setEnabled(true);
+
+
+                    entrantsRef.document(deviceId).get().addOnSuccessListener(entrantDoc -> {
+                        Boolean allow = entrantDoc.getBoolean("allowNotification");
+                        allowNotifSwitch.setChecked(allow);
+                    });
+
+
+                    allowNotifSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("allowNotification", isChecked);
+                        entrantsRef.document(deviceId).set(data, SetOptions.merge());
+                    });
+
+                } else {
+                    allowNotifSwitch.setVisibility(View.GONE);
+                    allowNotifSwitch.setEnabled(false);
+                }
 
             });
 
@@ -189,6 +224,9 @@ public class ProfileViewActivity extends AppCompatActivity {
             deleteButtonProfileView.setVisibility(View.GONE);
             saveButton.setVisibility(View.VISIBLE);
             cancelEdtButton.setVisibility(View.VISIBLE);
+
+            allowNotifSwitch.setVisibility(View.GONE);
+            allowNotifSwitch.setEnabled(false);
         }
 
         else {
@@ -196,6 +234,14 @@ public class ProfileViewActivity extends AppCompatActivity {
             deleteButtonProfileView.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.GONE);
             cancelEdtButton.setVisibility(View.GONE);
+
+            FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
+                profileRef.document(deviceId).get().addOnSuccessListener(profile -> {
+                    if ("ENTRANT".equals(profile.getString("role"))) {
+                        allowNotifSwitch.setVisibility(View.VISIBLE);
+                    }
+                });
+            });
         }
 
         nameProfileEditText.setEnabled(Mode);
@@ -228,10 +274,31 @@ public class ProfileViewActivity extends AppCompatActivity {
             return;
         }
 
+
+        if (!postEditName.matches(".*[a-zA-Z].*")) {
+            Toast.makeText(this, "Name must contain letters in it.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if(TextUtils.isEmpty(postEditEmail)){
             Toast.makeText(this, "Please Enter an Email Address",
                     Toast.LENGTH_SHORT).show();
             return;
+        }
+
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(postEditEmail).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
+        if (!TextUtils.isEmpty(postEditNum)) {
+            if (!postEditNum.matches("\\d{10}")) {
+                Toast.makeText(this, "Phone number must be of 10 digits", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         saveButton.setEnabled(false);

@@ -155,65 +155,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Row 2 Location and Price -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
-
-                <!-- Left Column Location -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvLocationHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDetailLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hall A"
-                        android:textSize="14sp"
-                        android:textColor="#666666"/>
-                </LinearLayout>
-
-                <!-- Right Column Price -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="end">
-
-                    <TextView
-                        android:id="@+id/tvPriceHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Price"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDetailPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$10"
-                        android:textSize="14sp"
-                        android:textColor="#666666"/>
-                </LinearLayout>
-            </LinearLayout>
-
             <!-- Row 3: Registration Deadline and Total Entrants -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -273,65 +214,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Row 4: Waiting List and Organizer -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
-
-                <!-- Left Column Waiting List -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvWaitingListHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Waiting List"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDetailWaitingList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="200"
-                        android:textSize="14sp"
-                        android:textColor="#666666"/>
-                </LinearLayout>
-
-                <!-- Right Column Organizer -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="end">
-
-                    <TextView
-                        android:id="@+id/tvOrganizerHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Organizer"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvDetailOrganizer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Organizer A"
-                        android:textSize="14sp"
-                        android:textColor="#666666"/>
-                </LinearLayout>
-            </LinearLayout>
-
             <!-- Description -->
             <TextView
                 android:id="@+id/tvDetailDescription"
@@ -376,6 +258,57 @@
                     android:layout_marginStart="8dp"
                     android:visibility="gone"
                     android:backgroundTint="@android:color/holo_red_light" />
+
+                <!-- new stuff -->
+                <Button
+                    android:id="@+id/btnAcceptInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Accept Invite"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnDeclineInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Decline Invite"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/btnCancelInvite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:visibility="gone"
+                    android:backgroundTint="@android:color/holo_red_light" />
+
+                <TextView
+                    android:id="@+id/tvCancelledMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Invitation Cancelled"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/tvPastDeadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The deadline for this event has passed"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
 
             </LinearLayout>
         </LinearLayout>

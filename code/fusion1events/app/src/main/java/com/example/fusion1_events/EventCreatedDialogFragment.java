@@ -15,13 +15,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,6 +40,8 @@ public class EventCreatedDialogFragment extends DialogFragment {
     private static final String ARG_EVENT_TITLE = "event_title";
     private static EventsModel createdEvent;
     private static final String ARG_IMAGE_URI = "image_uri";
+
+    private UsersAdapter usersAdapter;
 
     /**
      * Creates a new instance of EventCreatedDialogFragment.
@@ -64,17 +71,61 @@ public class EventCreatedDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.event_created_dialog, null);
-        TextView titleText = view.findViewById(R.id.inputTitle);
+        TextView titleText = view.findViewById(R.id.eventTitle);
+        ImageView poster = view.findViewById(R.id.eventPoster);
+        TextView regStart = view.findViewById(R.id.registrationStartDate);
+        TextView regEnd = view.findViewById(R.id.registrationEndDate);
+        TextView eventDate = view.findViewById(R.id.eventDate);
         ImageView qrCode = view.findViewById(R.id.generatedQrImage);
-        Button backButton = view.findViewById(R.id.btnAddImage);
-        TextView attendeesText = view.findViewById(R.id.attendeesText);
-        ListView attendeesList = view.findViewById(R.id.attendeesList);
+        Button backButton = view.findViewById(R.id.btnBack);
+        TextView attendeesCount= view.findViewById(R.id.attendeesCount);
+        RecyclerView attendeesList = view.findViewById(R.id.attendeesList);
+        TextView listTitle = view.findViewById(R.id.listTitle);
 
         // Generate QR code for the event
         generateQRCode(qrCode);
 
+
         // Set event title
-        titleText.setText("Event Created!\n" + createdEvent.getEventTitle());
+        titleText.setText(createdEvent.getEventTitle());
+
+        //Set the poster
+        if (createdEvent.getImageUrl() != null ) {
+            Glide.with(this).load(createdEvent.getImageUrl()).into(poster);
+        } else {
+            poster.setImageResource(R.drawable.logo_loading);
+        }
+
+
+
+        //Set the dates
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String regsStart = formatter.format(createdEvent.getRegistrationStart());
+        String regsEnd = formatter.format(createdEvent.getRegistrationEnd());
+        String regsDate = formatter.format(createdEvent.getDate());
+
+        regStart.setText(regsDate);
+        regEnd.setText(regsEnd);
+        eventDate.setText(regsDate);
+
+        //TODO: add the ability to cancel users invites
+        if (createdEvent.getInvitedList().isEmpty()){
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
+            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            attendeesList.setAdapter(usersAdapter);
+            listTitle.setText("Current Waiting List:");
+        } else {
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList());
+            attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            attendeesList.setAdapter(usersAdapter);
+            listTitle.setText("Invited Users:");
+        }
+
+
+        //Set attendees
+        attendeesCount.setText(String.valueOf(createdEvent.getSignups())+" attendees registered");
+
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -87,31 +138,8 @@ public class EventCreatedDialogFragment extends DialogFragment {
             throw new RuntimeException(e);
         }
 
-        titleText.setText("Event Created!\n"+ createdEvent.getEventTitle());
-        titleText.setTextSize(20);
-        titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        titleText.setPadding(0, 16, 0, 16);
-
-        // Display attendees or registration deadline
-        displayAttendeeInformation(attendeesText, attendeesList);
-        ArrayList<String> finalListTest = createdEvent.getFinalList();
+        ArrayList<String> waitListTest = createdEvent.getWaitingList();
         Date registrationDeadline = createdEvent.getRegistrationEnd();
-
-        if (finalListTest.isEmpty()) {
-            attendeesText.setText("registration deadline: "+registrationDeadline);
-        } else {
-            attendeesText.setText("Invited attendees:");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    getContext(),
-                    android.R.layout.simple_list_item_1,
-                    finalListTest
-            );
-            attendeesList.setAdapter(adapter);
-
-        }
-
-
-
 
 
         // Build and configure dialog
@@ -124,6 +152,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         return dialog;
     }
+
 
     /**
      * Generates a QR code for the event and displays it in the provided ImageView.
@@ -140,33 +169,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
             qrCodeImageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Displays either the registration deadline or the list of invited attendees.
-     * If the final list is empty, shows the registration deadline.
-     * If the final list has attendees, displays them in a ListView.
-     *
-     * @param attendeesText TextView to display the header text
-     * @param attendeesList ListView to display the list of attendees
-     */
-    private void displayAttendeeInformation(TextView attendeesText, ListView attendeesList) {
-        ArrayList<String> finalListTest = createdEvent.getFinalList();
-        Date registrationDeadline = createdEvent.getRegistrationEnd();
-
-        if (finalListTest.isEmpty()) {
-            attendeesText.setText("registration deadline: " + registrationDeadline);
-            attendeesList.setVisibility(View.GONE);
-        } else {
-            attendeesText.setText("Invited attendees:");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    getContext(),
-                    android.R.layout.simple_list_item_1,
-                    finalListTest
-            );
-            attendeesList.setAdapter(adapter);
-            attendeesList.setVisibility(View.VISIBLE);
         }
     }
 }

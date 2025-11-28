@@ -8,15 +8,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +28,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,22 +40,23 @@ import java.util.Locale;
  * Provides a form interface for entering event details including title, description,
  * dates, attendee count, and an optional event image.
  */
-public class AddEventFragment extends DialogFragment {
+public class EditEventFragment extends DialogFragment {
+
 
     /**
      * Interface for communicating event creation back to the host activity.
      */
-    public interface AddEventDialogListener {
+    public interface EditEventDialogListener {
         /**
          * Called when a new event is created.
          *
          * @param eventsModel The event model containing event details
          * @param imageUri The URI of the selected event image, or null if no image selected
          */
-        void addEvent(EventsModel eventsModel, Uri imageUri);
+        void editEvent(int position,EventsModel event, EventsModel eventsModel, Uri imageUri);
     }
 
-    private AddEventDialogListener listener;
+    private EditEventDialogListener listener;
     private ImageButton increase;
     private ImageButton decrease;
     private ImageButton waitIncrease;
@@ -67,16 +66,16 @@ public class AddEventFragment extends DialogFragment {
     private EditText inputRegStartDate;
     private EditText inputRegEndDate;
     private EditText inputEventDate;
-
-    private Integer peopleCount = 0;
-    private Integer maxListCount = 0;
+    private LinearLayout waitingListContainer ;
+    private Integer peopleCount = Math.toIntExact(eventsModel.getAttendees());
+    private Integer maxListCount = Math.toIntExact(eventsModel.getMaxWaitList());
     private Date regStartDate;
     private Date regEndDate;
     private Date eventDate;
     private Uri selectedImageUri;
-    private Button btnShowWaitingList;
-    private LinearLayout waitingListContainer ;
-    private ArrayList<String> selectedTags = new ArrayList<>();
+    private static EventsModel eventsModel;
+    private final ArrayList<String> selectedTags = eventsModel.getSelectedTags();
+    private static int position;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -84,12 +83,14 @@ public class AddEventFragment extends DialogFragment {
     /**
      * Creates a new instance of AddEventFragment.
      *
-     * @param eventsModel The event model (currently unused, for future expansion)
+     * @param pos The event model (currently unused, for future expansion)
      * @return A new instance of AddEventFragment
      */
-    public static AddEventFragment newInstance(EventsModel eventsModel) {
+    public static EditEventFragment newInstance(EventsModel event, int pos) {
+        eventsModel = event;
+        position = pos;
         Bundle args = new Bundle();
-        AddEventFragment fragment = new AddEventFragment();
+        EditEventFragment fragment = new EditEventFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,7 +104,10 @@ public class AddEventFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (eventsModel.getImageUrl() != null) {
+            selectedImageUri = Uri.parse(eventsModel.getImageUrl());
 
+        }
 
         // Initialize image picker
         imagePickerLauncher = registerForActivityResult(
@@ -129,8 +133,8 @@ public class AddEventFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof AddEventDialogListener) {
-            listener = (AddEventDialogListener) context;
+        if (context instanceof EditEventDialogListener) {
+            listener = (EditEventDialogListener) context;
         } else {
             throw new RuntimeException("Must implement AddEventDialogListener");
         }
@@ -147,25 +151,81 @@ public class AddEventFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.add_event_dialog, null);
+        Button btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
+        LinearLayout waitingListContainer = view.findViewById(R.id.waitingListContainer);
 
         // Initialize views
         EditText editTitle = view.findViewById(R.id.inputTitle);
+        editTitle.setText(eventsModel.getEventTitle(), TextView.BufferType.EDITABLE);
+
         EditText editDescription = view.findViewById(R.id.inputDescription);
+        editDescription.setText(eventsModel.getEventDescription(), TextView.BufferType.EDITABLE);
+
         TextView editPeopleCount = view.findViewById(R.id.txtPeopleCount);
         TextView editMaxListCount = view.findViewById(R.id.txtWaitCount);
-        inputRegStartDate = view.findViewById(R.id.inputRegStartDate);
-        inputRegEndDate = view.findViewById(R.id.inputRegEndDate);
-        inputEventDate = view.findViewById(R.id.inputEventDate);
-        imagePreview = view.findViewById(R.id.imagePreview);
-        Button btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
-        LinearLayout waitingListContainer = view.findViewById(R.id.waitingListContainer);
+
+        editPeopleCount.setText(eventsModel.getAttendees().toString());
+        editMaxListCount.setText(eventsModel.getMaxWaitList().toString());
+
         ChipGroup chipGroupTags = view.findViewById(R.id.chipGroupTags);
         TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
         AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
 
-        //set spinner listener and chips adapter
+
+        inputRegStartDate = view.findViewById(R.id.inputRegStartDate);
+        inputRegStartDate.setText(dateFormat.format(eventsModel.getRegistrationStart()));
+        regStartDate = eventsModel.getRegistrationStart();
+
+        inputRegEndDate = view.findViewById(R.id.inputRegEndDate);
+        inputRegEndDate.setText(dateFormat.format(eventsModel.getRegistrationEnd()));
+        regEndDate = eventsModel.getRegistrationEnd();
+
+        inputEventDate = view.findViewById(R.id.inputEventDate);
+        inputEventDate.setText(dateFormat.format(eventsModel.getDate()));
+        eventDate = eventsModel.getDate();
+
+        imagePreview = view.findViewById(R.id.imagePreview);
+
+
+        increase = view.findViewById(R.id.btnIncrease);
+        decrease = view.findViewById(R.id.btnDecrease);
+        waitIncrease = view.findViewById(R.id.btnWaitIncrease);
+        waitDecrease = view.findViewById(R.id.btnWaitDecrease);
+        addImage = view.findViewById(R.id.btnAddImage);
+
+        // Set up date pickers
+        setupDatePicker(inputRegStartDate, date -> regStartDate = date);
+        setupDatePicker(inputRegEndDate, date -> regEndDate = date);
+        setupDatePicker(inputEventDate, date -> eventDate = date);
+
+        if (eventsModel.getImageUrl() != null ) {
+            Glide.with(this).load(eventsModel.getImageUrl()).into(imagePreview);
+        } else {
+            imagePreview.setImageResource(R.drawable.logo_loading);
+        }
+
+        //set the keywords
         String[] tagItems = {"Chill", "Sports", "Educational"};
         boolean[] selectedFlags = {false, false, false};
+
+        for (int i = 0; i < selectedTags.size(); i++){
+            selectedFlags[i] = true;
+            Chip chip = new Chip(requireContext());
+            chip.setText(selectedTags.get(i));
+            chip.setCloseIconVisible(true);
+
+            chip.setOnCloseIconClickListener(view1 -> {
+                int index = selectedTags.indexOf(chip.getText());
+                selectedTags.remove(chip.getText());
+                selectedFlags[index] = false;  // uncheck it in the dialog
+                chipGroupTags.removeView(chip);
+            });
+
+            chipGroupTags.addView(chip);
+        }
+
+
+
 
 
         inputTags.setOnClickListener(v -> {
@@ -205,30 +265,6 @@ public class AddEventFragment extends DialogFragment {
             builder.show();
         });
 
-
-
-
-
-
-
-
-
-
-
-        increase = view.findViewById(R.id.btnIncrease);
-        decrease = view.findViewById(R.id.btnDecrease);
-        addImage = view.findViewById(R.id.btnAddImage);
-        waitIncrease = view.findViewById(R.id.btnWaitIncrease);
-        waitDecrease = view.findViewById(R.id.btnWaitDecrease);
-
-        //set template image
-        imagePreview.setImageResource(R.drawable.logo_loading);
-
-        // Set up date pickers
-        setupDatePicker(inputRegStartDate, date -> regStartDate = date);
-        setupDatePicker(inputRegEndDate, date -> regEndDate = date);
-        setupDatePicker(inputEventDate, date -> eventDate = date);
-
         // Set up people count buttons
         setupPeopleCountButtons(editPeopleCount);
 
@@ -236,6 +272,10 @@ public class AddEventFragment extends DialogFragment {
 
         // Set up image selection
         setupImageSelection();
+
+        if (maxListCount > 0) {
+            waitingListContainer.setVisibility(View.VISIBLE);
+        }
 
         // setup the waiting list
         btnShowWaitingList.setOnClickListener(new View.OnClickListener() {
@@ -259,8 +299,8 @@ public class AddEventFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         return builder
                 .setView(view)
-                .setTitle("Add Event")
-                .setPositiveButton("Add", (dialog, which) -> {
+                .setTitle("Edit Event")
+                .setPositiveButton("Confirm", (dialog, which) -> {
                     String title = editTitle.getText().toString().trim();
                     String description = editDescription.getText().toString().trim();
 
@@ -271,12 +311,10 @@ public class AddEventFragment extends DialogFragment {
 
                     // Create EventsModel
                     EventsModel event = createEventModel(title, description);
-                    listener.addEvent(event, selectedImageUri);
+                    listener.editEvent(position, eventsModel, event, selectedImageUri);
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
-
-
     }
 
     /**
@@ -296,7 +334,6 @@ public class AddEventFragment extends DialogFragment {
                 editPeopleCount.setText(peopleCount.toString());
             }
         });
-
     }
 
     private void setupMaxListCountButtons(TextView editMaxListCount) {
@@ -324,7 +361,6 @@ public class AddEventFragment extends DialogFragment {
             imagePickerLauncher.launch(intent);
         });
     }
-
 
     /**
      * Validates the event input fields.
@@ -356,7 +392,6 @@ public class AddEventFragment extends DialogFragment {
      * @return A new EventsModel with the provided data
      */
     private EventsModel createEventModel(String title, String description) {
-        // add selectedTags
         return new EventsModel(
                 title,
                 selectedTags,
@@ -368,7 +403,7 @@ public class AddEventFragment extends DialogFragment {
                 0L, // signups starts at 0
                 new ArrayList<>(), // Empty waiting list for new events
                 null, // imageUrl will be set after upload
-                null,
+                eventsModel.getEventId(),
                 null,
                 Long.valueOf(maxListCount)
         );

@@ -4,27 +4,15 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-11-28T22:08:56.746847Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kalista/.android/avd/Entrant_View.avd" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
-<<<<<<< Updated upstream
-      <SelectionState runConfigName="EventTest">
-      <SelectionState runConfigName="DatabaseReferencesTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="LoadAppActivityTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="profileExists_withEntrant_opensEntrantHome()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="SignUpActivityUITest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="Tests in 'com.example.fusion1_events'">
-=======
-      <SelectionState runConfigName="Tests in 'com.example.fusion1_events'">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
->>>>>>> Stashed changes
     </selectionStates>
   </component>
 </project>
