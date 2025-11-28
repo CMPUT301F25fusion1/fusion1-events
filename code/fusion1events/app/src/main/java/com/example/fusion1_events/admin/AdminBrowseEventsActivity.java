@@ -20,7 +20,7 @@ import java.util.List;
  * Activity that allows an admin to browse all events stored in Firestore.
  * Admins can view, and delete events from this screen.
  */
-public class AdminBrowseEventsActivity extends AppCompatActivity implements AdminEventAdapter.onEventActionListener{
+public class AdminBrowseEventsActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private AdminEventAdapter adapter;
     private List<Event> events = new ArrayList<>();
@@ -36,7 +36,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter with the list of events and event action listener
-        adapter = new AdminEventAdapter(events, this);
+        adapter = new AdminEventAdapter(events);
         recyclerView.setAdapter(adapter);
 
         // Set up navigation bar for admin users
@@ -74,27 +74,5 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
                 })
                 .addOnFailureListener(e ->
                         Log.e("Firestore", "Error loading events", e));
-    }
-
-    /**
-     * Handles the deletion of an event when triggered from the adapter.
-     * Removes the event from Firestore and updates the list.
-     *
-     * @param event The Event object to delete.
-     */
-    @Override
-    public void onDeleteEvent(Event event) {
-        String eventId = event.getId();
-        if (eventId == null) return;
-
-        db.collection("Events").document(eventId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    events.remove(event);
-                    adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Event deleted successfully");
-                })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error deleting event"));
     }
 }
