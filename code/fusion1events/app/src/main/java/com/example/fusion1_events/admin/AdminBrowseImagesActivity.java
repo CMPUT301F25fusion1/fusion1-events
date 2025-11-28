@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,9 +6,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * Activity that allows an admin to browse all images stored in Firestore.
  */
-public class AdminBrowseImagesActivity extends AppCompatActivity implements ImageAdapter.onImageActionListener {
+public class AdminBrowseImagesActivity extends AppCompatActivity implements AdminImageAdapter.onImageActionListener {
     private RecyclerView recyclerView;
-    private ImageAdapter adapter;
-    private List<Image> images = new ArrayList<>();
+    private AdminImageAdapter adapter;
+    private List<Admin> images = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -31,7 +31,7 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Imag
 
         recyclerView = findViewById(R.id.recyclerImages);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        adapter = new ImageAdapter(images, this);
+        adapter = new AdminImageAdapter(images, this);
         recyclerView.setAdapter(adapter);
 
         NavBarHelper.setupNavBar(this, AdminBrowseImagesActivity.class);
@@ -56,7 +56,7 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Imag
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     images.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Image image = doc.toObject(Image.class);
+                        Admin image = doc.toObject(Admin.class);
                         image.setId(doc.getId());
                         images.add(image);
                     }
@@ -75,7 +75,7 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Imag
      * @param image The Image object to delete.
      */
     @Override
-    public void onDeleteImage(Image image) {
+    public void onDeleteImage(Admin image) {
         String id = image.getId();
         if (id == null) return;
 

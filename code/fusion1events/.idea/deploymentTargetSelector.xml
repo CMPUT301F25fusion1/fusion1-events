@@ -5,6 +5,7 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< Updated upstream
       <SelectionState runConfigName="EventTest">
       <SelectionState runConfigName="DatabaseReferencesTest">
         <option name="selectionMode" value="DROPDOWN" />
@@ -19,6 +20,11 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="Tests in 'com.example.fusion1_events'">
+=======
+      <SelectionState runConfigName="Tests in 'com.example.fusion1_events'">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+>>>>>>> Stashed changes
     </selectionStates>
   </component>
 </project>

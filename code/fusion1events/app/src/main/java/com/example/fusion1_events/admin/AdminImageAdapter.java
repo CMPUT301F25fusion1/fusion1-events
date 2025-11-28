@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.Locale;
 
 import com.bumptech.glide.Glide;
+import com.example.fusion1_events.R;
 
 /**
  * RecyclerView adapter for displaying images uploaded for events in the admin interface.
  * <p>
  * Each item shows the image, event title, organizer, registration end date, and a delete button.
  */
-public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.ViewHolder> {
     /**
      * Listener interface for handling actions on images.
      */
@@ -31,10 +32,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
          *
          * @param image the Image object to be deleted
          */
-        void onDeleteImage(Image image);
+        void onDeleteImage(Admin image);
     }
 
-    private List<Image> images;
+    private List<Admin> images;
     private onImageActionListener listener;
 
     /**
@@ -43,7 +44,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
      * @param images   the list of images to display
      * @param listener listener to handle image actions
      */
-    public ImageAdapter(List<Image> images, onImageActionListener listener) {
+    public AdminImageAdapter(List<Admin> images, onImageActionListener listener) {
         this.images = images;
         this.listener = listener;
     }
@@ -70,7 +71,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Image image = images.get(position);
+        Admin image = images.get(position);
 
         // Load image from URL using Glide
         Glide.with(holder.imageView.getContext())
