@@ -19,6 +19,7 @@ public class EventsModel {
     ArrayList<String> waitingList;
     ArrayList<String> invitedList;
     ArrayList<String> cancelled;
+    ArrayList<String> confirmed;
 
 
     String imageUrl; // Store Cloudinary URL for event image
@@ -42,12 +43,14 @@ public class EventsModel {
      * @param eventId The Firestore document ID
      * @param invitedList List of entrant IDs selected for the event
      * @param maxWaitList The maximum number of entrants on the waiting list
+     * @param cancelled List of entrant IDs who were cancelled
+     * @param confirmed List of entrant IDs who are in the final confirmed list
      */
 
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -62,7 +65,7 @@ public class EventsModel {
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
-
+        this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
     }
 
     public ArrayList<String> getCancelled() {
@@ -72,6 +75,15 @@ public class EventsModel {
 
     public void setCancelled(ArrayList<String> cancelled) {
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
+    }
+
+    public ArrayList<String> getConfirmed() {
+        if (confirmed == null) confirmed = new ArrayList<>();
+        return confirmed;
+    }
+
+    public void setConfirmed(ArrayList<String> confirmed) {
+        this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
     }
 
     public ArrayList<String> getSelectedTags(){

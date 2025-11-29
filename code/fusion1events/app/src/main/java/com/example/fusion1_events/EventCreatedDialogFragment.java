@@ -88,11 +88,19 @@ public class EventCreatedDialogFragment extends DialogFragment {
         TextView listTitle = view.findViewById(R.id.listTitle);
 
         Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
+        Button btnViewFinalList = view.findViewById(R.id.btnViewFinalList);
 
         btnViewCancelled.setOnClickListener(v -> {
             CancelledEntrantsDialogFragment
                     .newInstance(createdEvent.getEventId(), createdEvent.getCancelled())
                     .show(getChildFragmentManager(), "cancelled_dialog");
+        });
+
+        btnViewFinalList.setOnClickListener(v -> {
+            // Assuming you have a confirmed/final list in EventsModel
+            FinalEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getConfirmed())
+                    .show(getChildFragmentManager(), "final_dialog");
         });
 
 

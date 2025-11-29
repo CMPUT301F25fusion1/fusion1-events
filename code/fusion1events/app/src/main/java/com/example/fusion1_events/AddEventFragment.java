@@ -371,6 +371,7 @@ public class AddEventFragment extends DialogFragment {
                 null,
                 null,
                 Long.valueOf(maxListCount),
+                null,
                 null
         );
     }

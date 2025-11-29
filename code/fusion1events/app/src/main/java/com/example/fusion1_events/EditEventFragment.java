@@ -406,6 +406,7 @@ public class EditEventFragment extends DialogFragment {
                 eventsModel.getEventId(),
                 null,
                 Long.valueOf(maxListCount),
+                null,
                 null
         );
     }

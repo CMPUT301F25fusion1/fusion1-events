@@ -188,10 +188,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                             Object invitedListObj = eventDoc.get("invitedList");  //changed
                                                             Object keyWordsListObj = eventDoc.get("Keywords");
                                                             Object cancelledObj = eventDoc.get("cancelled");
+                                                            Object confirmedObj = eventDoc.get("confirmed");   // NEW
+
                                                             ArrayList<String> keyWords = new ArrayList<>();
                                                             ArrayList<String> waitingList = new ArrayList<>();
                                                             ArrayList<String> invitedList = new ArrayList<>();
                                                             ArrayList<String> cancelled = new ArrayList<>();
+                                                            ArrayList<String> confirmed = new ArrayList<>();  // NEW
 
                                                             //fill waitingList
                                                             if (waitingListObj instanceof List) {
@@ -267,6 +270,27 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No cancelled list found or empty");
                                                             }
 
+                                                            // NEW: fill confirmed
+                                                            if (confirmedObj instanceof List) {
+                                                                List<Object> confirmedRefs = (List<Object>) confirmedObj;
+                                                                Log.d(TAG, "Found " + confirmedRefs.size() + " entrants in confirmed list");
+
+                                                                for (Object refObj : confirmedRefs) {
+                                                                    if (refObj instanceof DocumentReference) {
+                                                                        DocumentReference entrantRef = (DocumentReference) refObj;
+                                                                        String entrantId = entrantRef.getId();
+                                                                        confirmed.add(entrantId);
+                                                                        Log.d(TAG, "Added entrant to confirmed list: " + entrantId);
+                                                                    } else if (refObj instanceof String) {
+                                                                        confirmed.add((String) refObj);
+                                                                        Log.d(TAG, "Added entrant ID to confirmed list: " + refObj);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Log.d(TAG, "No confirmed list found or empty");
+                                                            }
+
+
                                                             EventsModel event = new EventsModel(
 
                                                                     eventDoc.getString("title"),
@@ -282,11 +306,10 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getId(),
                                                                     invitedList,
                                                                     eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
-                                                                    cancelled
-
-
-
+                                                                    cancelled,
+                                                                    confirmed
                                                             );
+
                                                             eventsModels.add(event);
                                                             eventsAdapter.notifyDataSetChanged();
                                                             Log.d(TAG, "Event added to list: " + event.getEventTitle() +
@@ -488,6 +511,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("waitingList", new ArrayList<>());
         eventData.put("cancelled", new ArrayList<>());
         eventData.put("invitedList", new ArrayList<>());
+        eventData.put("confirmed", new ArrayList<>());                 // NEW
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
 
         db.collection("Events")
