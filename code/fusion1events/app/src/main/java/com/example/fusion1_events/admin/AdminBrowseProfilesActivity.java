@@ -4,17 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.Event;
 import com.example.fusion1_events.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Activity that allows an admin to browse, view, and delete user profiles.
@@ -43,8 +50,23 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
         loadProfiles();
 
         // back button
-        Button backButton = findViewById(R.id.buttonBack);
+        ImageButton backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
+
+        // Listen for real-time updates to the "Profiles" collection.
+        db.collection("Profile").addSnapshotListener((doc, e) -> {
+            if (doc != null) {
+                profiles.clear();
+                List<AdminProfile> newProfiles = doc.getDocuments()
+                        .stream()
+                        .map(this::docToProfile)
+                        .collect(Collectors.toList());
+
+                profiles.addAll(newProfiles);
+                Log.d("FirestoreDebug", newProfiles.toString());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -59,15 +81,18 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     profiles.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        AdminProfile profile = doc.toObject(AdminProfile.class);
-                        profile.setId(doc.getId());
+                        AdminProfile profile = docToProfile(doc);
                         profiles.add(profile);
                     }
                     adapter.notifyDataSetChanged();
                     Log.d("Firestore", "Profiles loaded successfully");
                 })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error loading profiles", e));
+                {
+                    String failureMessage = "Error loading profiles";
+                    Log.e("Firestore", failureMessage, e);
+                    Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
+                });
     }
 
     /**
@@ -85,10 +110,16 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
                 .addOnSuccessListener(aVoid -> {
                     profiles.remove(profile);
                     adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Profile deleted successfully");
+                    String successMessage = "Profile deleted successfully";
+                    Log.d("Firestore", successMessage);
+                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error deleting profile"));
+                {
+                    String failureMessage = "Error deleting profile";
+                    Log.e("Firestore", failureMessage);
+                    Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
+                });
     }
 
     /**
@@ -101,6 +132,18 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
         Intent intent = new Intent(this, AdminProfileDetailsActivity.class);
         intent.putExtra("profile_id", profile.getId());
         startActivity(intent);
+    }
+
+    /**
+     * Converts a Firestore DocumentSnapshot into a Profile object and assigns the document's ID to the Profile.
+     *
+     * @param doc the Firestore document containing profile data
+     * @return a Profile object with populated fields and Firestore ID
+     */
+    private @NonNull AdminProfile docToProfile(@NonNull DocumentSnapshot doc) {
+        AdminProfile profile = doc.toObject(AdminProfile.class);
+        profile.setId(doc.getId());
+        return profile;
     }
 
 }
