@@ -3,7 +3,7 @@ package com.example.fusion1_events;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import com.example.fusion1_events.admin.Admin;
+import com.example.fusion1_events.admin.AdminImage;
 import com.google.firebase.Timestamp;
 
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.junit.Test;
 public class ImageTest {
     @Test
     public void testImageGettersAndSetters() {
-        Admin image = new Admin();
+        AdminImage image = new AdminImage();
         Timestamp timestamp = Timestamp.now();
 
         image.setId("img001");
@@ -29,7 +29,7 @@ public class ImageTest {
 
     @Test
     public void testImageDefaults() {
-        Admin image = new Admin();
+        AdminImage image = new AdminImage();
         assertNull(image.getId());
         assertNull(image.getImageUrl());
         assertNull(image.getEventTitle());

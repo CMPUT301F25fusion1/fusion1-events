@@ -5,14 +5,14 @@ import com.google.firebase.Timestamp;
 /**
  * Model class representing an image uploaded for an event in the admin interface.
  */
-public class Admin {
+public class AdminImage {
     private String id;
     private String imageUrl;
     private String eventTitle;
     private String organizer;
     private Timestamp registration_end;
 
-    public Admin() {}
+    public AdminImage() {}
 
     // getters and setters
     /**

@@ -3,18 +3,23 @@ package com.example.fusion1_events.admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusion1_events.Event;
 import com.example.fusion1_events.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Activity that allows an admin to browse all events stored in Firestore.
@@ -45,8 +50,23 @@ public class AdminBrowseEventsActivity extends AppCompatActivity{
         loadEvents();
 
         // Set up back button to return to the previous screen
-        Button backButton = findViewById(R.id.buttonBack);
+        ImageButton backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
+
+        // Listen for real-time updates to the "Events" collection.
+        db.collection("Events").addSnapshotListener((doc, e) -> {
+            if (doc != null) {
+                events.clear();
+                List<Event> newEvents = doc.getDocuments()
+                        .stream()
+                        .map(this::docToEvent)
+                        .collect(Collectors.toList());
+
+                events.addAll(newEvents);
+                Log.d("FirestoreDebug", newEvents.toString());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -59,8 +79,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity{
                     events.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         // Convert each Firestore document into an Event object
-                        Event event = doc.toObject(Event.class);
-                        event.setId(doc.getId());
+                        Event event = docToEvent(doc);
                         events.add(event);
 
                         if (event.getRegistration_end() != null) {
@@ -74,5 +93,17 @@ public class AdminBrowseEventsActivity extends AppCompatActivity{
                 })
                 .addOnFailureListener(e ->
                         Log.e("Firestore", "Error loading events", e));
+    }
+
+    /**
+     * Converts a Firestore DocumentSnapshot into an Event object and assigns the document's ID to the Event.
+     *
+     * @param doc the Firestore document containing event data
+     * @return an Event object with populated fields and Firestore ID
+     */
+    private @NonNull Event docToEvent(@NonNull DocumentSnapshot doc) {
+        Event event = doc.toObject(Event.class);
+        event.setId(doc.getId());
+        return event;
     }
 }

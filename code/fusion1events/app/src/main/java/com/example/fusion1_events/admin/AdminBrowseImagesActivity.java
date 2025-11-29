@@ -21,7 +21,7 @@ import java.util.List;
 public class AdminBrowseImagesActivity extends AppCompatActivity implements AdminImageAdapter.onImageActionListener {
     private RecyclerView recyclerView;
     private AdminImageAdapter adapter;
-    private List<Admin> images = new ArrayList<>();
+    private List<AdminImage> images = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -56,7 +56,7 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     images.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Admin image = doc.toObject(Admin.class);
+                        AdminImage image = doc.toObject(AdminImage.class);
                         image.setId(doc.getId());
                         images.add(image);
                     }
@@ -75,7 +75,7 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
      * @param image The Image object to delete.
      */
     @Override
-    public void onDeleteImage(Admin image) {
+    public void onDeleteImage(AdminImage image) {
         String id = image.getId();
         if (id == null) return;
 
