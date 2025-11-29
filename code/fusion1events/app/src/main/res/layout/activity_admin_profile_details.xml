@@ -4,12 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <!--    Back Button-->
+    <ImageButton
         android:id="@+id/buttonBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="← Back"
-        android:layout_marginBottom="16dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_back"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/back"
+        />
 
     <!-- Profile Name -->
     <TextView

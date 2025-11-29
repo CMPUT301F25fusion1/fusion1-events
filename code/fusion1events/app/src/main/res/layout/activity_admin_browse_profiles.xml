@@ -14,19 +14,16 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="←"
-        android:textSize="40dp"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:paddingHorizontal="5dp"
-        android:paddingVertical="2dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_back"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/back"
+        app:layout_constraintTop_toBottomOf="@+id/NavBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/NavBar"
-        android:layout_margin="6dp" />
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerProfiles"
