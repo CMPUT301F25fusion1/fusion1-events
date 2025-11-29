@@ -173,11 +173,13 @@ public class NotificationHelperClass {
                         notificationData.put("notificationTitle", notificationTitle);
                         notificationData.put("notificationMessage", notificationMessage);
                         notificationData.put("read", false);
+                        notificationData.put("notified", false);
                         notificationData.put("receiverId", entrantRef);
 
                         if (senderRef != null) {
                             notificationData.put("senderID", senderRef);
                         }
+
 
                         Log.d(TAG, "Adding notification for entrant: " + entrantRef.getPath());
 

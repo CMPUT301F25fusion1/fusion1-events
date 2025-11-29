@@ -112,6 +112,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
+    public void updateList(List<Event> filteredEvents) {
+        this.eventList = filteredEvents;
+        notifyDataSetChanged();
+    }
+
     static class EventViewHolder extends RecyclerView.ViewHolder {
         ImageView ivImage;
         TextView tvTitle, tvDate, tvDescription;

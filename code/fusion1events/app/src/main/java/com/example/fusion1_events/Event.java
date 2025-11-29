@@ -35,7 +35,7 @@ public class Event implements Serializable {
     private ArrayList<DocumentReference> invitedList;
     private ArrayList<DocumentReference> confirmed;
     private ArrayList<DocumentReference> cancelled;
-    private ArrayList<String> keywords;
+    private ArrayList<String> Keywords;
 
 
     public Event(){}
@@ -44,7 +44,7 @@ public class Event implements Serializable {
     public Event(int signups, int attendees, Timestamp date,String id, String description,
                  Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList,
                  String imageUrl, ArrayList<DocumentReference> invitedList, ArrayList<DocumentReference> confirmed,
-                 ArrayList<DocumentReference> cancelled, ArrayList<String> keywords) {
+                 ArrayList<DocumentReference> cancelled, ArrayList<String> Keywords) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -63,7 +63,7 @@ public class Event implements Serializable {
         this.invitedList = invitedList;
         this.confirmed = confirmed;
         this.cancelled = cancelled;
-        this.keywords = keywords;
+        this.Keywords = Keywords;
     }
 
 
@@ -210,8 +210,8 @@ public class Event implements Serializable {
         this.cancelled = cancelled;
     }
 
-    public ArrayList<String> getKeyword() { return keywords; }
-    public void setKeyword(String keyword) {
-        this.keywords = keywords;
+    public ArrayList<String> getKeywords() { return Keywords; }
+    public void setKeywords(String keyword) {
+        this.Keywords = Keywords;
     }
 }

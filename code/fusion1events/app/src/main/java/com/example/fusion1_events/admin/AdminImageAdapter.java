@@ -1,4 +1,4 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.Locale;
 
 import com.bumptech.glide.Glide;
+import com.example.fusion1_events.R;
 
 /**
  * RecyclerView adapter for displaying images uploaded for events in the admin interface.
  * <p>
  * Each item shows the image, event title, organizer, registration end date, and a delete button.
  */
-public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
+public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.ViewHolder> {
     /**
      * Listener interface for handling actions on images.
      */
@@ -31,10 +32,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
          *
          * @param image the Image object to be deleted
          */
-        void onDeleteImage(Image image);
+        void onDeleteImage(AdminImage image);
     }
 
-    private List<Image> images;
+    private List<AdminImage> images;
     private onImageActionListener listener;
 
     /**
@@ -43,7 +44,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
      * @param images   the list of images to display
      * @param listener listener to handle image actions
      */
-    public ImageAdapter(List<Image> images, onImageActionListener listener) {
+    public AdminImageAdapter(List<AdminImage> images, onImageActionListener listener) {
         this.images = images;
         this.listener = listener;
     }
@@ -70,16 +71,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Image image = images.get(position);
+        AdminImage image = images.get(position);
 
         // Load image from URL using Glide
         Glide.with(holder.imageView.getContext())
                 .load(image.getImageUrl())
-                .placeholder(R.drawable.ic_admin_image_placeholder_foreground) // optional placeholder
                 .into(holder.imageView);
 
         holder.title.setText(image.getEventTitle());
-        holder.organizer.setText("Uploaded by: " + image.getOrganizer());
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
         if (image.getRegistration_end() != null)
@@ -107,14 +106,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title, organizer, regEnd;
+        TextView title, regEnd;
         Button buttonDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageViewEvent);
             title = itemView.findViewById(R.id.tvImageTitle);
-            organizer = itemView.findViewById(R.id.tvOrganizer);
             regEnd = itemView.findViewById(R.id.tvRegEnd);
             buttonDelete = itemView.findViewById(R.id.buttonDeleteImage);
         }

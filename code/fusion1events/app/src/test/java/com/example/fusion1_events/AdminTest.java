@@ -3,9 +3,11 @@ package com.example.fusion1_events;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import com.example.fusion1_events.admin.AdminProfile;
+
 import org.junit.Test;
 
-public class AdminProfileTest {
+public class AdminTest {
     @Test
     public void testAdminProfileGettersAndSetters() {
         AdminProfile profile = new AdminProfile();

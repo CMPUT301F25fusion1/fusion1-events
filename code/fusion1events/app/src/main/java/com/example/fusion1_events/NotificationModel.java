@@ -16,6 +16,8 @@ public class NotificationModel {
     private DocumentReference receiverId;
     private DocumentReference senderID;
 
+    private boolean notified;
+
     public NotificationModel() {
     }
 
@@ -27,7 +29,8 @@ public class NotificationModel {
                             Timestamp createdAt,
                             DocumentReference eventId,
                             DocumentReference receiverId,
-                            DocumentReference senderID) {
+                            DocumentReference senderID,
+                            boolean notified) {
         this.id = id;
         this.eventName = eventName;
         this.notificationTitle = notificationTitle;
@@ -37,6 +40,7 @@ public class NotificationModel {
         this.eventId = eventId;
         this.receiverId = receiverId;
         this.senderID = senderID;
+        this.notified = notified;
     }
 
     public static NotificationModel fromSnapshot(DocumentSnapshot doc) {
@@ -49,6 +53,10 @@ public class NotificationModel {
         DocumentReference eventId = doc.getDocumentReference("eventId");
         DocumentReference receiverId = doc.getDocumentReference("receiverId");
         DocumentReference senderID = doc.getDocumentReference("senderID");
+
+        Boolean notified = doc.getBoolean("notified");
+        boolean isNotified = notified != null && notified;
+
 
         if (eventName == null) eventName = "";
         if (notificationTitle == null) notificationTitle = "";
@@ -64,7 +72,9 @@ public class NotificationModel {
                 createdAt,
                 eventId,
                 receiverId,
-                senderID
+                senderID,
+                isNotified
+
         );
     }
 
@@ -107,4 +117,7 @@ public class NotificationModel {
     public DocumentReference getSenderID() {
         return senderID;
     }
+
+    public boolean isNotified() { return notified; }
+    public void setNotified(boolean notified) { this.notified = notified; }
 }

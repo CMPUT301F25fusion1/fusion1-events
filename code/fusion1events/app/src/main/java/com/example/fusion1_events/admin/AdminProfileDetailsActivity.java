@@ -1,12 +1,15 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fusion1_events.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -16,13 +19,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class AdminProfileDetailsActivity extends AppCompatActivity {
     private TextView tvName, tvEmail, tvRole, tvPhone;
-    private Button buttonBack;
+    private ImageButton buttonBack;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_details);
+        setContentView(R.layout.activity_admin_profile_details);
 
         tvName = findViewById(R.id.tvName);
         tvEmail = findViewById(R.id.tvEmail);
@@ -51,7 +54,8 @@ public class AdminProfileDetailsActivity extends AppCompatActivity {
                             tvName.setText(profile.getName());
                             tvEmail.setText(profile.getEmail());
                             tvRole.setText(profile.getRole());
-                            tvPhone.setText(profile.getNumber());
+                            String phone = profile.getNumber();
+                            tvPhone.setText(phone != null && !phone.isEmpty() ? phone : "N/A");
                         }
                     }
                 })

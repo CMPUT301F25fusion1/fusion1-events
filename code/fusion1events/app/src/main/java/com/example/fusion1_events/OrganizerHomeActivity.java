@@ -119,7 +119,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
             @Override
             public void onEventClick(EventsModel event, int position) {
                 EventCreatedDialogFragment confirmDialog =
-                        EventCreatedDialogFragment.newInstance(event, null);
+                        EventCreatedDialogFragment.newInstance(event);
                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
             }
 
@@ -185,11 +185,16 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                                         try {
                                                             Object waitingListObj = eventDoc.get("waitingList");
-                                                            Object invitedListObj = eventDoc.get("InvitedList");
+                                                            Object invitedListObj = eventDoc.get("invitedList");  //changed
                                                             Object keyWordsListObj = eventDoc.get("Keywords");
+                                                            Object cancelledObj = eventDoc.get("cancelled");
+                                                            Object confirmedObj = eventDoc.get("confirmed");   // NEW
+
                                                             ArrayList<String> keyWords = new ArrayList<>();
                                                             ArrayList<String> waitingList = new ArrayList<>();
                                                             ArrayList<String> invitedList = new ArrayList<>();
+                                                            ArrayList<String> cancelled = new ArrayList<>();
+                                                            ArrayList<String> confirmed = new ArrayList<>();  // NEW
 
                                                             //fill waitingList
                                                             if (waitingListObj instanceof List) {
@@ -245,6 +250,47 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No invited list found or empty");
                                                             }
 
+                                                            //fill cancelled
+                                                            if (cancelledObj instanceof List) {
+                                                                List<Object> cancelledRefs = (List<Object>) cancelledObj;
+                                                                Log.d(TAG, "Found " + cancelledRefs.size() + " entrants in cancelled list");
+
+                                                                for (Object refObj : cancelledRefs) {
+                                                                    if (refObj instanceof DocumentReference) {
+                                                                        DocumentReference entrantRef = (DocumentReference) refObj;
+                                                                        String entrantId = entrantRef.getId();
+                                                                        cancelled.add(entrantId);
+                                                                        Log.d(TAG, "Added entrant to cancelled list: " + entrantId);
+                                                                    } else if (refObj instanceof String) {
+                                                                        cancelled.add((String) refObj);
+                                                                        Log.d(TAG, "Added entrant ID to cancelled list: " + refObj);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Log.d(TAG, "No cancelled list found or empty");
+                                                            }
+
+                                                            // NEW: fill confirmed
+                                                            if (confirmedObj instanceof List) {
+                                                                List<Object> confirmedRefs = (List<Object>) confirmedObj;
+                                                                Log.d(TAG, "Found " + confirmedRefs.size() + " entrants in confirmed list");
+
+                                                                for (Object refObj : confirmedRefs) {
+                                                                    if (refObj instanceof DocumentReference) {
+                                                                        DocumentReference entrantRef = (DocumentReference) refObj;
+                                                                        String entrantId = entrantRef.getId();
+                                                                        confirmed.add(entrantId);
+                                                                        Log.d(TAG, "Added entrant to confirmed list: " + entrantId);
+                                                                    } else if (refObj instanceof String) {
+                                                                        confirmed.add((String) refObj);
+                                                                        Log.d(TAG, "Added entrant ID to confirmed list: " + refObj);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                Log.d(TAG, "No confirmed list found or empty");
+                                                            }
+
+
                                                             EventsModel event = new EventsModel(
 
                                                                     eventDoc.getString("title"),
@@ -259,10 +305,11 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
                                                                     invitedList,
-                                                                    eventDoc.getLong("maxWaitingListSize")//TODO: if an event is legacy, set maxWaitingListSize to null
-
-
+                                                                    eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
+                                                                    cancelled,
+                                                                    confirmed
                                                             );
+
                                                             eventsModels.add(event);
                                                             eventsAdapter.notifyDataSetChanged();
                                                             Log.d(TAG, "Event added to list: " + event.getEventTitle() +
@@ -462,6 +509,9 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("Signups", eventsModel.getSignups());
         eventData.put("imageUrl", imageUrl);
         eventData.put("waitingList", new ArrayList<>());
+        eventData.put("cancelled", new ArrayList<>());
+        eventData.put("invitedList", new ArrayList<>());
+        eventData.put("confirmed", new ArrayList<>());                 // NEW
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
 
         db.collection("Events")
@@ -482,8 +532,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                 EventCreatedDialogFragment confirmDialog =
                                         EventCreatedDialogFragment.newInstance(
-                                                eventsModel,
-                                                null);
+                                                eventsModel);
                                 confirmDialog.show(getSupportFragmentManager(), "Event Created");
                             })
                             .addOnFailureListener(e -> {

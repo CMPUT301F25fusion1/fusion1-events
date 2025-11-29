@@ -1,26 +1,31 @@
-package com.example.fusion1_events;
+package com.example.fusion1_events.admin;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fusion1_events.Event;
+import com.example.fusion1_events.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Activity that allows an admin to browse all events stored in Firestore.
  * Admins can view, and delete events from this screen.
  */
-public class AdminBrowseEventsActivity extends AppCompatActivity implements AdminEventAdapter.onEventActionListener{
+public class AdminBrowseEventsActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private AdminEventAdapter adapter;
     private List<Event> events = new ArrayList<>();
@@ -36,7 +41,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter with the list of events and event action listener
-        adapter = new AdminEventAdapter(events, this);
+        adapter = new AdminEventAdapter(events);
         recyclerView.setAdapter(adapter);
 
         // Set up navigation bar for admin users
@@ -45,8 +50,23 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
         loadEvents();
 
         // Set up back button to return to the previous screen
-        Button backButton = findViewById(R.id.buttonBack);
+        ImageButton backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
+
+        // Listen for real-time updates to the "Events" collection.
+        db.collection("Events").addSnapshotListener((doc, e) -> {
+            if (doc != null) {
+                events.clear();
+                List<Event> newEvents = doc.getDocuments()
+                        .stream()
+                        .map(this::docToEvent)
+                        .collect(Collectors.toList());
+
+                events.addAll(newEvents);
+                Log.d("FirestoreDebug", newEvents.toString());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -59,8 +79,7 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
                     events.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         // Convert each Firestore document into an Event object
-                        Event event = doc.toObject(Event.class);
-                        event.setId(doc.getId());
+                        Event event = docToEvent(doc);
                         events.add(event);
 
                         if (event.getRegistration_end() != null) {
@@ -77,24 +96,14 @@ public class AdminBrowseEventsActivity extends AppCompatActivity implements Admi
     }
 
     /**
-     * Handles the deletion of an event when triggered from the adapter.
-     * Removes the event from Firestore and updates the list.
+     * Converts a Firestore DocumentSnapshot into an Event object and assigns the document's ID to the Event.
      *
-     * @param event The Event object to delete.
+     * @param doc the Firestore document containing event data
+     * @return an Event object with populated fields and Firestore ID
      */
-    @Override
-    public void onDeleteEvent(Event event) {
-        String eventId = event.getId();
-        if (eventId == null) return;
-
-        db.collection("Events").document(eventId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    events.remove(event);
-                    adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Event deleted successfully");
-                })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error deleting event"));
+    private @NonNull Event docToEvent(@NonNull DocumentSnapshot doc) {
+        Event event = doc.toObject(Event.class);
+        event.setId(doc.getId());
+        return event;
     }
 }
