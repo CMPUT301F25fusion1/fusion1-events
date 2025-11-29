@@ -38,9 +38,9 @@
         <activity android:name=".AdminBrowseImagesActivity" />
         <activity android:name=".AdminEventDetailsActivity" />
         <activity android:name=".AdminProfileDetailsActivity"/>
-        <activity android:name=".ProfileViewActivity"/>
-        <activity android:name=".SampleEntrantsActivity"/>
 
+        <activity android:name=".SampleEntrantsActivity"/>
+        <activity android:name=".NotificationsActivity"/>
 
 
     </application>

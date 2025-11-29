@@ -79,6 +79,7 @@ public class EntrantHomeActivity extends AppCompatActivity {
                     TextView tvYourEvents = findViewById(R.id.tvYourEvents);
                     TextView tvYourProfile = findViewById(R.id.tvYourProfile);
                     ImageView tvDetailImage = findViewById(R.id.ivDetailImage);
+                    TextView tvNotifications = findViewById(R.id.tvNotifications);
 
 
                     tvYourProfile.setOnClickListener(v -> {
@@ -97,6 +98,15 @@ public class EntrantHomeActivity extends AppCompatActivity {
                         intent.putExtra("currentUser", currentUser);
                         startActivity(intent);
                     });
+
+                    tvNotifications.setOnClickListener(v -> {
+                        Intent intent = new Intent(EntrantHomeActivity.this, NotificationsActivity.class);
+                        intent.putExtra("currentUser", currentUser);
+                        startActivity(intent);
+                    });
+
+
+
 
                     adapter = new EventAdapter(this, eventList, currentUser);
                     eventsRecyclerView.setAdapter(adapter);

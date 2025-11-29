@@ -58,6 +58,7 @@ public class YourEventsActivity extends AppCompatActivity {
         TextView tvCurrentEvents = findViewById(R.id.current_events);
         TextView tvPastEvents = findViewById(R.id.past_events);
         TextView tvYourProfile = findViewById(R.id.tvYourProfile);
+        TextView tvNotifications = findViewById(R.id.tvNotifications);
 
         // Menu listeners
         tvHome.setOnClickListener(v -> {
@@ -85,6 +86,12 @@ public class YourEventsActivity extends AppCompatActivity {
 
         tvPastEvents.setOnClickListener(v ->{
             Intent intent = new Intent(this, YourPastEventsActivity.class);
+            intent.putExtra("currentUser", currentUser);
+            startActivity(intent);
+        });
+
+        tvNotifications.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NotificationsActivity.class);
             intent.putExtra("currentUser", currentUser);
             startActivity(intent);
         });

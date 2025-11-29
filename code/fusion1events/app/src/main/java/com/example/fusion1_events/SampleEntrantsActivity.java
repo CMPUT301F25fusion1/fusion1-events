@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
+
 public class SampleEntrantsActivity extends AppCompatActivity {
 
     private static final String TAG = "SampleEntrantsActivity";
     private FirebaseFirestore db;
     private String eventId;
+    private String organizerId;
     private Button drawButton, homeButton;
 
     @Override
@@ -19,13 +22,16 @@ public class SampleEntrantsActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         eventId = getIntent().getStringExtra("eventId");
+        FirebaseInstallations.getInstance().getId().addOnSuccessListener(id -> {
+            organizerId = id;
+        });
 
         drawButton = findViewById(R.id.drawButton);
         homeButton = findViewById(R.id.buttonHome);
 
 
         drawButton.setOnClickListener(v -> {
-            DrawHelper.runDraw(eventId, FirebaseFirestore.getInstance(), this);
+            DrawHelper.runDraw(eventId, organizerId, db, this);
 
         });
 
