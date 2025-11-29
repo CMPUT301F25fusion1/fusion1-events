@@ -32,10 +32,10 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
          *
          * @param image the Image object to be deleted
          */
-        void onDeleteImage(Admin image);
+        void onDeleteImage(AdminImage image);
     }
 
-    private List<Admin> images;
+    private List<AdminImage> images;
     private onImageActionListener listener;
 
     /**
@@ -44,7 +44,7 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
      * @param images   the list of images to display
      * @param listener listener to handle image actions
      */
-    public AdminImageAdapter(List<Admin> images, onImageActionListener listener) {
+    public AdminImageAdapter(List<AdminImage> images, onImageActionListener listener) {
         this.images = images;
         this.listener = listener;
     }
@@ -71,7 +71,7 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Admin image = images.get(position);
+        AdminImage image = images.get(position);
 
         // Load image from URL using Glide
         Glide.with(holder.imageView.getContext())

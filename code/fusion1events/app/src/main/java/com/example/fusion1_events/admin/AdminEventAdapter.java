@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.fusion1_events.Event;
 import com.example.fusion1_events.R;
 
@@ -59,8 +61,21 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = events.get(position);
-        holder.title.setText(event.getTitle());
-        holder.desc.setText(event.getDescription());
+
+        int titleLimit = 18;
+        String eventTitle = event.getTitle();
+        if (eventTitle != null && eventTitle.length() > titleLimit) {
+            eventTitle = eventTitle.substring(0, titleLimit) + "...";
+        }
+        holder.title.setText(eventTitle);
+
+        int descriptionLimit = 72;
+        String eventDescription = event.getDescription();
+        if (eventDescription != null && eventDescription.length() > descriptionLimit) {
+            eventDescription = eventDescription.substring(0, descriptionLimit) + "...";
+        }
+        holder.description.setText(eventDescription);
+
         if (event.getRegistration_end() != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
             holder.endDate.setText(sdf.format(event.getRegistration_end().toDate()));
@@ -68,7 +83,15 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Vi
             holder.endDate.setText("");
         }
 
-        // TODO: load image
+        // Load image
+        String imageUrl = event.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUrl)
+                    .into(holder.imageEvent);
+        } else {
+            holder.imageEvent.setImageResource(R.drawable.ic_admin_image_placeholder_foreground);
+        }
 
         // View Details button opens AdminEventDetailsActivity
         holder.buttonViewDetails.setOnClickListener(v -> {
@@ -91,13 +114,15 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Vi
      * Holds references to UI components for an event item.
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title, desc, endDate;
+        TextView title, description, endDate;
+        ImageView imageEvent;
         Button buttonViewDetails;
         ViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tvEventTitle);
-            desc = itemView.findViewById(R.id.tvEventDesc);
+            description = itemView.findViewById(R.id.tvEventDescription);
             endDate = itemView.findViewById(R.id.tvEventDate);
+            imageEvent = itemView.findViewById(R.id.imageEvent);
             buttonViewDetails = itemView.findViewById(R.id.buttonViewDetails);
         }
     }
