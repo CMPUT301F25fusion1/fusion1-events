@@ -178,6 +178,21 @@
                 android:textAllCaps="false"
                 android:layout_marginTop="8dp"/>
 
+            <Button
+                android:id="@+id/btnViewCancelled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Cancelled Entrants"
+                android:layout_marginTop="12dp"/>
+
+            <Button
+                android:id="@+id/btnViewFinalList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Final List"
+                android:textAllCaps="false"
+                android:layout_marginTop="8dp" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.cardview.widget.CardView>
