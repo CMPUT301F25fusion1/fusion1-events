@@ -170,7 +170,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         regEnd.setText(regsEnd);
         eventDate.setText(regsDate);
 
-        //TODO: add the ability to cancel users invites
         if (createdEvent.getInvitedList().isEmpty()){
             usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), false);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -214,6 +213,12 @@ public class EventCreatedDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Initializes the fragment when it is first created.
+     * Retrieves the {@code eventId} from the fragment arguments if available.
+     *
+     * @param savedInstanceState The previously saved instance state, if any.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

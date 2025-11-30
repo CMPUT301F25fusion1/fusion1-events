@@ -70,35 +70,80 @@ public class EventsModel {
         this.geolocationRequired = geolocationRequired;
     }
 
+    /**
+     * Returns the list of cancelled entrant IDs.
+     * If the list is null, it initializes an empty list to avoid null references.
+     *
+     * @return A non-null list of cancelled entrant IDs.
+     */
     public ArrayList<String> getCancelled() {
         if (cancelled == null) cancelled = new ArrayList<>();
         return cancelled;
     }
 
+    /**
+     * Sets the list of cancelled entrants for the event.
+     * If the provided list is null, an empty list is assigned instead.
+     *
+     * @param cancelled The list of cancelled entrant IDs, or null to reset to an empty list.
+     */
     public void setCancelled(ArrayList<String> cancelled) {
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
     }
 
+    /**
+     * Returns the list of confirmed entrant IDs.
+     * Ensures the list is never null by creating an empty list when necessary.
+     *
+     * @return A non-null list of confirmed entrant IDs.
+     */
     public ArrayList<String> getConfirmed() {
         if (confirmed == null) confirmed = new ArrayList<>();
         return confirmed;
     }
 
+    /**
+     * Sets the list of confirmed entrants for the event.
+     * If null is passed, the method initializes an empty list instead.
+     *
+     * @param confirmed The list of confirmed entrant IDs, or null to reset to an empty list.
+     */
     public void setConfirmed(ArrayList<String> confirmed) {
         this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
     }
 
+    /**
+     * Returns the list of selected keyword tags associated with the event.
+     *
+     * @return A list of keyword tags.
+     */
     public ArrayList<String> getSelectedTags(){
         return this.selectedTags;
     }
+
+    /**
+     * Sets the list of keyword tags associated with the event.
+     *
+     * @param selectedTags The list of selected tags.
+     */
     public void setSelectedTags(ArrayList<String> selectedTags){
         this.selectedTags = selectedTags;
     }
 
+    /**
+     * Returns the maximum allowed size for the event's waiting list.
+     *
+     * @return The maximum waiting list size.
+     */
     public Long getMaxWaitList() {
         return maxWaitList;
     }
 
+    /**
+     * Sets the maximum allowed size for the waiting list.
+     *
+     * @param maxWaitList The maximum number of people allowed in the waiting list.
+     */
     public void setMaxWaitList(Long maxWaitList) {
         this.maxWaitList = maxWaitList;
     }

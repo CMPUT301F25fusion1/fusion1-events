@@ -375,6 +375,15 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         }
     }
 
+    /**
+     * Callback for editing an existing event.
+     * Uploads a new image if provided, otherwise updates Firestore directly.
+     *
+     * @param position Index of the event being edited.
+     * @param event Original event model.
+     * @param eventsModel Updated event model.
+     * @param imageUri Optional new image for the event.
+     */
     @Override
     public void editEvent(int position, EventsModel event, EventsModel eventsModel, Uri imageUri) {
         if (imageUri != null) {
@@ -385,14 +394,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
     }
 
 
-
-
     /**
      * Uploads an event image to Cloudinary and creates the event upon successful upload.
      * Displays progress and error messages during the upload process.
      *
      * @param eventsModel The event model containing event details
      * @param imageUri The URI of the image to upload
+     * @param position Position of the event in the RecyclerView.
      */
     private void replaceImageToCloudinaryAndEditEvent(EventsModel eventsModel, Uri imageUri, int position) {
         Log.d(TAG, "Uploading image to Cloudinary: " + imageUri);
@@ -443,6 +451,13 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 })
                 .dispatch();
     }
+
+    /**
+     * Uploads a new event image to Cloudinary, then creates the event.
+     *
+     * @param eventsModel Event details.
+     * @param imageUri URI of the event image.
+     */
     private void uploadImageToCloudinaryAndCreateEvent(EventsModel eventsModel, Uri imageUri) {//uri not needed here
         Log.d(TAG, "Uploading image to Cloudinary: " + imageUri);
         String publicId = "event_images/" + System.currentTimeMillis();
@@ -550,6 +565,15 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                             Toast.LENGTH_SHORT).show();
                 });
     }
+
+    /**
+     * Updates an existing event document in Firestore.
+     * Merges updated fields and refreshes the RecyclerView entry.
+     *
+     * @param eventsModel Updated event details.
+     * @param imageUrl Optional updated image URL.
+     * @param position Item index in RecyclerView.
+     */
     private void editEventInFirestore(EventsModel eventsModel, String imageUrl, int position) {
         String eventId = eventsModel.getEventId();
         Map<String, Object> eventData = new HashMap<>();
@@ -663,7 +687,12 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                 .show();
     }
 
-    // Helper method to update UI after deletion
+    /**
+     * Removes a deleted event from the UI list after Firestore deletion completes,
+     * updates the adapter, and shows a toast confirming success.
+     *
+     * @param position Position of the removed event.
+     */
     private void updateUIAfterDelete(int position) {
         eventsModels.remove(position);
         eventsAdapter.notifyItemRemoved(position);
