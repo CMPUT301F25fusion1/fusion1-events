@@ -17,7 +17,7 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+
 
 /*
  * File: SignUpActivity.java
@@ -151,14 +151,13 @@ public class SignUpActivity extends AppCompatActivity {
                         if (finalRole.equals("ENTRANT")) {
                             entrantsRef.document(device_id).set(profileData);
 
-                            FirebaseMessaging.getInstance().getToken()
-                                    .addOnSuccessListener(token -> {
+
                                         entrantsRef.document(device_id)
                                                 .update(
-                                                        "allowNotification", true,
-                                                        "fcmToken", token
+                                                        "allowNotification", true
+
                                                 );
-                                    });
+
 
 
                             startActivity(new android.content.Intent(this,

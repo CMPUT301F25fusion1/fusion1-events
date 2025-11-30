@@ -117,6 +117,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         TextView tvYourProfile = findViewById(R.id.tvYourProfileEvent);
 
+                        TextView tvNotifications = findViewById(R.id.tvNotifications);
+
                         tvYourProfile.setOnClickListener(v -> {
                             Intent intent = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
                             startActivity(intent);
@@ -130,6 +132,12 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         tvYourEvents.setOnClickListener(v -> {
                             Intent intent = new Intent(this, YourEventsActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
+                        });
+
+                        tvNotifications.setOnClickListener(v -> {
+                            Intent intent = new Intent( this, NotificationsActivity.class);
                             intent.putExtra("currentUser", currentUser);
                             startActivity(intent);
                         });
@@ -309,7 +317,31 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
 
-                    DrawHelper.runDraw(eventId, FirebaseFirestore.getInstance(), null);
+                    eventRef.get().addOnSuccessListener(eventDoc -> {
+
+                        if (!eventDoc.exists()) {
+                            Log.e("EntrantEvent", "Event doc does not exist for id = " + eventId);
+                            return;
+                        }
+
+                        Log.d("EntrantEvent", "Event data = " + eventDoc.getData());
+
+                        DocumentReference organizerRef = eventDoc.getDocumentReference("organizerId");
+
+                        if (organizerRef == null) {
+                            Log.e("EntrantEvent", "organizerId is null or not a reference on event " + eventId);
+                            return;
+                        }
+
+                        String organizerId = organizerRef.getId();
+                        Log.d("EntrantEvent", "OrganizerRef path = " + organizerRef.getPath()
+                                + ", organizerId = " + organizerId);
+
+                        DrawHelper.runDraw(eventId, organizerId, FirebaseFirestore.getInstance(), this);
+
+                    }).addOnFailureListener(e -> {
+                        Log.e("EntrantEvent", "Failed to load event " + eventId, e);
+                    });
 
                 });
     }

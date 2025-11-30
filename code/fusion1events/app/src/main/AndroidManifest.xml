@@ -29,10 +29,11 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
+        <activity android:name=".admin.AdminHomeActivity" />
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".GuidelinesActivity" />
 
-        <activity android:name=".admin.AdminHomeActivity" />
+
         <activity android:name=".admin.AdminBrowseEventsActivity" />
         <activity android:name=".admin.AdminBrowseProfilesActivity" />
         <activity android:name=".admin.AdminBrowseImagesActivity" />
@@ -41,8 +42,10 @@
         <activity android:name=".admin.AdminProfileDetailsActivity"/>
         <activity android:name=".admin.AdminNotificationDetailsActivity" />
         <activity android:name=".SampleEntrantsActivity"/>
-        <activity android:name=".CancelledEntrantsActivity"/>
 
+
+
+        <activity android:name=".NotificationsActivity"/>
 
 
     </application>
