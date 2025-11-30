@@ -1,5 +1,4 @@
 package com.example.fusion1_events.admin;
-// change to admin_home
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -39,6 +38,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         buttonBrowseImages.setOnClickListener(v ->
                 startActivity(new Intent(this, AdminBrowseImagesActivity.class)));
 
-        // TODO: implement notification button
+        buttonViewNotifications.setOnClickListener(v ->
+                startActivity(new Intent(this, AdminBrowseNotificationsActivity.class)));
     }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:padding="12dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="2dp"
+    card_view:cardBackgroundColor="#DBDBDB">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <!-- Notification title -->
+        <TextView
+            android:id="@+id/textNotificationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification Title"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+        <!-- Event name -->
+        <TextView
+            android:id="@+id/textNotificationEventName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textSize="16sp"
+            android:paddingTop="4dp"/>
+
+        <!-- Message preview -->
+        <TextView
+            android:id="@+id/textNotificationPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a preview of the notification message..."
+            android:textSize="14sp"
+            android:paddingTop="6dp"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+
+        <!-- Right aligned date & time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingTop="6dp">
+
+            <TextView
+                android:id="@+id/textNotificationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nov 29"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/textNotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18:46"
+                android:textSize="12sp"
+                android:paddingStart="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
