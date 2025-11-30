@@ -47,6 +47,11 @@ public class NavBarHelper {
             }
         });
 
-        // TODO: notifications
+        // notifications button
+        buttonNotifications.setOnClickListener(v-> {
+            if (currentPage != AdminBrowseNotificationsActivity.class) {
+                activity.startActivity(new Intent(activity, AdminBrowseNotificationsActivity.class));
+            }
+        });
     }
 }

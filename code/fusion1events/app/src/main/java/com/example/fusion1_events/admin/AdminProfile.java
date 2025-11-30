@@ -1,7 +1,7 @@
 package com.example.fusion1_events.admin;
 
 /**
- * Represents an admin profile in the application.
+ * Represents a profile in the application.
  * <p>
  * Contains information such as ID, name, email, role, and phone number.
  */
@@ -35,72 +35,72 @@ public class AdminProfile {
     }
 
     /**
-     * Returns the admin's name.
+     * Returns the profile's name.
      *
-     * @return the admin's name
+     * @return the profile's name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Sets the admin's name.
+     * Sets the profile's name.
      *
-     * @param name the admin's name
+     * @param name the profile's name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Returns the admin's email address.
+     * Returns the profile's email address.
      *
-     * @return the admin's email
+     * @return the profile's email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * Sets the admin's email address.
+     * Sets the profile's email address.
      *
-     * @param email the admin's email
+     * @param email the profile's email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * Returns the admin's role.
+     * Returns the profile's role.
      *
-     * @return the admin's role
+     * @return the profile's role
      */
     public String getRole() {
         return role;
     }
 
     /**
-     * Sets the admin's role.
+     * Sets the profile's role.
      *
-     * @param role the admin's role
+     * @param role the profile's role
      */
     public void setRole(String role) {
         this.role = role;
     }
 
     /**
-     * Returns the admin's contact number.
+     * Returns the profile's phone number.
      *
-     * @return the admin's phone number
+     * @return the profile's phone number
      */
     public String getNumber() {
         return number;
     }
 
     /**
-     * Sets the admin's contact number.
+     * Sets the profile's phone number.
      *
-     * @param number the admin's phone number
+     * @param number the profile's phone number
      */
     public void setNumber(String number) {
         this.number = number;
