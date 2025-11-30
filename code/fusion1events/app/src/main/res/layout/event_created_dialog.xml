@@ -193,6 +193,15 @@
                 android:textAllCaps="false"
                 android:layout_marginTop="8dp" />
 
+            <Button
+                android:id="@+id/btnViewWaitingList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Waiting List"
+                android:textAllCaps="false"
+                android:layout_marginTop="12dp" />
+
+
         </LinearLayout>
     </ScrollView>
 </androidx.cardview.widget.CardView>

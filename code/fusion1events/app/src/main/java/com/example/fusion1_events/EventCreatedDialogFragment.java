@@ -89,6 +89,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
         Button btnViewFinalList = view.findViewById(R.id.btnViewFinalList);
+        Button btnViewWaitingList = view.findViewById(R.id.btnViewWaitingList);
 
         btnViewCancelled.setOnClickListener(v -> {
             CancelledEntrantsDialogFragment
@@ -97,13 +98,16 @@ public class EventCreatedDialogFragment extends DialogFragment {
         });
 
         btnViewFinalList.setOnClickListener(v -> {
-            // Assuming you have a confirmed/final list in EventsModel
             FinalEntrantsDialogFragment
                     .newInstance(createdEvent.getEventId(), createdEvent.getConfirmed())
                     .show(getChildFragmentManager(), "final_dialog");
         });
 
-
+        btnViewWaitingList.setOnClickListener(v -> {
+            WaitingEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getWaitingList())
+                    .show(getChildFragmentManager(), "waiting_dialog");
+        });
 
         // Generate QR code for the event
         generateQRCode(qrCode);

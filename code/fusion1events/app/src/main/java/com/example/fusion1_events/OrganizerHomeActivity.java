@@ -270,7 +270,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No cancelled list found or empty");
                                                             }
 
-                                                            // NEW: fill confirmed
+                                                            //fill confirmed
                                                             if (confirmedObj instanceof List) {
                                                                 List<Object> confirmedRefs = (List<Object>) confirmedObj;
                                                                 Log.d(TAG, "Found " + confirmedRefs.size() + " entrants in confirmed list");
@@ -305,7 +305,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
                                                                     invitedList,
-                                                                    eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
+                                                                    eventDoc.getLong("maxWaitingListSize"),
                                                                     cancelled,
                                                                     confirmed
                                                             );
