@@ -2,8 +2,10 @@ package com.example.fusion1_events;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,8 +31,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 /**
  * File: EventDetailActivity.java
  *
@@ -44,6 +54,7 @@ import java.util.Locale;
  *
  */
 public class EventDetailActivity extends AppCompatActivity {
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
             tvDetailSignups, tvCancelledMessage, tvDetailDeadline, tvDetailTime, tvPastDeadline;
@@ -54,6 +65,8 @@ public class EventDetailActivity extends AppCompatActivity {
     private String eventId;
     private String deviceId;
     private Event currentEvent;
+    private FusedLocationProviderClient fusedLocationClient;
+
     /**
      * Initializes the activity, loads event details from Firestore, sets up UI components,
      * and configures navigation and waiting list button logic.
@@ -66,6 +79,7 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         db = FirebaseFirestore.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         eventId = getIntent().getStringExtra("eventId");
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
@@ -220,11 +234,68 @@ public class EventDetailActivity extends AppCompatActivity {
                             tvCancelledMessage.setVisibility(View.VISIBLE);
                         }
 
-                        btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
+                        btnJoinWaitingList.setOnClickListener(v -> {
+                            if (checkLocationPermission()) {
+                                getUserLocationAndJoinWaitingList();
+                            }
+                        });
                         btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingList());
                     });
         });
     }
+
+    // Location
+    private boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getUserLocationAndJoinWaitingList();
+            } else {
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getUserLocationAndJoinWaitingList() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) return;
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        saveLocationToFirestore(latitude, longitude);
+                    }
+                    joinWaitingList();
+                });
+    }
+
+    private void saveLocationToFirestore(double latitude, double longitude) {
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("latitude", latitude);
+        updates.put("longitude", longitude);
+
+        entrantRef.update(updates)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Location updated"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to update location", e));
+    }
+
+
     /**
      * Adds the current entrant to the event's waiting list in Firestore.
      * Updates the signups count locally and remotely, adjusts button visibility,

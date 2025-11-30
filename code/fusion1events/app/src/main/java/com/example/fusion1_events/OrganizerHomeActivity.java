@@ -307,7 +307,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     invitedList,
                                                                     eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
                                                                     cancelled,
-                                                                    confirmed
+                                                                    confirmed,
+                                                                    false
                                                             );
 
                                                             eventsModels.add(event);

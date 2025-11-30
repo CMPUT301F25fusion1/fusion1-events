@@ -37,7 +37,6 @@ public class Event implements Serializable {
     private ArrayList<DocumentReference> cancelled;
     private ArrayList<String> Keywords;
 
-
     public Event(){}
 
 
