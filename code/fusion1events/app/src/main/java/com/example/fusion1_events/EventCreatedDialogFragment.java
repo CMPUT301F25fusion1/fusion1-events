@@ -51,6 +51,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * Creates a new instance of EventCreatedDialogFragment.
      *
      * @param event The event that was created or is being displayed
+     * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
     public static EventCreatedDialogFragment newInstance(EventsModel event) {
@@ -64,8 +65,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         return fragment;
     }
-
-
 
     /**
      * Creates and configures the dialog to display event creation confirmation.
@@ -92,6 +91,25 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
         Button btnViewFinalList = view.findViewById(R.id.btnViewFinalList);
+        Button btnViewWaitingList = view.findViewById(R.id.btnViewWaitingList);
+
+        btnViewCancelled.setOnClickListener(v -> {
+            CancelledEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getCancelled())
+                    .show(getChildFragmentManager(), "cancelled_dialog");
+        });
+
+        btnViewFinalList.setOnClickListener(v -> {
+            FinalEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getConfirmed())
+                    .show(getChildFragmentManager(), "final_dialog");
+        });
+
+        btnViewWaitingList.setOnClickListener(v -> {
+            WaitingEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getWaitingList())
+                    .show(getChildFragmentManager(), "waiting_dialog");
+        });
 
         // Geolocation toggle
         SwitchCompat locationToggle = view.findViewById(R.id.locationToggle);
@@ -124,20 +142,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
                     .addOnFailureListener(e -> Log.e("EventDialog", "Error updating geo setting", e));
         });
 
-        btnViewCancelled.setOnClickListener(v -> {
-            CancelledEntrantsDialogFragment
-                    .newInstance(createdEvent.getEventId(), createdEvent.getCancelled())
-                    .show(getChildFragmentManager(), "cancelled_dialog");
-        });
-
-        btnViewFinalList.setOnClickListener(v -> {
-            // Assuming you have a confirmed/final list in EventsModel
-            FinalEntrantsDialogFragment
-                    .newInstance(createdEvent.getEventId(), createdEvent.getConfirmed())
-                    .show(getChildFragmentManager(), "final_dialog");
-        });
-
-
 
         // Generate QR code for the event
         generateQRCode(qrCode);
@@ -166,7 +170,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         regEnd.setText(regsEnd);
         eventDate.setText(regsDate);
 
-        //TODO: add the ability to cancel users invites
         if (createdEvent.getInvitedList().isEmpty()){
             usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), false);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -210,6 +213,12 @@ public class EventCreatedDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Initializes the fragment when it is first created.
+     * Retrieves the {@code eventId} from the fragment arguments if available.
+     *
+     * @param savedInstanceState The previously saved instance state, if any.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

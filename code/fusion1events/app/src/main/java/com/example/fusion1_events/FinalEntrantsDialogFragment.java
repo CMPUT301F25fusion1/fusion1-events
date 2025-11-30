@@ -21,6 +21,14 @@ import java.util.ArrayList;
 
 public class FinalEntrantsDialogFragment extends DialogFragment {
 
+    /**
+     * Creates a new instance of FinalEntrantsDialogFragment with the given event ID
+     * and a list of confirmed entrant IDs.
+     *
+     * @param eventId   The ID of the event whose final entrants are being displayed.
+     * @param confirmed A list of user IDs representing confirmed entrants.
+     * @return A configured instance of FinalEntrantsDialogFragment.
+     */
     public static FinalEntrantsDialogFragment newInstance(String eventId, ArrayList<String> confirmed) {
         FinalEntrantsDialogFragment fragment = new FinalEntrantsDialogFragment();
         Bundle b = new Bundle();
@@ -33,6 +41,14 @@ public class FinalEntrantsDialogFragment extends DialogFragment {
     private ArrayList<String> confirmedIds;
     private String eventId;
 
+    /**
+     * Creates and returns the dialog UI for displaying confirmed entrants.
+     * Includes a RecyclerView listing all confirmed entrants and a button
+     * for exporting the final list to CSV format.
+     *
+     * @param savedInstanceState Saved state, or null if none.
+     * @return The constructed dialog.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -65,19 +81,23 @@ public class FinalEntrantsDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Builds a CSV string representing the full list of confirmed entrants.
+     * Retrieves each entrant's name from Firestore individually, then triggers
+     * sharing once all data has been collected.
+     *
+     * The CSV includes columns for EntrantId and Name.
+     */
     private void exportFinalListAsCsv() {
         if (confirmedIds == null || confirmedIds.isEmpty()) {
-            // nothing to export
             return;
         }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         StringBuilder csvBuilder = new StringBuilder();
 
-        // Header row - adjust columns based on your Profile fields
         csvBuilder.append("EntrantId,Name\n");
 
-        // We'll load each profile one by one and then share when done
         final int[] remaining = {confirmedIds.size()};
 
         for (String entrantId : confirmedIds) {
@@ -98,7 +118,6 @@ public class FinalEntrantsDialogFragment extends DialogFragment {
 
                 remaining[0]--;
 
-                // When all profiles are processed, share CSV
                 if (remaining[0] == 0) {
                     shareCsv(csvBuilder.toString());
                 }
@@ -106,6 +125,11 @@ public class FinalEntrantsDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Opens a system share dialog to export the generated CSV text.
+     *
+     * @param csvContent The CSV data to be shared.
+     */
     private void shareCsv(String csvContent) {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         sendIntent.setType("text/csv");

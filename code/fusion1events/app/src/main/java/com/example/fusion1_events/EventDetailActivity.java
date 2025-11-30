@@ -244,7 +244,12 @@ public class EventDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Location
+    /**
+     * Checks whether the user has granted fine location permission.
+     * If not granted, it requests the permission from the system.
+     *
+     * @return true if permission is already granted; false otherwise
+     */
     private boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -256,6 +261,15 @@ public class EventDetailActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handles the result of a location permission request.
+     * If permission is granted, the user's location is retrieved
+     * and they are added to the waiting list.
+     *
+     * @param requestCode  The request ID used when requesting permission
+     * @param permissions  The permissions requested
+     * @param grantResults The results returned for each permission
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -269,6 +283,11 @@ public class EventDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Retrieves the user's last known location using FusedLocationProviderClient.
+     * After retrieving the location (if available), it is stored in Firestore and
+     * the user is added to the event's waiting list.
+     */
     private void getUserLocationAndJoinWaitingList() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) return;
@@ -284,6 +303,13 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Saves the user's current latitude and longitude to Firestore
+     * under their entrant profile document.
+     *
+     * @param latitude  The user's latitude
+     * @param longitude The user's longitude
+     */
     private void saveLocationToFirestore(double latitude, double longitude) {
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
         Map<String, Object> updates = new HashMap<>();
@@ -425,9 +451,11 @@ public class EventDetailActivity extends AppCompatActivity {
 
                 });
     }
+
     /**
-     * Removes the current entrant from the event's invited list and confirmed list in Firestore.
-     * Provides user feedback via a Toast.
+     * Removes the current entrant from the event’s invited list and confirmed list.
+     * Shows a cancellation message and hides the cancel button.
+     * This effectively reverts the entrant back to a non-invited, non-confirmed state.
      */
     private void cancelInvitation(){
         DocumentReference eventRef = db.collection("Events").document(eventId);

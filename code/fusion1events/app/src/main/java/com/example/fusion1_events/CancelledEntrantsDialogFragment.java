@@ -16,7 +16,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * A DialogFragment that displays a list of entrants who have cancelled their
+ * participation in an event. It shows the cancelled users in a RecyclerView
+ * and provides a back button to dismiss the dialog.
+ */
+
 public class CancelledEntrantsDialogFragment extends DialogFragment {
+    /**
+     * Creates a new instance of {@link CancelledEntrantsDialogFragment} with the
+     * given event ID and list of cancelled entrant IDs/names.
+     *
+     * @param eventId   The ID of the event associated with the cancelled entrants.
+     * @param cancelled The list of cancelled entrant identifiers.
+     * @return A configured instance of {@link CancelledEntrantsDialogFragment}.
+     */
     public static CancelledEntrantsDialogFragment newInstance(String eventId, ArrayList<String> cancelled) {
         CancelledEntrantsDialogFragment fragment = new CancelledEntrantsDialogFragment();
         Bundle b = new Bundle();
@@ -26,6 +40,13 @@ public class CancelledEntrantsDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Called to create the dialog UI. Inflates the view, initializes the RecyclerView
+     * with a list of cancelled entrants, and sets up the back button to close the dialog.
+     *
+     * @param savedInstanceState The saved instance state, if any.
+     * @return A fully constructed Dialog displaying cancelled entrants.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
