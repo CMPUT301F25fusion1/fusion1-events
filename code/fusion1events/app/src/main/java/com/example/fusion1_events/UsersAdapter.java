@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +137,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                         user.setText("Error loading user");
                     });
 
-            //Hide cancel button if disabled
             if (!enableCancel) {
                 cancelButton.setVisibility(View.GONE);
                 return;
@@ -157,7 +157,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
                 db.runTransaction(transaction -> {
                     com.google.firebase.firestore.DocumentSnapshot snapshot = transaction.get(eventRef);
-
                     java.util.List<Object> invitedRaw =
                             (java.util.List<Object>) snapshot.get("invitedList");
                     java.util.List<Object> cancelledRaw =
@@ -168,7 +167,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                         for (Object o : invitedRaw) {
                             if (o instanceof DocumentReference) {
                                 invited.add((DocumentReference) o);
-                            } else if (o instanceof String) {
+                            } else if (o instanceof String) {   // legacy: convert String ID to DocumentReference
                                 invited.add(db.collection("Entrants").document((String) o));
                             }
                         }
@@ -179,7 +178,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                         for (Object o : cancelledRaw) {
                             if (o instanceof DocumentReference) {
                                 cancelled.add((DocumentReference) o);
-                            } else if (o instanceof String) {
+                            } else if (o instanceof String) {   // legacy: convert String ID to DocumentReference
                                 cancelled.add(db.collection("Entrants").document((String) o));
                             }
                         }
@@ -205,6 +204,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                 }).addOnSuccessListener(unused -> {
                     users.remove(pos);
                     notifyItemRemoved(pos);
+
+                    FirebaseInstallations.getInstance().getId().addOnSuccessListener(organizerId -> {
+
+                        NotificationHelperClass.sendSingleCancelledNotification(
+                                context,
+                                eventId,
+                                organizerId,
+                                entrantRefToCancel
+                        );
+
+                        DrawHelper.runDraw(eventId, organizerId, FirebaseFirestore.getInstance(), context);
+                    });
                 });
             });
         }

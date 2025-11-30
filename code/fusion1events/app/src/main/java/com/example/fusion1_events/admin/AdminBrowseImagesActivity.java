@@ -3,17 +3,23 @@ package com.example.fusion1_events.admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.fusion1_events.R;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Activity that allows an admin to browse all images stored in Firestore.
@@ -21,7 +27,7 @@ import java.util.List;
 public class AdminBrowseImagesActivity extends AppCompatActivity implements AdminImageAdapter.onImageActionListener {
     private RecyclerView recyclerView;
     private AdminImageAdapter adapter;
-    private List<Admin> images = new ArrayList<>();
+    private List<AdminImage> images = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -39,8 +45,28 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
         loadImages();
 
         // back button
-        Button backButton = findViewById(R.id.buttonBack);
+        ImageButton backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
+
+        // Listen for real-time updates to the "Events" collection concerning images.
+        db.collection("Events").addSnapshotListener((docs, e) -> {
+            if (docs != null) {
+                images.clear();
+
+                for (DocumentSnapshot doc : docs.getDocuments()) {
+                    String imageUrl = doc.getString("imageUrl");
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        String eventTitle = doc.getString("title");
+                        AdminImage image = new AdminImage(doc.getId(), imageUrl, eventTitle);
+                        image.setRegistration_end(doc.getTimestamp("registration_end"));
+                        images.add(image);
+                    }
+                }
+
+                adapter.notifyDataSetChanged();
+                Log.d("FirestoreDebug", "Images loaded successfully");
+            }
+        });
     }
 
     /**
@@ -51,14 +77,17 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
      */
 
     private void loadImages() {
-        db.collection("Images")
+        db.collection("Events")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     images.clear();
+
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Admin image = doc.toObject(Admin.class);
-                        image.setId(doc.getId());
-                        images.add(image);
+                        String imageUrl = doc.getString("imageUrl");
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            String eventTitle = doc.getString("title"); // or whatever field you have
+                            images.add(new AdminImage(doc.getId(), imageUrl, eventTitle));
+                        }
                     }
                     adapter.notifyDataSetChanged();
                     Log.d("Firestore", "Images loaded successfully");
@@ -75,18 +104,20 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
      * @param image The Image object to delete.
      */
     @Override
-    public void onDeleteImage(Admin image) {
-        String id = image.getId();
-        if (id == null) return;
-
-        db.collection("Images").document(id)
-                .delete()
+    public void onDeleteImage(AdminImage image) {
+        db.collection("Events").document(image.getEventId())
+                .update("imageUrl", null)
                 .addOnSuccessListener(aVoid -> {
                     images.remove(image);
                     adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Image deleted successfully");
+                    String successMessage = "Image deleted successfully";
+                    Log.d("FirestoreDebug", successMessage);
+                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error deleting image", e));
+                .addOnFailureListener(e -> {
+                    String failureMessage = "Error deleting image";
+                    Log.d("FirestoreDebug", failureMessage);
+                    Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
+                });
     }
 }

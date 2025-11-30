@@ -26,6 +26,7 @@ public class EventsModel {
     String eventId;
     Long maxWaitList;
     ArrayList<String> selectedTags;
+    private boolean geolocationRequired;
 
     // Sports, Chill, Party, Seasonal, Educational,
     /**
@@ -50,7 +51,7 @@ public class EventsModel {
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -66,6 +67,7 @@ public class EventsModel {
         this.maxWaitList = maxWaitList;
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
         this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
+        this.geolocationRequired = geolocationRequired;
     }
 
     public ArrayList<String> getCancelled() {
@@ -337,5 +339,23 @@ public class EventsModel {
      */
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    /**
+     * Returns whether geolocation is required for this event.
+     *
+     * @return true if geolocation is required, false otherwise
+     */
+    public boolean isGeolocationRequired() {
+        return geolocationRequired;
+    }
+
+    /**
+     * Sets whether geolocation is required for this event.
+     *
+     * @param geolocationRequired true to require location verification, false otherwise
+     */
+    public void setGeolocationRequired(boolean geolocationRequired) {
+        this.geolocationRequired = geolocationRequired;
     }
 }

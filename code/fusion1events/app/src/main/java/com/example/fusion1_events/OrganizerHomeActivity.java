@@ -185,10 +185,10 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
                                                         try {
                                                             Object waitingListObj = eventDoc.get("waitingList");
-                                                            Object invitedListObj = eventDoc.get("invitedList");  //changed
+                                                            Object invitedListObj = eventDoc.get("invitedList");
                                                             Object keyWordsListObj = eventDoc.get("Keywords");
                                                             Object cancelledObj = eventDoc.get("cancelled");
-                                                            Object confirmedObj = eventDoc.get("confirmed");   // NEW
+                                                            Object confirmedObj = eventDoc.get("confirmed");
 
                                                             ArrayList<String> keyWords = new ArrayList<>();
                                                             ArrayList<String> waitingList = new ArrayList<>();
@@ -270,7 +270,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                 Log.d(TAG, "No cancelled list found or empty");
                                                             }
 
-                                                            //fill confirmed
+                                                            // NEW: fill confirmed
                                                             if (confirmedObj instanceof List) {
                                                                 List<Object> confirmedRefs = (List<Object>) confirmedObj;
                                                                 Log.d(TAG, "Found " + confirmedRefs.size() + " entrants in confirmed list");
@@ -305,9 +305,10 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
                                                                     invitedList,
-                                                                    eventDoc.getLong("maxWaitingListSize"),
+                                                                    eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
                                                                     cancelled,
-                                                                    confirmed
+                                                                    confirmed,
+                                                                    false
                                                             );
 
                                                             eventsModels.add(event);

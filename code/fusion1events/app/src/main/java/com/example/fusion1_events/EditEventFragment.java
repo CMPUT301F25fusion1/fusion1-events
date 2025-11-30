@@ -407,7 +407,8 @@ public class EditEventFragment extends DialogFragment {
                 null,
                 Long.valueOf(maxListCount),
                 null,
-                null
+                null,
+                geolocationRequired
         );
     }
 

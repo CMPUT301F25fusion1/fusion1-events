@@ -32,10 +32,10 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
          *
          * @param image the Image object to be deleted
          */
-        void onDeleteImage(Admin image);
+        void onDeleteImage(AdminImage image);
     }
 
-    private List<Admin> images;
+    private List<AdminImage> images;
     private onImageActionListener listener;
 
     /**
@@ -44,7 +44,7 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
      * @param images   the list of images to display
      * @param listener listener to handle image actions
      */
-    public AdminImageAdapter(List<Admin> images, onImageActionListener listener) {
+    public AdminImageAdapter(List<AdminImage> images, onImageActionListener listener) {
         this.images = images;
         this.listener = listener;
     }
@@ -71,16 +71,14 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Admin image = images.get(position);
+        AdminImage image = images.get(position);
 
         // Load image from URL using Glide
         Glide.with(holder.imageView.getContext())
                 .load(image.getImageUrl())
-                .placeholder(R.drawable.ic_admin_image_placeholder_foreground) // optional placeholder
                 .into(holder.imageView);
 
         holder.title.setText(image.getEventTitle());
-        holder.organizer.setText("Uploaded by: " + image.getOrganizer());
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
         if (image.getRegistration_end() != null)
@@ -108,14 +106,13 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Vi
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView title, organizer, regEnd;
+        TextView title, regEnd;
         Button buttonDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageViewEvent);
             title = itemView.findViewById(R.id.tvImageTitle);
-            organizer = itemView.findViewById(R.id.tvOrganizer);
             regEnd = itemView.findViewById(R.id.tvRegEnd);
             buttonDelete = itemView.findViewById(R.id.buttonDeleteImage);
         }

@@ -89,4 +89,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

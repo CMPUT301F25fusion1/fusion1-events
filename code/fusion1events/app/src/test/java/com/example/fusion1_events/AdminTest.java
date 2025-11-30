@@ -7,7 +7,7 @@ import com.example.fusion1_events.admin.AdminProfile;
 
 import org.junit.Test;
 
-public class AdminProfileTest {
+public class AdminTest {
     @Test
     public void testAdminProfileGettersAndSetters() {
         AdminProfile profile = new AdminProfile();

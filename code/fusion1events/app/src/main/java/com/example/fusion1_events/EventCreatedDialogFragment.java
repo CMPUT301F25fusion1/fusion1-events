@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -48,6 +51,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * Creates a new instance of EventCreatedDialogFragment.
      *
      * @param event The event that was created or is being displayed
+     * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
     public static EventCreatedDialogFragment newInstance(EventsModel event) {
@@ -61,8 +65,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
 
         return fragment;
     }
-
-
 
     /**
      * Creates and configures the dialog to display event creation confirmation.
@@ -108,6 +110,38 @@ public class EventCreatedDialogFragment extends DialogFragment {
                     .newInstance(createdEvent.getEventId(), createdEvent.getWaitingList())
                     .show(getChildFragmentManager(), "waiting_dialog");
         });
+
+        // Geolocation toggle
+        SwitchCompat locationToggle = view.findViewById(R.id.locationToggle);
+        locationToggle.setEnabled(false); // disable until Firestore fetch completes
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Events").document(eventId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Boolean geoRequired = doc.getBoolean("geolocationRequired");
+                        if (geoRequired != null) {
+                            createdEvent.setGeolocationRequired(geoRequired);
+                            locationToggle.setChecked(geoRequired);
+                        }
+                    }
+                    locationToggle.setEnabled(true); // enable after fetch
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EventDialog", "Error fetching geolocation", e);
+                    locationToggle.setEnabled(true);
+                });
+
+        // Update Firestore when toggled
+        locationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            createdEvent.setGeolocationRequired(isChecked);
+            db.collection("Events").document(eventId)
+                    .update("geolocationRequired", isChecked)
+                    .addOnSuccessListener(aVoid -> Log.d("EventDialog", "Geo setting updated"))
+                    .addOnFailureListener(e -> Log.e("EventDialog", "Error updating geo setting", e));
+        });
+
 
         // Generate QR code for the event
         generateQRCode(qrCode);

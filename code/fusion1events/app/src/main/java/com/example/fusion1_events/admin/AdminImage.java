@@ -5,31 +5,34 @@ import com.google.firebase.Timestamp;
 /**
  * Model class representing an image uploaded for an event in the admin interface.
  */
-public class Admin {
-    private String id;
+public class AdminImage {
+    private String eventId;
     private String imageUrl;
     private String eventTitle;
-    private String organizer;
     private Timestamp registration_end;
 
-    public Admin() {}
+    public AdminImage() { }
+
+    public AdminImage(String eventId, String imageUrl, String eventTitle) {
+        this.eventId = eventId;
+        this.imageUrl = imageUrl;
+        this.eventTitle = eventTitle;
+    }
 
     // getters and setters
     /**
      * Gets the ID of the image.
      * @return the image ID
      */
-    public String getId() {
-        return id;
+    public String getEventId() {
+        return eventId;
     }
 
     /**
      * Sets the ID of the image.
-     * @param id the image ID
+     * @param eventId the image ID
      */
-    public void setId(String id) {
-        this.id = id;
-    }
+    public void setEventId(String eventId) { this.eventId = eventId;}
 
     /**
      * Gets the URL of the image.
@@ -61,22 +64,6 @@ public class Admin {
      */
     public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
-    }
-
-    /**
-     * Gets the organizer of the image.
-     * @return the organizer
-     */
-    public String getOrganizer() {
-        return organizer;
-    }
-
-    /**
-     * Sets the organizer of the image.
-     * @param organizer the organizer
-     */
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
     }
 
     /**

@@ -3,11 +3,14 @@ package com.example.fusion1_events.admin;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.fusion1_events.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,7 +30,8 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
 
     private ImageView ivEventImage;
     private TextView tvEventTitle, tvDescription, tvRegStart, tvRegEnd, tvAttendees;
-    private Button buttonBack, buttonDelete;
+    private Button buttonDelete;
+    private ImageButton buttonBack;
 
     private String eventId;
 
@@ -102,7 +106,14 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
         tvRegEnd.setText(end != null ? sdf.format(end.toDate()) : "N/A");
         tvAttendees.setText(attendees != null ? String.valueOf(attendees) : "0");
 
-        // TODO: image
+        // Load image
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .into(ivEventImage);
+        } else {
+            ivEventImage.setImageResource(R.mipmap.ic_image_placeholder);
+        }
     }
 
     /**
@@ -112,9 +123,15 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
         db.collection("Events").document(eventId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "Event deleted successfully");
+                    String successMessage = "Event deleted successfully";
+                    Log.d("Firestore", successMessage);
+                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
                     finish();
                 })
-                .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
+                .addOnFailureListener(e -> {
+                    String failureMessage = "Error deleting event";
+                    Log.e("Firestore", failureMessage, e);
+                    Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
+                });
     }
 }

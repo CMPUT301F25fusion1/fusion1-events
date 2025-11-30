@@ -16,7 +16,22 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * File: YourEventsActivity.java
+ *
+ * Role:
+ * - Display the list of events the current user is in the waiting, invited, or confirmed list.
+ *  where the event date has passed.
+ * - Retrieve relevant events from Firestore using the user's device ID as the identifier.
+ * - Populate a RecyclerView using EventAdapter to show these events.
+ * - Provide navigation back to the Entrant home screen.
+ *
+ * Issues:
+ * - Assumes Firestore read succeeds (no offline handling or error UI).
+ * - Reloads the activity when "Your Events" is clicked, potentially stacking activities.
+ * - Uses device installation ID as the unique user identifier, which may change if the app is reinstalled.
+ *
+ */
 public class YourPastEventsActivity extends AppCompatActivity {
     private RecyclerView yourEventsRecyclerView;
     private EventAdapter adapter;
@@ -42,6 +57,8 @@ public class YourPastEventsActivity extends AppCompatActivity {
         TextView tvCurrentEvents = findViewById(R.id.tvCurrentEvents);
         TextView tvYourProfile = findViewById(R.id.tvYourProfile);
 
+        TextView tvNotifications = findViewById(R.id.tvNotifications);
+
         // Menu listeners
         tvHome.setOnClickListener(v -> {
             Intent intent = new Intent(this, EntrantHomeActivity.class);
@@ -62,6 +79,12 @@ public class YourPastEventsActivity extends AppCompatActivity {
 
         tvCurrentEvents.setOnClickListener(v -> {
             Intent intent = new Intent(this, YourEventsActivity.class);
+            intent.putExtra("currentUser", currentUser);
+            startActivity(intent);
+        });
+
+        tvNotifications.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NotificationsActivity.class);
             intent.putExtra("currentUser", currentUser);
             startActivity(intent);
         });

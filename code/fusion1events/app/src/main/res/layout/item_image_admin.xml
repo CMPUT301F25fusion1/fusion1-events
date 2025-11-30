@@ -21,14 +21,6 @@
         android:paddingTop="4dp"/>
 
     <TextView
-        android:id="@+id/tvOrganizer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Uploaded by Organizer"
-        android:textSize="12sp"
-        android:textColor="#555555"/>
-
-    <TextView
         android:id="@+id/tvRegEnd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
