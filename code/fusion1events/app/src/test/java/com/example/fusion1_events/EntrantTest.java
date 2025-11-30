@@ -15,12 +15,15 @@ public class EntrantTest {
     private Event event;
     private ArrayList<DocumentReference> waitingList;
     private EventAdapter adapter;
+    private ArrayList<String> keywords;
 
     @Before
     public void setUpEvent() {
         waitingList = new ArrayList<>();
+        keywords = new ArrayList<>();
+        keywords.add("Chill");
         Timestamp now = Timestamp.now();
-        event = new Event(5, 3, now, "id", "Test event", now, now, "Title", waitingList, null, null, null, null, null);
+        event = new Event(5, 3, now, "id", "Test event", now, now, "Title", waitingList, null, null, null, null, keywords);
     }
 
     @Test
@@ -30,6 +33,7 @@ public class EntrantTest {
         assertEquals("Test event", event.getDescription());
         assertEquals("Title", event.getTitle());
         assertEquals(waitingList, event.getWaitingList());
+        assertEquals(keywords, event.getKeywords());
     }
 
     @Test

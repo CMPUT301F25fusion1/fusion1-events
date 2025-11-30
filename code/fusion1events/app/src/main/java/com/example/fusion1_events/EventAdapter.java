@@ -112,6 +112,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
+    /**
+     * updates the event screen based on the applied filter
+     *
+     * @param filteredEvents a list of filtered events
+     */
     public void updateList(List<Event> filteredEvents) {
         this.eventList = filteredEvents;
         notifyDataSetChanged();

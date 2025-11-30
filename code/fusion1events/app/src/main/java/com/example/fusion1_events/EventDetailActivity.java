@@ -355,7 +355,11 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
         }
 
-    //new stuff
+    /**
+     * Adds the current entrant to the event's confirmed list in Firestore.
+     * Provides user feedback via a Toast.
+     * Display a cancel button for the entrant to cancel their invitation
+     */
     private void acceptInvitation() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -374,6 +378,11 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnCancelInvite.setVisibility(View.VISIBLE);
         });
     }
+    /**
+     * Removes the current entrant from the event's waiting list and invited list in Firestore.
+     * Draws a new entrant for the invited list.
+     * Provides user feedback via a Toast.
+     */
     private void declineInvitation() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -416,6 +425,10 @@ public class EventDetailActivity extends AppCompatActivity {
 
                 });
     }
+    /**
+     * Removes the current entrant from the event's invited list and confirmed list in Firestore.
+     * Provides user feedback via a Toast.
+     */
     private void cancelInvitation(){
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
