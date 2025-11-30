@@ -33,24 +33,19 @@
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".GuidelinesActivity" />
 
-<<<<<<< HEAD
-        <activity android:name=".AdminBrowseEventsActivity" />
-        <activity android:name=".AdminBrowseProfilesActivity" />
-        <activity android:name=".AdminBrowseImagesActivity" />
-        <activity android:name=".AdminEventDetailsActivity" />
-        <activity android:name=".AdminProfileDetailsActivity"/>
-=======
+
+
+
         <activity android:name=".admin.AdminBrowseEventsActivity" />
         <activity android:name=".admin.AdminBrowseProfilesActivity" />
         <activity android:name=".admin.AdminBrowseImagesActivity" />
         <activity android:name=".admin.AdminEventDetailsActivity" />
         <activity android:name=".admin.AdminProfileDetailsActivity"/>
-        <activity android:name=".ProfileViewActivity"/>
-        <activity android:name=".SampleEntrantsActivity"/>
-        <activity android:name=".CancelledEntrantsActivity"/>
->>>>>>> origin/main
 
         <activity android:name=".SampleEntrantsActivity"/>
+
+
+
         <activity android:name=".NotificationsActivity"/>
 
 

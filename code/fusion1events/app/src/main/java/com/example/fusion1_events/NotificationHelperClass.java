@@ -130,6 +130,42 @@ public class NotificationHelperClass {
                 });
     }
 
+    public static void sendSingleCancelledNotification(
+            Context context,
+            String eventId,
+            String organizerId,
+            DocumentReference entrantRef
+    ) {
+
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(eventDoc -> {
+                    if (!eventDoc.exists()) return;
+
+                    String eventTitle = eventDoc.getString("title");
+                    if (eventTitle == null) eventTitle = "this event";
+
+                    String message = "Your invitation for the \"" + eventTitle +
+                            "\" event was canceled by the organizer.";
+
+                    String title = "Invitation canceled for \"" + eventTitle + "\"";
+
+                    DocumentReference senderRef = organizerId == null ?
+                            null : organizerRef.document(organizerId);
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("createdAt", FieldValue.serverTimestamp());
+                    data.put("eventId", eventsRef.document(eventId));
+                    data.put("eventName", eventTitle);
+                    data.put("notificationMessage", message);
+                    data.put("notificationTitle", title);
+                    data.put("read", false);
+                    data.put("notified", false);
+                    data.put("receiverId", entrantRef);
+                    data.put("senderID", senderRef);
+
+                    notifRef.add(data);
+                });
+    }
 
     private static void sendNotificationsToEntrantRefs(List<DocumentReference> entrantRefs,
                                                        String eventIdString,

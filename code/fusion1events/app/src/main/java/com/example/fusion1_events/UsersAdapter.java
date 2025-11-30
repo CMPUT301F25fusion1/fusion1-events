@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,6 +165,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                 }).addOnSuccessListener(unused -> {
                     users.remove(pos);
                     notifyItemRemoved(pos);
+
+                    FirebaseInstallations.getInstance().getId().addOnSuccessListener(organizerId -> {
+
+                        NotificationHelperClass.sendSingleCancelledNotification(
+                                context,
+                                eventId,
+                                organizerId,
+                                entrantRefToCancel
+                        );
+
+                        DrawHelper.runDraw(eventId, organizerId, FirebaseFirestore.getInstance(), context);
+                    });
+
+
+
                 });
             });
         }

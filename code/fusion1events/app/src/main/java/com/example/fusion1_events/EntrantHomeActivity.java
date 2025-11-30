@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.text.SimpleDateFormat;
@@ -49,6 +54,7 @@ import java.util.Locale;
  *      - Entrant's events screen
  *      - Entrant's profile screen
  * - Initializes and binds an EventAdapter to show event cards for the entrant.
+ * - Notify user of any notification that they have not interacted with yet.
  *
  * Issues:
  * - Assumes successful retrieval of the Firebase Installation ID.
@@ -68,6 +74,21 @@ public class EntrantHomeActivity extends AppCompatActivity {
     private String currentSelectedInterest = null;
     private Date currentSelectedDate = null;
 
+    private CollectionReference notifRef;
+    private CollectionReference entrantsRef;
+
+    private LinearLayout notificationBanner;
+    private TextView notificationBannerText;
+    private Button notificationBannerViewButton;
+    private Button notificationBannerCloseButton;
+
+
+    private List<DocumentSnapshot> pendingNotifications = new ArrayList<>();
+    private int currentNotifIndex = 0;
+
+
+
+
 
 
     @Override
@@ -81,6 +102,15 @@ public class EntrantHomeActivity extends AppCompatActivity {
         eventsRecyclerView = findViewById(R.id.events_recycler_view);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventList = new ArrayList<>();
+
+        notifRef = DatabaseReferences.getNotificationDatabase();
+        entrantsRef = DatabaseReferences.getEntrantsDatabase();
+
+
+        notificationBanner = findViewById(R.id.notificationBanner);
+        notificationBannerText = findViewById(R.id.notificationBannerText);
+        notificationBannerViewButton = findViewById(R.id.notificationBannerViewButton);
+        notificationBannerCloseButton = findViewById(R.id.notificationBannerCloseButton);
 
         Button lotteryGuidelinesBtn = findViewById(R.id.lottery_guidelines_btn);
         lotteryGuidelinesBtn.setOnClickListener(v -> {
@@ -178,11 +208,76 @@ public class EntrantHomeActivity extends AppCompatActivity {
                                 }
                                 adapter.notifyDataSetChanged();
                             });
+                    loadNotificationsOnce(deviceId);
                 }
             });
         });
 
     }
+
+    private void loadNotificationsOnce(String deviceId) {
+        DocumentReference entrantRef = entrantsRef.document(deviceId);
+
+        notifRef.whereEqualTo("receiverId", entrantRef)
+                .whereEqualTo("read", false)
+                .whereEqualTo("notified", false)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+
+                    if (querySnapshot == null || querySnapshot.isEmpty()) {
+                        hideBanner();
+                        return;
+                    }
+
+                    pendingNotifications.clear();
+                    pendingNotifications.addAll(querySnapshot.getDocuments());
+
+                    // sort by createdAt (newest first)
+                    pendingNotifications.sort((d1, d2) -> {
+                        com.google.firebase.Timestamp t1 = d1.getTimestamp("createdAt");
+                        com.google.firebase.Timestamp t2 = d2.getTimestamp("createdAt");
+
+                        if (t1 == null && t2 == null) return 0;
+                        if (t1 == null) return 1;
+                        if (t2 == null) return -1;
+                        return t2.compareTo(t1); // descending
+                    });
+
+                    currentNotifIndex = 0;
+                    showNextNotificationFromQueue();
+                })
+                .addOnFailureListener(e -> {
+                    hideBanner();
+                });
+    }
+
+    private void showNextNotificationFromQueue() {
+        if (pendingNotifications == null ||
+                pendingNotifications.isEmpty() ||
+                currentNotifIndex >= pendingNotifications.size()) {
+
+            hideBanner();
+            return;
+        }
+
+        DocumentSnapshot doc = pendingNotifications.get(currentNotifIndex);
+
+        String notifId = doc.getId();
+        String title = doc.getString("notificationTitle");
+        String message = doc.getString("notificationMessage");
+        DocumentReference eventRef = doc.getDocumentReference("eventId");
+
+        if (title == null) title = "Notification";
+        if (message == null) message = "";
+
+
+        notifRef.document(notifId).update("notified", true);
+
+        showNotificationBanner(title, message, eventRef);
+    }
+
+
+
 
     private void showInterestDropdown(View anchorView, List<String> interests) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -272,6 +367,55 @@ public class EntrantHomeActivity extends AppCompatActivity {
         }
 
         adapter.updateList(filteredEvents);
+    }
+
+    private void showNotificationBanner(String title,
+                                        String message,
+                                        DocumentReference eventRef) {
+
+        String formatted = "<b>" + title + "</b><br>" + message;
+        notificationBannerText.setText(Html.fromHtml(formatted));
+
+        notificationBannerViewButton.setOnClickListener(v -> {
+            if (eventRef != null) {
+                String eventId = eventRef.getId();
+                Intent intent = new Intent(this, EventDetailActivity.class);
+                intent.putExtra("eventId", eventId);
+                intent.putExtra("currentUser", currentUser);
+                startActivity(intent);
+            }
+            currentNotifIndex++;
+            showNextNotificationFromQueue();
+        });
+
+        notificationBannerCloseButton.setOnClickListener(v -> {
+            currentNotifIndex++;
+            showNextNotificationFromQueue();
+        });
+
+        showBanner();
+    }
+
+
+    private void showBanner() {
+        notificationBanner.setVisibility(View.VISIBLE);
+        notificationBanner.setAlpha(0f);
+
+        notificationBanner.post(() -> {
+            float startY = -notificationBanner.getHeight() * 2f;
+            notificationBanner.setTranslationY(startY);
+
+            notificationBanner.animate()
+                    .translationY(0f)
+                    .alpha(1f)
+                    .setDuration(300)
+                    .start();
+        });
+    }
+    private void hideBanner() {
+        notificationBanner.setVisibility(View.GONE);
+        notificationBanner.setTranslationY(0f);
+        notificationBanner.setAlpha(1f);
     }
 }
 
