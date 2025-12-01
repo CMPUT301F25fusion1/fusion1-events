@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,12 +23,13 @@ import java.util.List;
 /**
  * Displays a Google Map showing the locations of entrants for a specific event.
  * <p>
- * The event ID is passed via Intent extra ("eventId"). The activity retrieves the
- * event's waiting list from Firestore, fetches each entrant's coordinates, places
- * markers on the map, and automatically adjusts the camera to fit all visible markers.
+ * The activity retrieves the event's waiting list from Firestore, fetches each entrant's
+ * coordinates, places markers on the map, and automatically adjusts the camera to fit all
+ * visible markers.
  */
 public class EntrantsMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    public static final String TAG = "GoogleMapDebug";
     private String eventId;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -35,9 +37,7 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
      * Called when the activity is first created.
      * Initializes the map fragment and sets up the back button behavior.
      *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           being previously shut down, this contains the
-     *                           data it most recently supplied.
+     * @param savedInstanceState Bundle containing activity's previously saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         } else {
-            Log.e("MAP", "Map fragment is null");
+            Log.e(TAG, "Map fragment is null");
         }
 
         ImageButton backButton = findViewById(R.id.buttonBack);
@@ -62,9 +62,8 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
 
     /**
      * Called when the Google Map is ready to be used.
-     * This method configures the map appearance, handles marker interactions,
-     * retrieves entrant locations from Firestore, and automatically fits all
-     * markers into the camera view.
+     * This method configures the map appearance, handles marker interactions, retrieves entrant
+     * locations from Firestore, and automatically fits all markers into the camera view.
      *
      * @param googleMap The GoogleMap instance that is ready for use.
      */
@@ -72,12 +71,15 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
 
         if (eventId == null) {
-            Log.e("MAP", "EventId is null");
+            Log.e(TAG, "EventId is null");
             return;
         }
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+        // Tutorial/hint for user
+        Toast.makeText(this, "Tap a pin to see the entrant's name and location", Toast.LENGTH_LONG).show();
 
         // Zoom in when clicking a marker
         googleMap.setOnMarkerClickListener(marker -> {
@@ -99,7 +101,7 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
                 .addOnSuccessListener(documentSnapshot -> {
 
                     if (!documentSnapshot.exists()) {
-                        Log.e("MAP", "Event document does not exist");
+                        Log.e(TAG, "Event document does not exist");
                         return;
                     }
 
@@ -107,7 +109,7 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
                             (List<?>) documentSnapshot.get("waitingList");
 
                     if (waitingList == null || waitingList.isEmpty()) {
-                        Log.d("MAP", "Waiting list is empty");
+                        Log.d(TAG, "Waiting list is empty");
                         return;
                     }
 
@@ -144,7 +146,7 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
                                 }
 
                             }).addOnFailureListener(e ->
-                                    Log.e("MAP", "Error fetching entrant document", e)
+                                    Log.e(TAG, "Error fetching entrant document", e)
                             );
                         }
                     }
@@ -160,13 +162,13 @@ public class EntrantsMapActivity extends AppCompatActivity implements OnMapReady
                             );
 
                         } catch (Exception e) {
-                            Log.e("MAP", "Not enough locations to move camera", e);
+                            Log.e(TAG, "Not enough locations to move camera", e);
                         }
                     }, 800);
 
                 })
                 .addOnFailureListener(e ->
-                        Log.e("MAP", "Error loading event document", e)
+                        Log.e(TAG, "Error loading event document", e)
                 );
     }
 }
