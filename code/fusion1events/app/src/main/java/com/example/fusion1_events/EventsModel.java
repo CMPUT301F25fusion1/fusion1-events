@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 import java.util.ArrayList;
 import java.util.Date;
+import com.google.firebase.firestore.PropertyName;
+
 
 /**
  * Model class representing an event with its details and participant lists.
@@ -16,10 +18,17 @@ public class EventsModel {
     Long signups;
     ArrayList<String> waitingList;
     ArrayList<String> invitedList;
+    ArrayList<String> cancelled;
+    ArrayList<String> confirmed;
+
+
     String imageUrl; // Store Cloudinary URL for event image
     String eventId;
     Long maxWaitList;
     ArrayList<String> selectedTags;
+    private boolean geolocationRequired;
+
+    // Sports, Chill, Party, Seasonal, Educational,
 
     String organizerId;
 
@@ -41,10 +50,14 @@ public class EventsModel {
      * @param eventId The Firestore document ID
      * @param invitedList List of entrant IDs selected for the event
      * @param maxWaitList The maximum number of entrants on the waiting list
+     * @param cancelled List of entrant IDs who were cancelled
+     * @param confirmed List of entrant IDs who are in the final confirmed list
      */
+
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired) {
                        ArrayList<String> invitedList, Long maxWaitList, String organizerId) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
@@ -59,6 +72,51 @@ public class EventsModel {
         this.eventId = eventId;
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
+        this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
+        this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
+        this.geolocationRequired = geolocationRequired;
+    }
+
+    /**
+     * Returns the list of cancelled entrant IDs.
+     * If the list is null, it initializes an empty list to avoid null references.
+     *
+     * @return A non-null list of cancelled entrant IDs.
+     */
+    public ArrayList<String> getCancelled() {
+        if (cancelled == null) cancelled = new ArrayList<>();
+        return cancelled;
+    }
+
+    /**
+     * Sets the list of cancelled entrants for the event.
+     * If the provided list is null, an empty list is assigned instead.
+     *
+     * @param cancelled The list of cancelled entrant IDs, or null to reset to an empty list.
+     */
+    public void setCancelled(ArrayList<String> cancelled) {
+        this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
+    }
+
+    /**
+     * Returns the list of confirmed entrant IDs.
+     * Ensures the list is never null by creating an empty list when necessary.
+     *
+     * @return A non-null list of confirmed entrant IDs.
+     */
+    public ArrayList<String> getConfirmed() {
+        if (confirmed == null) confirmed = new ArrayList<>();
+        return confirmed;
+    }
+
+    /**
+     * Sets the list of confirmed entrants for the event.
+     * If null is passed, the method initializes an empty list instead.
+     *
+     * @param confirmed The list of confirmed entrant IDs, or null to reset to an empty list.
+     */
+    public void setConfirmed(ArrayList<String> confirmed) {
+        this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
         this.organizerId = organizerId;
     }
 
@@ -69,17 +127,39 @@ public class EventsModel {
     public void setOrganizerId(String organizerId) {
         this.organizerId = organizerId;
     }
+
+    /**
+     * Returns the list of selected keyword tags associated with the event.
+     *
+     * @return A list of keyword tags.
+     */
     public ArrayList<String> getSelectedTags(){
         return this.selectedTags;
     }
+
+    /**
+     * Sets the list of keyword tags associated with the event.
+     *
+     * @param selectedTags The list of selected tags.
+     */
     public void setSelectedTags(ArrayList<String> selectedTags){
         this.selectedTags = selectedTags;
     }
 
+    /**
+     * Returns the maximum allowed size for the event's waiting list.
+     *
+     * @return The maximum waiting list size.
+     */
     public Long getMaxWaitList() {
         return maxWaitList;
     }
 
+    /**
+     * Sets the maximum allowed size for the waiting list.
+     *
+     * @param maxWaitList The maximum number of people allowed in the waiting list.
+     */
     public void setMaxWaitList(Long maxWaitList) {
         this.maxWaitList = maxWaitList;
     }
@@ -320,5 +400,23 @@ public class EventsModel {
      */
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    /**
+     * Returns whether geolocation is required for this event.
+     *
+     * @return true if geolocation is required, false otherwise
+     */
+    public boolean isGeolocationRequired() {
+        return geolocationRequired;
+    }
+
+    /**
+     * Sets whether geolocation is required for this event.
+     *
+     * @param geolocationRequired true to require location verification, false otherwise
+     */
+    public void setGeolocationRequired(boolean geolocationRequired) {
+        this.geolocationRequired = geolocationRequired;
     }
 }

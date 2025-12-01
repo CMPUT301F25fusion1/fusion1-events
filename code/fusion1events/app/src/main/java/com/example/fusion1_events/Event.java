@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 /**
  * File: Event.java
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
  * - Assumes Firestore timestamps and document references are always present and valid.
  *
  */
+@IgnoreExtraProperties
 public class Event implements Serializable {
     private String id;
     private String title;
@@ -35,8 +37,7 @@ public class Event implements Serializable {
     private ArrayList<DocumentReference> invitedList;
     private ArrayList<DocumentReference> confirmed;
     private ArrayList<DocumentReference> cancelled;
-    private ArrayList<String> keywords;
-
+    private ArrayList<String> Keywords;
 
     public Event(){}
 
@@ -44,7 +45,7 @@ public class Event implements Serializable {
     public Event(int signups, int attendees, Timestamp date,String id, String description,
                  Timestamp registration_start, Timestamp registration_end, String title, ArrayList<DocumentReference> waitingList,
                  String imageUrl, ArrayList<DocumentReference> invitedList, ArrayList<DocumentReference> confirmed,
-                 ArrayList<DocumentReference> cancelled, ArrayList<String> keywords) {
+                 ArrayList<DocumentReference> cancelled, ArrayList<String> Keywords) {
         this.Signups = signups;
         this.attendees = attendees;
         this.date = date;
@@ -59,11 +60,10 @@ public class Event implements Serializable {
         this.Signups = signups;
         this.waitingList = waitingList;
         this.imageUrl = imageUrl;
-        // new
         this.invitedList = invitedList;
         this.confirmed = confirmed;
         this.cancelled = cancelled;
-        this.keywords = keywords;
+        this.Keywords = Keywords;
     }
 
 
@@ -183,35 +183,65 @@ public class Event implements Serializable {
     public void setWaitingList(ArrayList<DocumentReference> waitingList) {
         this.waitingList = waitingList;
     }
-
+    /**
+     * Returns the image for the event.
+     *
+     * @return the imageUrl
+     */
     public String getImageUrl() {
         return imageUrl;
     }
-
+    /**
+     * Sets the image for the event.
+     *
+     * @param imageUrl
+     */
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
 
-    // new code
+    /**
+     * Returns the invitedList for the event.
+     *
+     * @return invitedList list of document references representing the invited list
+     */
     public ArrayList<DocumentReference> getInvitedList() { return invitedList; }
-
-    public void setInvitedList(ArrayList<DocumentReference> finaList) {
-        this.invitedList = finaList;
+    /**
+     * Sets the invited list for the event.
+     *
+     * @param invitedList list of document references representing the invited list
+     */
+    public void setInvitedList(ArrayList<DocumentReference> invitedList) {
+        this.invitedList = invitedList;
     }
 
     public ArrayList<DocumentReference> getConfirmed() { return confirmed; }
-
+    /**
+     * Sets the confirmed list for the event.
+     *
+     * @param confirmed list of document references representing the confirmed list
+     */
     public void setConfirmed(ArrayList<DocumentReference> confirmed) {
         this.confirmed = confirmed;
     }
 
     public ArrayList<DocumentReference> getCancelled() { return cancelled; }
+    /**
+     * Sets the cancelled list for the event.
+     *
+     * @param cancelled list of document references representing the cancelled list
+     */
     public void setCancelled(ArrayList<DocumentReference> cancelled) {
         this.cancelled = cancelled;
     }
 
-    public ArrayList<String> getKeyword() { return keywords; }
-    public void setKeyword(String keyword) {
-        this.keywords = keywords;
+    public ArrayList<String> getKeywords() { return Keywords; }
+    /**
+     * Sets the keywords list for the event.
+     *
+     * @param keyword list of document references representing the keywords list
+     */
+    public void setKeywords(String keyword) {
+        this.Keywords = Keywords;
     }
 }

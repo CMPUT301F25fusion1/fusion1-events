@@ -79,6 +79,7 @@ public class EditEventFragment extends DialogFragment {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private boolean geolocationRequired;
 
     /**
      * Creates a new instance of AddEventFragment.
@@ -207,6 +208,25 @@ public class EditEventFragment extends DialogFragment {
         //set the keywords Sports, Chill, Party, Seasonal, Educational,
         String[] tagItems = {"Chill \uD83E\uDD1F", "Sports \uD83C\uDFC0", "Educational \uD83C\uDFC0","Seasonal ☃\uFE0F","Party \uD83C\uDF89" };
         boolean[] selectedFlags = {false, false, false, false, false};
+
+        for (int i = 0; i < selectedTags.size(); i++){
+            selectedFlags[i] = true;
+            Chip chip = new Chip(requireContext());
+            chip.setText(selectedTags.get(i));
+            chip.setCloseIconVisible(true);
+
+            chip.setOnCloseIconClickListener(view1 -> {
+                int index = selectedTags.indexOf(chip.getText());
+                selectedTags.remove(chip.getText());
+                selectedFlags[index] = false;  // uncheck it in the dialog
+                chipGroupTags.removeView(chip);
+            });
+
+            chipGroupTags.addView(chip);
+        }
+
+
+
 
         for (int i = 0; i < selectedTags.size(); i++){
             selectedFlags[i] = true;

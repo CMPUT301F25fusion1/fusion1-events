@@ -6,7 +6,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Activity that displays app guidelines to entrant users.
+ * Provides simple navigation options back to the home screen
+ * or the user's events page.
+ */
 public class GuidelinesActivity extends AppCompatActivity {
+
+    /**
+     * Initializes the guidelines screen and sets up navigation click listeners.
+     *
+     * @param savedInstanceState Saved instance state from Android, or null if none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

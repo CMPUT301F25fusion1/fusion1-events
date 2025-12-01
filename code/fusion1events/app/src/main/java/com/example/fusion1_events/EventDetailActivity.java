@@ -2,8 +2,10 @@ package com.example.fusion1_events;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,8 +32,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 /**
  * File: EventDetailActivity.java
  *
@@ -45,6 +55,7 @@ import java.util.Locale;
  *
  */
 public class EventDetailActivity extends AppCompatActivity {
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
             tvDetailSignups, tvCancelledMessage, tvDetailDeadline, tvDetailTime, tvPastDeadline;
@@ -55,6 +66,8 @@ public class EventDetailActivity extends AppCompatActivity {
     private String eventId;
     private String deviceId;
     private Event currentEvent;
+    private FusedLocationProviderClient fusedLocationClient;
+
     /**
      * Initializes the activity, loads event details from Firestore, sets up UI components,
      * and configures navigation and waiting list button logic.
@@ -68,6 +81,9 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         db = FirebaseFirestore.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        eventId = getIntent().getStringExtra("eventId");
+        currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
         // Check if this activity was opened via deep link
         Intent intent = getIntent();
@@ -137,6 +153,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
                         TextView tvYourProfile = findViewById(R.id.tvYourProfileEvent);
 
+                        TextView tvNotifications = findViewById(R.id.tvNotifications);
+
                         tvYourProfile.setOnClickListener(v -> {
                             Intent intent1 = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
                             startActivity(intent1);
@@ -152,6 +170,12 @@ public class EventDetailActivity extends AppCompatActivity {
                             Intent intent3 = new Intent(this, YourEventsActivity.class);
                             intent3.putExtra("currentUser", currentUser);
                             startActivity(intent3);
+                        });
+
+                        tvNotifications.setOnClickListener(v -> {
+                            Intent intent = new Intent( this, NotificationsActivity.class);
+                            intent.putExtra("currentUser", currentUser);
+                            startActivity(intent);
                         });
 
                         btnScanQR.setOnClickListener(v ->
@@ -232,11 +256,94 @@ public class EventDetailActivity extends AppCompatActivity {
                             tvCancelledMessage.setVisibility(View.VISIBLE);
                         }
 
-                        btnJoinWaitingList.setOnClickListener(v -> joinWaitingList());
+                        btnJoinWaitingList.setOnClickListener(v -> {
+                            if (checkLocationPermission()) {
+                                getUserLocationAndJoinWaitingList();
+                            }
+                        });
                         btnLeaveWaitingList.setOnClickListener(v -> leaveWaitingList());
                     });
         });
     }
+
+    /**
+     * Checks whether the user has granted fine location permission.
+     * If not granted, it requests the permission from the system.
+     *
+     * @return true if permission is already granted; false otherwise
+     */
+    private boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Handles the result of a location permission request.
+     * If permission is granted, the user's location is retrieved
+     * and they are added to the waiting list.
+     *
+     * @param requestCode  The request ID used when requesting permission
+     * @param permissions  The permissions requested
+     * @param grantResults The results returned for each permission
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getUserLocationAndJoinWaitingList();
+            } else {
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Retrieves the user's last known location using FusedLocationProviderClient.
+     * After retrieving the location (if available), it is stored in Firestore and
+     * the user is added to the event's waiting list.
+     */
+    private void getUserLocationAndJoinWaitingList() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) return;
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        saveLocationToFirestore(latitude, longitude);
+                    }
+                    joinWaitingList();
+                });
+    }
+
+    /**
+     * Saves the user's current latitude and longitude to Firestore
+     * under their entrant profile document.
+     *
+     * @param latitude  The user's latitude
+     * @param longitude The user's longitude
+     */
+    private void saveLocationToFirestore(double latitude, double longitude) {
+        DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("latitude", latitude);
+        updates.put("longitude", longitude);
+
+        entrantRef.update(updates)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Location updated"))
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to update location", e));
+    }
+
+
     /**
      * Adds the current entrant to the event's waiting list in Firestore.
      * Updates the signups count locally and remotely, adjusts button visibility,
@@ -296,7 +403,11 @@ public class EventDetailActivity extends AppCompatActivity {
                 });
         }
 
-    //new stuff
+    /**
+     * Adds the current entrant to the event's confirmed list in Firestore.
+     * Provides user feedback via a Toast.
+     * Display a cancel button for the entrant to cancel their invitation
+     */
     private void acceptInvitation() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -315,6 +426,11 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnCancelInvite.setVisibility(View.VISIBLE);
         });
     }
+    /**
+     * Removes the current entrant from the event's waiting list and invited list in Firestore.
+     * Draws a new entrant for the invited list.
+     * Provides user feedback via a Toast.
+     */
     private void declineInvitation() {
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
@@ -328,8 +444,42 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
+
+
+                    eventRef.get().addOnSuccessListener(eventDoc -> {
+
+                        if (!eventDoc.exists()) {
+                            Log.e("EntrantEvent", "Event doc does not exist for id = " + eventId);
+                            return;
+                        }
+
+                        Log.d("EntrantEvent", "Event data = " + eventDoc.getData());
+
+                        DocumentReference organizerRef = eventDoc.getDocumentReference("organizerId");
+
+                        if (organizerRef == null) {
+                            Log.e("EntrantEvent", "organizerId is null or not a reference on event " + eventId);
+                            return;
+                        }
+
+                        String organizerId = organizerRef.getId();
+                        Log.d("EntrantEvent", "OrganizerRef path = " + organizerRef.getPath()
+                                + ", organizerId = " + organizerId);
+
+                        DrawHelper.runDraw(eventId, organizerId, FirebaseFirestore.getInstance(), this);
+
+                    }).addOnFailureListener(e -> {
+                        Log.e("EntrantEvent", "Failed to load event " + eventId, e);
+                    });
+
                 });
     }
+
+    /**
+     * Removes the current entrant from the event’s invited list and confirmed list.
+     * Shows a cancellation message and hides the cancel button.
+     * This effectively reverts the entrant back to a non-invited, non-confirmed state.
+     */
     private void cancelInvitation(){
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);

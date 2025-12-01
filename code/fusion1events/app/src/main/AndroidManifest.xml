@@ -3,6 +3,10 @@
     package="com.example.fusion1_events"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -41,20 +45,27 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".EntrantHomeActivity"/>
         <activity android:name=".OrganizerHomeActivity"/>
-        <activity android:name=".AdminHomeActivity" />
+        <activity android:name=".admin.AdminHomeActivity" />
         <activity android:name=".ProfileViewActivity" />
         <activity android:name=".GuidelinesActivity" />
 
-        <activity android:name=".AdminBrowseEventsActivity" />
-        <activity android:name=".AdminBrowseProfilesActivity" />
-        <activity android:name=".AdminBrowseImagesActivity" />
-        <activity android:name=".AdminEventDetailsActivity" />
-        <activity android:name=".AdminProfileDetailsActivity"/>
-        <activity android:name=".ProfileViewActivity"/>
+
+        <activity android:name=".admin.event.AdminBrowseEventsActivity" />
+        <activity android:name=".admin.profile.AdminBrowseProfilesActivity" />
+        <activity android:name=".admin.image.AdminBrowseImagesActivity" />
+        <activity android:name=".admin.notification.AdminBrowseNotificationsActivity" />
+        <activity android:name=".admin.event.AdminEventDetailsActivity" />
+        <activity android:name=".admin.profile.AdminProfileDetailsActivity"/>
+        <activity android:name=".admin.notification.AdminNotificationDetailsActivity" />
         <activity android:name=".SampleEntrantsActivity"/>
 
+        <activity android:name=".NotificationsActivity"/>
+        <activity android:name=".EntrantsMapActivity"/>
 
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"
+            />
     </application>
 
 

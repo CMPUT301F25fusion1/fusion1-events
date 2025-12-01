@@ -23,4 +23,10 @@
     <string name="dashboard">Dashboard</string>
     <string name="view_details">View Details</string>
     <string name="events">Events</string>
+    <string name="back">back</string>
+    <string name="notifications">Notifications</string>
+    <string name="geolocation_description">Use device location to verify where users join from</string>
+    <string name="require_geolocation">Require geolocation</string>
+    <string name="view_map">View Map</string>
+    <string name="entrant_locations">Entrant Locations</string>
 </resources>
