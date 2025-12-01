@@ -1,6 +1,8 @@
 package com.example.fusion1_events;
 import java.util.ArrayList;
 import java.util.Date;
+
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.PropertyName;
 
 
@@ -20,20 +22,14 @@ public class EventsModel {
     ArrayList<String> invitedList;
     ArrayList<String> cancelled;
     ArrayList<String> confirmed;
-
-
     String imageUrl; // Store Cloudinary URL for event image
     String eventId;
     Long maxWaitList;
     ArrayList<String> selectedTags;
     private boolean geolocationRequired;
 
-    // Sports, Chill, Party, Seasonal, Educational,
 
-    String organizerId;
-
-
-
+    DocumentReference organizerId;
 
     /**
      * Constructor to create an EventsModel with all fields.
@@ -52,12 +48,14 @@ public class EventsModel {
      * @param maxWaitList The maximum number of entrants on the waiting list
      * @param cancelled List of entrant IDs who were cancelled
      * @param confirmed List of entrant IDs who are in the final confirmed list
+     * @param geolocationRequired boolean indicating if users locations will be on or off
+     * @param organizerId the reference of the organizer who owns the event
      */
 
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired, String organizerId) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired, DocumentReference organizerId) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -120,11 +118,11 @@ public class EventsModel {
         this.organizerId = organizerId;
     }
 
-    public String getOrganizerId() {
+    public DocumentReference getOrganizerId() {
         return organizerId;
     }
 
-    public void setOrganizerId(String organizerId) {
+    public void setOrganizerId(DocumentReference organizerId) {
         this.organizerId = organizerId;
     }
 

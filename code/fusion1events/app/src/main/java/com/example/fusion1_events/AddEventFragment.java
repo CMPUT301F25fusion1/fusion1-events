@@ -31,6 +31,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.text.SimpleDateFormat;
@@ -69,7 +72,12 @@ public class AddEventFragment extends DialogFragment {
     private EditText inputRegStartDate;
     private EditText inputRegEndDate;
     private EditText inputEventDate;
-    private String deviceId = String.valueOf(FirebaseInstallations.getInstance().getId());
+    private String organizerId;
+
+    private FirebaseFirestore db;
+
+    private DocumentReference organizerRef;
+
     private Integer peopleCount = 0;
     private Integer maxListCount = 0;
     private Date regStartDate;
@@ -164,6 +172,16 @@ public class AddEventFragment extends DialogFragment {
         ChipGroup chipGroupTags = view.findViewById(R.id.chipGroupTags);
         TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
         AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
+
+        FirebaseInstallations.getInstance().getId()
+                .addOnSuccessListener(id -> {
+                    organizerId = id;
+                    db = FirebaseFirestore.getInstance();
+                    organizerRef = db.collection("Organizers").document(organizerId);
+                });
+
+
+
 
         //set spinner listener and chips adapter  Sports, Chill, Party, Seasonal, Educational,
         String[] tagItems = {"Chill \uD83E\uDD1F", "Sports \uD83C\uDFC0", "Educational \uD83C\uDFC0","Seasonal ☃\uFE0F","Party \uD83C\uDF89" };
@@ -291,7 +309,11 @@ public class AddEventFragment extends DialogFragment {
         });
 
     }
-
+    /**
+     * Sets up the increase and decrease buttons for max list count.
+     *
+     * @param editMaxListCount The TextView displaying the current count
+     */
     private void setupMaxListCountButtons(TextView editMaxListCount) {
         waitIncrease.setOnClickListener(v -> {
             maxListCount++;
@@ -349,6 +371,7 @@ public class AddEventFragment extends DialogFragment {
      * @return A new EventsModel with the provided data
      */
     private EventsModel createEventModel(String title, String description) {
+
         // add selectedTags
         return new EventsModel(
                 title,
@@ -367,7 +390,7 @@ public class AddEventFragment extends DialogFragment {
                 null,
                 null,
                 false,
-                deviceId
+                organizerRef
         );
     }
 
