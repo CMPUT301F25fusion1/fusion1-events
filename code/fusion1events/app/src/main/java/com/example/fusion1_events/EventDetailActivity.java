@@ -85,21 +85,13 @@ public class EventDetailActivity extends AppCompatActivity {
         eventId = getIntent().getStringExtra("eventId");
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
-        // Check if this activity was opened via deep link
         Intent intent = getIntent();
         Uri data = intent.getData();
 
         if (data != null) {
-            // Opened from QR code scan - extract event ID from URI
-            // URI format: fusion1events://event/EVENT_ID
             eventId = data.getLastPathSegment();
 
-            // We don't have currentUser from the intent, so we'll need to load it
-            // You can either:
-            // 1. Load it from SharedPreferences/Firebase
-            // 2. Pass null and handle it gracefully
-            currentUser = null; // Handle this appropriately in your app
-        } else {
+            currentUser = null;
             // Opened normally - get data from intent extras
             eventId = intent.getStringExtra("eventId");
             currentUser = (Profile) intent.getSerializableExtra("currentUser");
