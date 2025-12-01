@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--    Back Button-->
+    <ImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_back"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/back"
+        />
+
+    <!-- Profile Name -->
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="#212121"
+        android:layout_marginTop="12dp" />
+
+    <!-- Role Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Role"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="role"
+        android:textColor="#212121"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Email Section-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="username@server.domain"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Phone_num Section-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Phone_No"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(xxx) xxx-xxxx"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

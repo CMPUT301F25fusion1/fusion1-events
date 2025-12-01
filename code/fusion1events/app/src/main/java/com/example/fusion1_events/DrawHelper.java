@@ -20,6 +20,7 @@ public class DrawHelper {
 
     private static final String TAG = "DrawHelper";
 
+
     /**
      * Runs the draw process for a given event.<br>
      * Steps performed:<br>
@@ -34,7 +35,7 @@ public class DrawHelper {
      * @param db The Firestore instance used for database operations.<br>
      * @param context Optional: Android context for Toast messages. Can be null for tests.
      */
-    public static void runDraw(String eventId, FirebaseFirestore db, Context context) {
+    public static void runDraw(String eventId, String organizerId, FirebaseFirestore db, Context context) {
 
         DocumentReference eventRef = db.collection("Events").document(eventId);
 
@@ -108,6 +109,9 @@ public class DrawHelper {
                     Toast.makeText(context, "Draw completed", Toast.LENGTH_SHORT).show();
                     Toast.makeText(context, "Draw completed", Toast.LENGTH_SHORT).show();
                 }
+                NotificationHelperClass.sendWaitingListNotifications(context, eventId, organizerId);
+                NotificationHelperClass.sendInvitedNotifications(context, eventId, organizerId);
+
             }).addOnFailureListener(e -> {
                 Log.e(TAG, "Error updating draw", e);
                 if (context != null) {

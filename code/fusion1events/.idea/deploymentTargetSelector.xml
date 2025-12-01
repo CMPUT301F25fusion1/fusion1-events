@@ -4,14 +4,17 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-28T22:08:56.746847Z">
+        <DropdownSelection timestamp="2025-12-01T05:15:59.334322Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kalista/.android/avd/Entrant_View.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kalista/.android/avd/Organizer_View.avd" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="DrawHelperTest">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>

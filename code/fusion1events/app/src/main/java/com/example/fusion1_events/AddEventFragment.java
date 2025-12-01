@@ -205,16 +205,6 @@ public class AddEventFragment extends DialogFragment {
             builder.show();
         });
 
-
-
-
-
-
-
-
-
-
-
         increase = view.findViewById(R.id.btnIncrease);
         decrease = view.findViewById(R.id.btnDecrease);
         addImage = view.findViewById(R.id.btnAddImage);
@@ -370,7 +360,10 @@ public class AddEventFragment extends DialogFragment {
                 null, // imageUrl will be set after upload
                 null,
                 null,
-                Long.valueOf(maxListCount)
+                Long.valueOf(maxListCount),
+                null,
+                null,
+                false
         );
     }
 

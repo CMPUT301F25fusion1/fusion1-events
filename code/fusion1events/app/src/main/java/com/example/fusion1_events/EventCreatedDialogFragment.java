@@ -1,10 +1,11 @@
 package com.example.fusion1_events;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -38,10 +41,11 @@ import java.util.Date;
 public class EventCreatedDialogFragment extends DialogFragment {
 
     private static final String ARG_EVENT_TITLE = "event_title";
-    private static EventsModel createdEvent;
+    private EventsModel createdEvent;
     private static final String ARG_IMAGE_URI = "image_uri";
 
     private UsersAdapter usersAdapter;
+    private String eventId;
 
     /**
      * Creates a new instance of EventCreatedDialogFragment.
@@ -50,12 +54,15 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
-    public static EventCreatedDialogFragment newInstance(EventsModel event, Uri imageUri) {
-        createdEvent = event;
+    public static EventCreatedDialogFragment newInstance(EventsModel event) {
         EventCreatedDialogFragment fragment = new EventCreatedDialogFragment();
+
         Bundle args = new Bundle();
-        args.putString(ARG_EVENT_TITLE, event.getEventTitle());
+        args.putString("eventId", event.getEventId());
         fragment.setArguments(args);
+
+        fragment.createdEvent = event;
+
         return fragment;
     }
 
@@ -81,6 +88,60 @@ public class EventCreatedDialogFragment extends DialogFragment {
         TextView attendeesCount= view.findViewById(R.id.attendeesCount);
         RecyclerView attendeesList = view.findViewById(R.id.attendeesList);
         TextView listTitle = view.findViewById(R.id.listTitle);
+
+        Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
+        Button btnViewFinalList = view.findViewById(R.id.btnViewFinalList);
+        Button btnViewWaitingList = view.findViewById(R.id.btnViewWaitingList);
+
+        btnViewCancelled.setOnClickListener(v -> {
+            CancelledEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getCancelled())
+                    .show(getChildFragmentManager(), "cancelled_dialog");
+        });
+
+        btnViewFinalList.setOnClickListener(v -> {
+            FinalEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getConfirmed())
+                    .show(getChildFragmentManager(), "final_dialog");
+        });
+
+        btnViewWaitingList.setOnClickListener(v -> {
+            WaitingEntrantsDialogFragment
+                    .newInstance(createdEvent.getEventId(), createdEvent.getWaitingList())
+                    .show(getChildFragmentManager(), "waiting_dialog");
+        });
+
+        // Geolocation toggle
+        SwitchCompat locationToggle = view.findViewById(R.id.locationToggle);
+        locationToggle.setEnabled(false); // disable until Firestore fetch completes
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Events").document(eventId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Boolean geoRequired = doc.getBoolean("geolocationRequired");
+                        if (geoRequired != null) {
+                            createdEvent.setGeolocationRequired(geoRequired);
+                            locationToggle.setChecked(geoRequired);
+                        }
+                    }
+                    locationToggle.setEnabled(true); // enable after fetch
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EventDialog", "Error fetching geolocation", e);
+                    locationToggle.setEnabled(true);
+                });
+
+        // Update Firestore when toggled
+        locationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            createdEvent.setGeolocationRequired(isChecked);
+            db.collection("Events").document(eventId)
+                    .update("geolocationRequired", isChecked)
+                    .addOnSuccessListener(aVoid -> Log.d("EventDialog", "Geo setting updated"))
+                    .addOnFailureListener(e -> Log.e("EventDialog", "Error updating geo setting", e));
+        });
+
 
         // Generate QR code for the event
         generateQRCode(qrCode);
@@ -109,14 +170,13 @@ public class EventCreatedDialogFragment extends DialogFragment {
         regEnd.setText(regsEnd);
         eventDate.setText(regsDate);
 
-        //TODO: add the ability to cancel users invites
         if (createdEvent.getInvitedList().isEmpty()){
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList());
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getWaitingList(), createdEvent.getEventId(), false);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Current Waiting List:");
         } else {
-            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList());
+            usersAdapter = new UsersAdapter(requireContext(),createdEvent.getInvitedList(), createdEvent.getEventId(), true);
             attendeesList.setLayoutManager(new LinearLayoutManager(requireContext()));
             attendeesList.setAdapter(usersAdapter);
             listTitle.setText("Invited Users:");
@@ -151,6 +211,20 @@ public class EventCreatedDialogFragment extends DialogFragment {
         backButton.setOnClickListener(v -> dismiss());
 
         return dialog;
+    }
+
+    /**
+     * Initializes the fragment when it is first created.
+     * Retrieves the {@code eventId} from the fragment arguments if available.
+     *
+     * @param savedInstanceState The previously saved instance state, if any.
+     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null)
+            eventId = getArguments().getString("eventId");
     }
 
 
