@@ -195,16 +195,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         attendeesCount.setText(String.valueOf(createdEvent.getSignups())+" attendees registered");
 
 
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode("TEST!", BarcodeFormat.QR_CODE, 200, 200);
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            qrCode.setImageBitmap(bitmap);
-
-        } catch(WriterException e) {
-            throw new RuntimeException(e);
-        }
 
         ArrayList<String> waitListTest = createdEvent.getWaitingList();
         Date registrationDeadline = createdEvent.getRegistrationEnd();
@@ -245,7 +235,11 @@ public class EventCreatedDialogFragment extends DialogFragment {
     private void generateQRCode(ImageView qrCodeImageView) {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode("TEST!", BarcodeFormat.QR_CODE, 200, 200);
+            String eventId = createdEvent.getEventId();
+
+            String deepLink = "fusion1events://event/" + eventId;
+
+            BitMatrix bitMatrix = multiFormatWriter.encode(deepLink, BarcodeFormat.QR_CODE, 200, 200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             qrCodeImageView.setImageBitmap(bitmap);

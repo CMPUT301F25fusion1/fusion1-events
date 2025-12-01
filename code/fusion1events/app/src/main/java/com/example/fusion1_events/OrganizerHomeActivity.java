@@ -33,6 +33,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.io.IOException;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
  */
 
     private static final String TAG = "OrganizerHomeActivity";
+    private SwipeRefreshLayout swipeRefreshLayout;
     private FirebaseFirestore db;
     private FloatingActionButton addEventButton;
     private RecyclerView recyclerView;
@@ -100,6 +102,14 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         });
 
         loadEvents();
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            eventsModels.clear();
+            eventsAdapter.notifyDataSetChanged();
+            loadEvents();
+        });
+
     }
 
     /**
@@ -143,6 +153,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         });
         recyclerView.setAdapter(eventsAdapter);
     }
+
 
     /**
      * Loads all events associated with the current organizer from Firestore.
@@ -308,7 +319,10 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
                                                                     cancelled,
                                                                     confirmed,
-                                                                    false
+                                                                    false,
+                                                                    eventDoc.getString("organizerId")
+
+
                                                             );
 
                                                             eventsModels.add(event);
@@ -320,6 +334,9 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                         }
                                                     } else {
                                                         Log.w(TAG, "Event document does not exist: " + eventRef.getPath());
+                                                    }
+                                                    if (swipeRefreshLayout.isRefreshing()) {
+                                                        swipeRefreshLayout.setRefreshing(false);
                                                     }
                                                 })
                                                 .addOnFailureListener(e -> {
@@ -347,8 +364,12 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                 "Organizer not found",
                                 Toast.LENGTH_SHORT).show();
                     }
+
                 })
                 .addOnFailureListener(e -> {
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     Log.e(TAG, "Error loading organizer document", e);
                     Toast.makeText(OrganizerHomeActivity.this,
                             "Failed to load events: " + e.getMessage(),
@@ -529,6 +550,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("invitedList", new ArrayList<>());
         eventData.put("confirmed", new ArrayList<>());                 // NEW
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
+        eventData.put("organizerId",eventsModel.getOrganizerId());
 
         db.collection("Events")
                 .add(eventData)
@@ -586,6 +608,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("imageUrl", imageUrl);
         eventData.put("maxWaitingListSize", eventsModel.getMaxWaitList());
+
 
         Log.d(TAG, "Updating event: " + eventId);
 

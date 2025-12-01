@@ -29,6 +29,12 @@ public class EventsModel {
     private boolean geolocationRequired;
 
     // Sports, Chill, Party, Seasonal, Educational,
+
+    String organizerId;
+
+
+
+
     /**
      * Constructor to create an EventsModel with all fields.
      *
@@ -51,7 +57,7 @@ public class EventsModel {
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired, String organizerId) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -68,6 +74,7 @@ public class EventsModel {
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
         this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
         this.geolocationRequired = geolocationRequired;
+        this.organizerId = organizerId;
     }
 
     /**
@@ -110,6 +117,15 @@ public class EventsModel {
      */
     public void setConfirmed(ArrayList<String> confirmed) {
         this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
+        this.organizerId = organizerId;
+    }
+
+    public String getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
     }
 
     /**

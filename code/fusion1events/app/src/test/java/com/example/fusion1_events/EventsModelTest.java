@@ -14,8 +14,25 @@ public class EventsModelTest {
     @Before
     public void setup() {
         Date now = new Date();
-        event = new EventsModel("Concert", new ArrayList<>(), now, now, "Music Event", now,
-                100L, 80L, new ArrayList<>(), null, "event123", new ArrayList<>(), 50L, new ArrayList<>(), new ArrayList<>(), false);
+        event = new EventsModel(
+                "Concert",
+                new ArrayList<String>(),  // selectedTags
+                now,
+                now,
+                "Music Event",
+                now,
+                100L,
+                50L,
+                new ArrayList<String>(),
+                "imageUrl",
+                "event123",
+                new ArrayList<String>(),
+                20L,
+                new ArrayList<String>(),
+                new ArrayList<String>(),
+                false,
+                "organizer123"
+        );
     }
 
     @Test

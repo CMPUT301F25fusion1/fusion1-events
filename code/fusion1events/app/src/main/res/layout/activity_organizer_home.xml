@@ -9,9 +9,6 @@
     android:background="@color/white"
     tools:context=".OrganizerHomeActivity">
 
-    <!-- Top App Bar -->
-
-    <!-- Greeting Text -->
 
     <TextView
         android:id="@+id/tvGreeting"
@@ -25,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Floating Action Button to Create Event -->
 
     <LinearLayout
         android:layout_width="408dp"
@@ -51,17 +47,22 @@
             app:cornerRadius="0dp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerEvents"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toTopOf="@id/fabAddEvent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvGreeting"
-        app:layout_constraintVertical_bias="1.0"
-        tools:listitem="@layout/item_event_card" />
+        app:layout_constraintTop_toBottomOf="@id/tvGreeting">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerEvents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_event_card" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddEvent"
