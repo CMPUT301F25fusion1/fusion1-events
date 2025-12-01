@@ -34,14 +34,6 @@
             android:textSize="14sp" />
 
         <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="Scan"
-            android:gravity="center"
-            android:textSize="14sp" />
-
-        <TextView
             android:id="@+id/tvYourProfileEvent"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -233,14 +225,6 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:weightSum="2">
-
-                <Button
-                    android:id="@+id/btnScanQR"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Scan QR"
-                    android:layout_marginEnd="8dp"/>
 
                 <Button
                     android:id="@+id/btnJoinWaitingList"

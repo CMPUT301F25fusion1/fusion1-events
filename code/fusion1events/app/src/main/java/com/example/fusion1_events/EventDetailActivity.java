@@ -59,7 +59,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
             tvDetailSignups, tvCancelledMessage, tvDetailDeadline, tvDetailTime, tvPastDeadline;
-    private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList,
+    private Button btnJoinWaitingList, btnLeaveWaitingList,
             btnAcceptInvite, btnDeclineInvite, btnCancelInvite;
     private Profile currentUser;
     private FirebaseFirestore db;
@@ -106,7 +106,6 @@ public class EventDetailActivity extends AppCompatActivity {
         tvDetailSignups = findViewById(R.id.tvDetailSignups);
         tvCancelledMessage = findViewById(R.id.tvCancelledMessage);
         tvPastDeadline = findViewById(R.id.tvPastDeadline);
-        btnScanQR = findViewById(R.id.btnScanQR);
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
         btnAcceptInvite = findViewById(R.id.btnAcceptInvite);
@@ -170,9 +169,6 @@ public class EventDetailActivity extends AppCompatActivity {
                             startActivity(intent4);
                         });
 
-                        btnScanQR.setOnClickListener(v ->
-                                Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
-                        );
                         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
                         if (currentEvent.getWaitingList().contains(entrantRef)) {//TODO: Check if waitlistsize is not null and signups isnt bigger than waitlistsize in or statement
                             btnJoinWaitingList.setVisibility(View.GONE);
@@ -202,7 +198,6 @@ public class EventDetailActivity extends AppCompatActivity {
                                 currentEvent.getInvitedList().contains(entrantRef);
 
                         if (afterRegistration && !waiting && !invited) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -211,7 +206,6 @@ public class EventDetailActivity extends AppCompatActivity {
                         }
 
                         else if (isConfirmed) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -222,7 +216,6 @@ public class EventDetailActivity extends AppCompatActivity {
                         }
 
                         else if (isInFinalList) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.VISIBLE);
@@ -240,7 +233,6 @@ public class EventDetailActivity extends AppCompatActivity {
                             btnDeclineInvite.setOnClickListener(v -> declineInvitation());
                         }
                         else if (isCancelled) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -431,7 +423,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "You declined the invitation.", Toast.LENGTH_SHORT).show();
 
-                    btnScanQR.setVisibility(View.GONE);
                     btnJoinWaitingList.setVisibility(View.GONE);
                     btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);
