@@ -7,7 +7,7 @@ import com.google.firebase.firestore.DocumentReference;
  * Represents a notification in the application.
  * <p>
  * Contains information such as createdAt, eventId, eventName, notificationMessage,
- * notificationTitle, notified, read, receiverId, senderId.
+ * notificationTitle, notified, read, receiverId, senderID.
  */
 public class AdminNotification {
     private String id;

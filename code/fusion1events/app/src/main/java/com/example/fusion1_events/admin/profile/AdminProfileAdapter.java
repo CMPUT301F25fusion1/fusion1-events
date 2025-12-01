@@ -15,7 +15,9 @@ import java.util.List;
 
 /**
  * Adapter for displaying a list of admin profiles in a RecyclerView.
- * Provides buttons for deleting or viewing a profile's details.
+ * <p>
+ * Each item shows the profile's name and role, and provides buttons for deleting or viewing
+ * the profile details.
  */
 public class AdminProfileAdapter extends RecyclerView.Adapter<AdminProfileAdapter.ViewHolder> {
     /**
@@ -38,7 +40,8 @@ public class AdminProfileAdapter extends RecyclerView.Adapter<AdminProfileAdapte
     private onProfileActionListener listener;
 
     /**
-     * Constructor for ProfileAdapter.
+     * Constructs an AdminProfileAdapter with a list of profiles and a listener.
+     *
      * @param profiles list of admin profiles to display
      * @param listener listener for handling profile actions
      */
@@ -48,9 +51,9 @@ public class AdminProfileAdapter extends RecyclerView.Adapter<AdminProfileAdapte
     }
 
     /**
-     * Inflates the layout for each profile item.
+     * Inflates the layout for each profile item and creates a ViewHolder.
      *
-     * @param parent   the parent ViewGroup
+     * @param parent the parent ViewGroup
      * @param viewType the type of view
      * @return a ViewHolder for the profile item
      */
@@ -62,7 +65,7 @@ public class AdminProfileAdapter extends RecyclerView.Adapter<AdminProfileAdapte
     }
 
     /**
-     * Binds profile data to the ViewHolder.
+     * Binds profile data to the ViewHolder and sets click listeners for the buttons.
      *
      * @param holder   the ViewHolder to bind data to
      * @param position the position of the profile in the list

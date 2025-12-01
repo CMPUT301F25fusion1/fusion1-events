@@ -20,7 +20,8 @@ import com.example.fusion1_events.R;
 /**
  * RecyclerView adapter for displaying images uploaded for events in the admin interface.
  * <p>
- * Each item shows the image, event title, organizer, registration end date, and a delete button.
+ * Each item shows the image, event title, registration end date, and a delete button.
+ * The adapter communicates user actions via the {@link onImageActionListener}.
  */
 public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.ViewHolder> {
     /**

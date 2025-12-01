@@ -16,14 +16,27 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * Activity that displays the full details of a single notification.
+ * <p>
+ * Retrieves the notification document from Firestore using its document ID and populates
+ * UI fields with the notification title, message, event name, sender, receiver, timestamp,
+ * and notified and read status.
+ */
 public class AdminNotificationDetailsActivity extends AppCompatActivity {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static final String UNKNOWN = "Unknown";
+    public static final String TAG = "FirestoreDebugNotificationDetails";
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView tvTitle, tvMessage, tvEventName, tvSender, tvReceiver, tvCreatedAt, tvNotified, tvRead;
     private ImageButton buttonBack;
-
     private String notificationId;
 
+    /**
+     * Initializes the activity, binds UI components, and loads notification details.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +59,7 @@ public class AdminNotificationDetailsActivity extends AppCompatActivity {
         notificationId = getIntent().getStringExtra("notificationId");
 
         if (notificationId == null || notificationId.isEmpty()) {
-            Log.e("Firestore", "Missing notification ID");
+            Log.e(TAG, "Missing notification ID");
             finish();
             return;
         }
@@ -55,24 +68,32 @@ public class AdminNotificationDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads this notification from Firestore using its document ID.
+     * Loads the notification document from Firestore using its document ID.
+     * <p>
+     * On success, calls {@link #displayNotification(DocumentSnapshot)}.
+     * On failure, logs the error and closes the activity.
      */
     private void loadNotificationDetails() {
         db.collection("Notifications").document(notificationId)
                 .get()
                 .addOnSuccessListener(this::displayNotification)
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error loading notification", e);
+                    Log.e(TAG, "Error loading notification", e);
                     finish();
                 });
     }
 
     /**
-     * Populates UI fields using a Firestore document.
+     * Populates the UI fields with data from the given Firestore document.
+     * <p>
+     * Fields include title, message, event name, timestamp, notified and read status,
+     * and resolves Firestore references to sender and receiver names.
+     *
+     * @param doc Firestore document containing notification data
      */
     private void displayNotification(DocumentSnapshot doc) {
         if (!doc.exists()) {
-            Log.e("Firestore", "Notification not found");
+            Log.e(TAG, "Notification not found");
             finish();
             return;
         }
@@ -113,17 +134,17 @@ public class AdminNotificationDetailsActivity extends AppCompatActivity {
                         Log.i("DEBUG", "Sender document exists? " + senderDoc.exists() + " Path: " + senderDoc.getReference().getPath());
                         if (senderDoc.exists()) {
                             String senderName = senderDoc.getString("name");
-                            tvSender.setText(senderName != null ? senderName : "Unknown");
+                            tvSender.setText(senderName != null ? senderName : UNKNOWN);
                         } else {
-                            tvSender.setText("Unknown");
+                            tvSender.setText(UNKNOWN);
                         }
                     })
                     .addOnFailureListener(e -> {
                         Log.i("DEBUG", "Failed to fetch sender", e);
-                        tvSender.setText("Unknown");
+                        tvSender.setText(UNKNOWN);
                     });
         } else {
-            tvSender.setText("Unknown");
+            tvSender.setText(UNKNOWN);
         }
 
         // Fetch receiver name from Entrants collection
@@ -131,13 +152,13 @@ public class AdminNotificationDetailsActivity extends AppCompatActivity {
             receiverRef.get().addOnSuccessListener(receiverDoc -> {
                 if (receiverDoc.exists()) {
                     String receiverName = receiverDoc.getString("name");
-                    tvReceiver.setText(receiverName != null ? receiverName : "Unknown");
+                    tvReceiver.setText(receiverName != null ? receiverName : UNKNOWN);
                 } else {
-                    tvReceiver.setText("Unknown");
+                    tvReceiver.setText(UNKNOWN);
                 }
-            }).addOnFailureListener(e -> tvReceiver.setText("Unknown"));
+            }).addOnFailureListener(e -> tvReceiver.setText(UNKNOWN));
         } else {
-            tvReceiver.setText("Unknown");
+            tvReceiver.setText(UNKNOWN);
         }
     }
 }
