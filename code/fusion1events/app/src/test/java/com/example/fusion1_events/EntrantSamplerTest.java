@@ -18,6 +18,12 @@ public class EntrantSamplerTest {
     }
 
     @Test
+    public void testNullWaitingList() {
+        List<String> sampled = EntrantSampler.sampleEntrants(null, 3);
+        assertTrue(sampled.isEmpty());
+    }
+
+    @Test
     public void testSampleSizeZero() {
         List<String> waitingList = Arrays.asList("Alice", "Bob", "Charlie");
         List<String> sampled = EntrantSampler.sampleEntrants(waitingList, 0);
