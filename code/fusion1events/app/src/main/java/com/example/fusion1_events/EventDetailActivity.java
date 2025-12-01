@@ -423,9 +423,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
 
-<<<<<<< HEAD
-                    DrawHelper.runDraw(eventId, FirebaseFirestore.getInstance(), null);
-=======
+
                     eventRef.get().addOnSuccessListener(eventDoc -> {
 
                         if (!eventDoc.exists()) {
@@ -451,7 +449,6 @@ public class EventDetailActivity extends AppCompatActivity {
                     }).addOnFailureListener(e -> {
                         Log.e("EntrantEvent", "Failed to load event " + eventId, e);
                     });
->>>>>>> origin/main
 
                 });
     }
