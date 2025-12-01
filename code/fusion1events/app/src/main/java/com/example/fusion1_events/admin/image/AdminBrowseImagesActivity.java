@@ -19,14 +19,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Activity that allows an admin to browse all images stored in Firestore.
+ * Activity that allows an admin to browse and delete all images stored in Firestore.
+ * <p>
+ * Features:
+ * <ul>
+ *     <li>Displays images in a RecyclerView.</li>
+ *     <li>Shows real-time updates using Firestore snapshot listeners.</li>
+ *     <li>Includes a back button to return to the previous screen.</li>
+ * </ul>
  */
 public class AdminBrowseImagesActivity extends AppCompatActivity implements AdminImageAdapter.onImageActionListener {
+    public static final String TAG = "FirestoreDebugBrowseImages";
     private RecyclerView recyclerView;
     private AdminImageAdapter adapter;
     private List<AdminImage> images = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Initializes the activity.
+     * <p>
+     * Sets up the RecyclerView, adapter, navigation bar, back button.
+     * Loads images from Firestore, and listens for real-time updates.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,18 +77,17 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
                 }
 
                 adapter.notifyDataSetChanged();
-                Log.d("FirestoreDebug", "Images loaded successfully");
+                Log.d(TAG, "Images loaded successfully");
             }
         });
     }
 
     /**
-     * Loads all images from the Firestore "Images" collection and populates the RecyclerView.
+     * Loads all images from Firestore and populates the RecyclerView.
      * <p>
-     * Clears the existing list, converts Firestore documents to Image objects, and notifies
-     * the adapter to refresh the view.
+     * Clears the existing list, converts Firestore documents into {@link AdminImage} objects,
+     * and refreshes the adapter.
      */
-
     private void loadImages() {
         db.collection("Events")
                 .get()
@@ -87,18 +102,18 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Images loaded successfully");
+                    Log.d(TAG, "Images loaded successfully");
                 })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error loading images", e));
+                        Log.e(TAG, "Error loading images", e));
     }
 
     /**
      * Deletes the specified image from Firestore and removes it from the RecyclerView.
      * <p>
-     * Triggered from the ImageAdapter when the admin requests to delete an image.
+     * Triggered from the AdminImageAdapter when the admin requests to delete an image.
      *
-     * @param image The Image object to delete.
+     * @param image The AdminImage object to delete.
      */
     @Override
     public void onDeleteImage(AdminImage image) {
@@ -108,12 +123,12 @@ public class AdminBrowseImagesActivity extends AppCompatActivity implements Admi
                     images.remove(image);
                     adapter.notifyDataSetChanged();
                     String successMessage = "Image deleted successfully";
-                    Log.d("FirestoreDebug", successMessage);
+                    Log.d(TAG, successMessage);
                     Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     String failureMessage = "Error deleting image";
-                    Log.d("FirestoreDebug", failureMessage);
+                    Log.d(TAG, failureMessage);
                     Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
                 });
     }

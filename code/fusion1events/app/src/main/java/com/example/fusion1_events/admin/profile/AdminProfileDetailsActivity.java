@@ -11,15 +11,21 @@ import com.example.fusion1_events.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Activity that displays the details of an admin profile.
+ * Activity that displays the full details of a single profile.
  * <p>
- * Loads profile information from Firestore and shows name, email, role, and phone number.
+ * Retrieves the profile document from Firestore using its document ID and populates UI fields
+ * with the name, email, role, and phone number.
  */
 public class AdminProfileDetailsActivity extends AppCompatActivity {
     private TextView tvName, tvEmail, tvRole, tvPhone;
     private ImageButton buttonBack;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Initializes the activity, binds UI components, and loads profile details.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +44,11 @@ public class AdminProfileDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads the admin profile from Firestore by ID and displays the information.
+     * Loads the  profile from Firestore by document ID and populates the UI.
+     * <p>
+     * If the profile's phone number is missing, displays "N/A" instead.
      *
-     * @param id the Firestore document ID of the profile
+     * @param id the Firestore document ID of the profile to load
      */
     private void loadProfile(String id) {
         db.collection("Profile").document(id)

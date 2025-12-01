@@ -1,8 +1,10 @@
 package com.example.fusion1_events.admin.notification;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,15 +22,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Activity that allows an admin to browse all notifications logged in Firestore.
+ * Activity that allows an admin to browse all notifications stored in Firestore.
+ * <p>
+ * Features:
+ * <ul>
+ *     <li>Displays notifications in a RecyclerView.</li>
+ *     <li>Shows real-time updates using Firestore snapshot listeners.</li>
+ *     <li>Provides a temporary tutorial hint when the screen loads.</li>
+ *     <li>Includes a back button to return to the previous screen.</li>
+ * </ul>
  */
 public class AdminBrowseNotificationsActivity extends AppCompatActivity {
+    public static final String TAG = "FirestoreDebugBrowseNotifications";
+
     private RecyclerView recyclerView;
     private AdminNotificationAdapter adapter;
     private List<AdminNotification> notifications = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    /**
+     * Initializes the activity.
+     * <p>
+     * Sets up the RecyclerView, adapter, navigation bar, back button, tutorial hint.
+     * Loads notifications from Firestore, and listens for real-time updates.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +70,14 @@ public class AdminBrowseNotificationsActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.buttonBack);
         backButton.setOnClickListener(v -> finish());
 
+        // Temporary hint/tutorial for user
+        new Handler().postDelayed(() ->
+                        Toast.makeText(
+                                AdminBrowseNotificationsActivity.this,
+                                "Click on a notification to view full details",
+                                Toast.LENGTH_LONG
+                        ).show(), 300);
+
         // Listen for real-time updates to the "Notifications" collection.
         db.collection("Notifications")
                 .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
@@ -63,14 +90,17 @@ public class AdminBrowseNotificationsActivity extends AppCompatActivity {
                         .collect(Collectors.toList());
 
                 notifications.addAll(newNotificationss);
-                Log.d("FirestoreDebug", newNotificationss.toString());
+                Log.d(TAG, newNotificationss.toString());
                 adapter.notifyDataSetChanged();
             }
         });
     }
 
     /**
-     * Loads all events from the Firestore "Events" collection and populates the RecyclerView.
+     * Loads all notifications from the Firestore "Notifications" collection and populates the RecyclerView.
+     * <p>
+     * Retrieves documents in descending order by the "createdAt" timestamp.
+     * On success, clears the existing list, adds the new notifications, and updates the adapter.
      */
     private void loadNotifications() {
         db.collection("Notifications")
@@ -84,16 +114,18 @@ public class AdminBrowseNotificationsActivity extends AppCompatActivity {
                         notifications.add(notification);
                     }
                     adapter.notifyDataSetChanged();
-                    Log.d("Firestore", "Notifications loaded successfully");
+                    Log.d(TAG, "Notifications loaded successfully");
                 })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "Error loading notifications", e));
+                        Log.e(TAG, "Error loading notifications", e));
     }
 
     /**
-     * Converts a Firestore DocumentSnapshot into an AdminNotification object and assigns the document's ID to the AdminNotification.
+     * Converts a Firestore DocumentSnapshot into an AdminNotification object.
+     * <p>
+     * Assigns the Firestore document ID to the notification object for reference.
      *
-     * @param doc the Firestore document containing notificatiion data
+     * @param doc the Firestore document containing notification data
      * @return an AdminNotification object with populated fields and Firestore ID
      */
     private @NonNull AdminNotification docToNotification(@NonNull DocumentSnapshot doc) {

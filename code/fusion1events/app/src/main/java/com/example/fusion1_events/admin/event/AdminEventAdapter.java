@@ -25,8 +25,6 @@ import java.util.Locale;
  * Handles displaying the title, description, registration end date, and provides a button to view event details.
  */
 public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.ViewHolder> {
-
-
     private List<Event> events;
 
     /**

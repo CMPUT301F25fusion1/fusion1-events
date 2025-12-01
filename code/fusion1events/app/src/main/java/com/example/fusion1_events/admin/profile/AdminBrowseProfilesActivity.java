@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 /**
  * Activity that allows an admin to browse, view, and delete user profiles.
  * <p>
- * Displays all profiles stored in Firestore using a RecyclerView with a custom ProfileAdapter.
+ * Displays all profiles stored in Firestore using a RecyclerView with a custom
+ * AdminProfileAdapter.
  * Supports deleting profiles and viewing detailed profile information.
  */
 public class AdminBrowseProfilesActivity extends AppCompatActivity implements AdminProfileAdapter.onProfileActionListener {
@@ -33,6 +34,14 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
     private List<AdminProfile> profiles = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Initializes the activity.
+     * <p>
+     * Sets up the RecyclerView, adapter, navigation bar, back button.
+     * Loads profiles from Firestore, and listens for real-time updates.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,10 +142,12 @@ public class AdminBrowseProfilesActivity extends AppCompatActivity implements Ad
     }
 
     /**
-     * Converts a Firestore DocumentSnapshot into a Profile object and assigns the document's ID to the Profile.
+     * Converts a Firestore DocumentSnapshot into an AdminProfile object.
+     * <p>
+     * Assigns the Firestore document's ID to the AdminProfile.
      *
      * @param doc the Firestore document containing profile data
-     * @return a Profile object with populated fields and Firestore ID
+     * @return an AdminProfile object with populated fields and Firestore ID
      */
     private @NonNull AdminProfile docToProfile(@NonNull DocumentSnapshot doc) {
         AdminProfile profile = doc.toObject(AdminProfile.class);

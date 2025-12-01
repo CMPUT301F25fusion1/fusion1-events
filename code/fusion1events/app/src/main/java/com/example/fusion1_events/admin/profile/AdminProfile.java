@@ -1,9 +1,12 @@
 package com.example.fusion1_events.admin.profile;
 
+
 /**
- * Represents a profile in the application.
+ * Represents an admin profile in the application.
  * <p>
- * Contains information such as ID, name, email, role, and phone number.
+ * This class contains information such as the profile's unique ID, name, email address, role,
+ * and phone number.
+ * It provides standard getters and setters to access and modify the profile details.
  */
 public class AdminProfile {
     private String id;
@@ -12,7 +15,11 @@ public class AdminProfile {
     private String role;
     private String number;
 
-    // default constructor
+    /**
+     * Default constructor for AdminProfile.
+     * <p>
+     * Initializes a new instance of the AdminProfile class with default values.
+     */
     public AdminProfile() {}
 
     // getters and setters

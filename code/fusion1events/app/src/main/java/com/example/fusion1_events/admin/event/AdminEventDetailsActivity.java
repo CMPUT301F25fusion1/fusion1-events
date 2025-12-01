@@ -20,12 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Activity that displays detailed information about a single event to an admin.
+ * Activity that displays the full details of a single event.
  * <p>
- * Shows the event image, title, description, registration start and end dates,
- * and the number of attendees. Admins can also delete the event from this screen.
+ * Retrieves the event document from Firestore using its document ID and populates UI fields
+ * with the title, description, registration start and end dates, number of attendees, image.
  */
 public class AdminEventDetailsActivity extends AppCompatActivity {
+    public static final String TAG = "FirestoreDebugEventDetails";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private ImageView ivEventImage;
@@ -35,6 +36,11 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
 
     private String eventId;
 
+    /**
+     * Initializes the activity, binds UI components, and loads event details.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +60,7 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
         // Get event ID passed via Intent
         eventId = getIntent().getStringExtra("eventId");
         if (eventId == null || eventId.isEmpty()) {
-            Log.e("Firestore", "Missing event ID");
+            Log.e(TAG, "Missing event ID");
             finish();
             return;
         }
@@ -66,7 +72,9 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads event details from Firestore based on eventId.
+     * Loads event details from Firestore based on the eventId.
+     * <p>
+     * If the event exists, displays it in the UI. Otherwise, logs an error and finishes the activity.
      */
     private void loadEventDetails() {
         db.collection("Events").document(eventId)
@@ -75,12 +83,12 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         displayEvent(documentSnapshot);
                     } else {
-                        Log.e("Firestore", "Event not found");
+                        Log.e(TAG, "Event not found");
                         finish();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error loading event", e);
+                    Log.e(TAG, "Error loading event", e);
                     finish();
                 });
     }
@@ -124,13 +132,13 @@ public class AdminEventDetailsActivity extends AppCompatActivity {
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     String successMessage = "Event deleted successfully";
-                    Log.d("Firestore", successMessage);
+                    Log.d(TAG, successMessage);
                     Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {
                     String failureMessage = "Error deleting event";
-                    Log.e("Firestore", failureMessage, e);
+                    Log.e(TAG, failureMessage, e);
                     Toast.makeText(this, failureMessage, Toast.LENGTH_SHORT).show();
                 });
     }

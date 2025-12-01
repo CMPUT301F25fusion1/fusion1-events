@@ -22,6 +22,14 @@ public class AdminHomeActivity extends AppCompatActivity {
     // Buttons for navigating to different admin screens
     Button buttonBrowseEvents, buttonBrowseImages, buttonViewNotifications, buttonBrowseProfiles;
 
+    /**
+     * Initializes the admin home screen.
+     * <p>
+     * Binds the buttons to their respective UI components and sets up click listeners
+     * that navigate to the corresponding management activities.
+     *
+     * @param savedInstanceState Bundle containing activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
