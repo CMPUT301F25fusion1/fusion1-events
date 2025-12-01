@@ -46,7 +46,6 @@
         <activity android:name=".admin.AdminProfileDetailsActivity"/>
         <activity android:name=".admin.AdminNotificationDetailsActivity" />
         <activity android:name=".SampleEntrantsActivity"/>
-        <activity android:name=".CancelledEntrantsActivity"/>
 
         <activity android:name=".NotificationsActivity"/>
         <activity android:name=".EntrantsMapActivity"/>

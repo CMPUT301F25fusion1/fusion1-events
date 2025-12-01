@@ -423,6 +423,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     btnAcceptInvite.setVisibility(View.GONE);
                     btnDeclineInvite.setVisibility(View.GONE);
 
+
                     eventRef.get().addOnSuccessListener(eventDoc -> {
 
                         if (!eventDoc.exists()) {

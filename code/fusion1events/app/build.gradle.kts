@@ -91,6 +91,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("com.google.firebase:firebase-messaging")
+
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.7.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
 
@@ -99,4 +105,5 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.2.0")
     // Allows Android classes (Context, Bundle) to run in unit tests
     testImplementation("org.robolectric:robolectric:4.11.1")
+
 }
