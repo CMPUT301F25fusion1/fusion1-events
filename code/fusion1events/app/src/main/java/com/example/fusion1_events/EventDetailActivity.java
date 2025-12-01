@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +74,7 @@ public class EventDetailActivity extends AppCompatActivity {
      *
      * @param savedInstanceState the previously saved state of the activity, or null
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,26 @@ public class EventDetailActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         eventId = getIntent().getStringExtra("eventId");
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
+
+        // Check if this activity was opened via deep link
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+
+        if (data != null) {
+            // Opened from QR code scan - extract event ID from URI
+            // URI format: fusion1events://event/EVENT_ID
+            eventId = data.getLastPathSegment();
+
+            // We don't have currentUser from the intent, so we'll need to load it
+            // You can either:
+            // 1. Load it from SharedPreferences/Firebase
+            // 2. Pass null and handle it gracefully
+            currentUser = null; // Handle this appropriately in your app
+        } else {
+            // Opened normally - get data from intent extras
+            eventId = intent.getStringExtra("eventId");
+            currentUser = (Profile) intent.getSerializableExtra("currentUser");
+        }
 
         ivDetailImage = findViewById(R.id.ivDetailImage);
         tvDetailDeadline = findViewById(R.id.tvDetailDeadline);
@@ -134,20 +156,20 @@ public class EventDetailActivity extends AppCompatActivity {
                         TextView tvNotifications = findViewById(R.id.tvNotifications);
 
                         tvYourProfile.setOnClickListener(v -> {
-                            Intent intent = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
-                            startActivity(intent);
+                            Intent intent1 = new Intent(EventDetailActivity.this, ProfileViewActivity.class);
+                            startActivity(intent1);
                         });
 
                         tvHome.setOnClickListener(v -> {
-                            Intent intent = new Intent(this, EntrantHomeActivity.class);
-                            intent.putExtra("currentUser", currentUser);
-                            startActivity(intent);
+                            Intent intent2 = new Intent(this, EntrantHomeActivity.class);
+                            intent2.putExtra("currentUser", currentUser);
+                            startActivity(intent2);
                         });
 
                         tvYourEvents.setOnClickListener(v -> {
-                            Intent intent = new Intent(this, YourEventsActivity.class);
-                            intent.putExtra("currentUser", currentUser);
-                            startActivity(intent);
+                            Intent intent3 = new Intent(this, YourEventsActivity.class);
+                            intent3.putExtra("currentUser", currentUser);
+                            startActivity(intent3);
                         });
 
                         tvNotifications.setOnClickListener(v -> {

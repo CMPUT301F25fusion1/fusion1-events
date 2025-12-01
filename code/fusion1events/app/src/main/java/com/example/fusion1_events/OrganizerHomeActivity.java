@@ -309,6 +309,10 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     cancelled,
                                                                     confirmed,
                                                                     false
+                                                                    eventDoc.getLong("maxWaitingListSize"),
+                                                                    eventDoc.getString("organizerId")
+
+
                                                             );
 
                                                             eventsModels.add(event);

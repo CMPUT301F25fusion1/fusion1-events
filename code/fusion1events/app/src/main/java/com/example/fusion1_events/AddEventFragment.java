@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class AddEventFragment extends DialogFragment {
     private EditText inputRegStartDate;
     private EditText inputRegEndDate;
     private EditText inputEventDate;
-
+    private String deviceId = String.valueOf(FirebaseInstallations.getInstance().getId());
     private Integer peopleCount = 0;
     private Integer maxListCount = 0;
     private Date regStartDate;
@@ -163,9 +164,9 @@ public class AddEventFragment extends DialogFragment {
         TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
         AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
 
-        //set spinner listener and chips adapter
-        String[] tagItems = {"Chill", "Sports", "Educational"};
-        boolean[] selectedFlags = {false, false, false};
+        //set spinner listener and chips adapter  Sports, Chill, Party, Seasonal, Educational,
+        String[] tagItems = {"Chill \uD83E\uDD1F", "Sports \uD83C\uDFC0", "Educational \uD83C\uDFC0","Seasonal ☃\uFE0F","Party \uD83C\uDF89" };
+        boolean[] selectedFlags = {false, false, false, false, false };
 
 
         inputTags.setOnClickListener(v -> {
@@ -361,9 +362,7 @@ public class AddEventFragment extends DialogFragment {
                 null,
                 null,
                 Long.valueOf(maxListCount),
-                null,
-                null,
-                false
+                deviceId
         );
     }
 
