@@ -38,13 +38,13 @@
         <activity android:name=".GuidelinesActivity" />
 
 
-        <activity android:name=".admin.AdminBrowseEventsActivity" />
-        <activity android:name=".admin.AdminBrowseProfilesActivity" />
-        <activity android:name=".admin.AdminBrowseImagesActivity" />
-        <activity android:name=".admin.AdminBrowseNotificationsActivity" />
-        <activity android:name=".admin.AdminEventDetailsActivity" />
-        <activity android:name=".admin.AdminProfileDetailsActivity"/>
-        <activity android:name=".admin.AdminNotificationDetailsActivity" />
+        <activity android:name=".admin.event.AdminBrowseEventsActivity" />
+        <activity android:name=".admin.profile.AdminBrowseProfilesActivity" />
+        <activity android:name=".admin.image.AdminBrowseImagesActivity" />
+        <activity android:name=".admin.notification.AdminBrowseNotificationsActivity" />
+        <activity android:name=".admin.event.AdminEventDetailsActivity" />
+        <activity android:name=".admin.profile.AdminProfileDetailsActivity"/>
+        <activity android:name=".admin.notification.AdminNotificationDetailsActivity" />
         <activity android:name=".SampleEntrantsActivity"/>
 
         <activity android:name=".NotificationsActivity"/>

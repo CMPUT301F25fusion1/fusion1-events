@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.notification;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusion1_events.R;
+import com.example.fusion1_events.admin.NavBarHelper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

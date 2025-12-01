@@ -1,15 +1,13 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.profile;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fusion1_events.R;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**

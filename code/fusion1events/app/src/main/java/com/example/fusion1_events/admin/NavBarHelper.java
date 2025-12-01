@@ -6,6 +6,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.fusion1_events.R;
+import com.example.fusion1_events.admin.event.AdminBrowseEventsActivity;
+import com.example.fusion1_events.admin.image.AdminBrowseImagesActivity;
+import com.example.fusion1_events.admin.notification.AdminBrowseNotificationsActivity;
 
 /**
  * Helper class to set up the navigation bar in the admin interface.

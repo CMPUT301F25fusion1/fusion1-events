@@ -1,25 +1,22 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.image;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.fusion1_events.R;
+import com.example.fusion1_events.admin.NavBarHelper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Activity that allows an admin to browse all images stored in Firestore.

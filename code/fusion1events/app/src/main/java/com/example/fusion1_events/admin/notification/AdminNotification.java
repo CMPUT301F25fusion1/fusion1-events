@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.notification;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;

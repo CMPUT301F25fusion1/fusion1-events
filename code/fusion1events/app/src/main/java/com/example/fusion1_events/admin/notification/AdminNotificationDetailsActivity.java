@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.notification;
 
 import android.os.Bundle;
 import android.util.Log;
