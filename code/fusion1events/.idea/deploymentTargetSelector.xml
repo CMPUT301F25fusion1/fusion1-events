@@ -13,7 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="DrawHelperTest">
+      <SelectionState runConfigName="Tests in 'com.example.fusion1_events'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
