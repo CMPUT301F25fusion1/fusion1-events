@@ -25,6 +25,13 @@ import com.google.firebase.installations.FirebaseInstallations;
 public class LoadAppActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
+    /**
+     * Called when the activity is first created.
+     * Initializes the splash-screen layout, retrieves the device ID,
+     * and checks Firestore for an associated profile after a short delay.
+     *
+     * @param savedInstanceState Previously saved state, or null if none.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +62,12 @@ public class LoadAppActivity extends AppCompatActivity {
     }
 
     /**
-     * If profile exists opens the appropriate home screen as per their role
-     * @param profile a DocumentSnapshot containing the profile model.
+     * Handles the case where a profile document exists for this device.
+     * Redirects the user to the appropriate home screen depending on their role:
+     * ENTANT, ORGANIZER, or ADMIN.
+     *
+     * @param profile The Firestore document representing the user's profile.
      */
-
     public void profileExists(DocumentSnapshot profile){
 
             String role = profile.getString("role");
@@ -88,7 +97,8 @@ public class LoadAppActivity extends AppCompatActivity {
     }
 
     /**
-     * If profile does not exist opens the SignUpActivity.
+     * Handles the case where no profile exists for this device.
+     * Redirects the user to the SignUpActivity so they can create an account.
      */
     public void profileDoesNotExist(){
         startActivity(new android.content.Intent(this, SignUpActivity.class));

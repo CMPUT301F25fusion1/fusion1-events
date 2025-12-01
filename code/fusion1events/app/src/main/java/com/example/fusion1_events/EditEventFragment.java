@@ -79,6 +79,7 @@ public class EditEventFragment extends DialogFragment {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private boolean geolocationRequired;
 
     /**
      * Creates a new instance of AddEventFragment.
@@ -407,7 +408,8 @@ public class EditEventFragment extends DialogFragment {
                 null,
                 Long.valueOf(maxListCount),
                 null,
-                null
+                null,
+                geolocationRequired
         );
     }
 

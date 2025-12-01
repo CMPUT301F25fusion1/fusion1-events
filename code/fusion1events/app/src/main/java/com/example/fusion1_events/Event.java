@@ -37,7 +37,6 @@ public class Event implements Serializable {
     private ArrayList<DocumentReference> cancelled;
     private ArrayList<String> Keywords;
 
-
     public Event(){}
 
 
@@ -59,7 +58,6 @@ public class Event implements Serializable {
         this.Signups = signups;
         this.waitingList = waitingList;
         this.imageUrl = imageUrl;
-        // new
         this.invitedList = invitedList;
         this.confirmed = confirmed;
         this.cancelled = cancelled;
@@ -183,34 +181,64 @@ public class Event implements Serializable {
     public void setWaitingList(ArrayList<DocumentReference> waitingList) {
         this.waitingList = waitingList;
     }
-
+    /**
+     * Returns the image for the event.
+     *
+     * @return the imageUrl
+     */
     public String getImageUrl() {
         return imageUrl;
     }
-
+    /**
+     * Sets the image for the event.
+     *
+     * @param imageUrl
+     */
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
 
-    // new code
+    /**
+     * Returns the invitedList for the event.
+     *
+     * @return invitedList list of document references representing the invited list
+     */
     public ArrayList<DocumentReference> getInvitedList() { return invitedList; }
-
-    public void setInvitedList(ArrayList<DocumentReference> finaList) {
-        this.invitedList = finaList;
+    /**
+     * Sets the invited list for the event.
+     *
+     * @param invitedList list of document references representing the invited list
+     */
+    public void setInvitedList(ArrayList<DocumentReference> invitedList) {
+        this.invitedList = invitedList;
     }
 
     public ArrayList<DocumentReference> getConfirmed() { return confirmed; }
-
+    /**
+     * Sets the confirmed list for the event.
+     *
+     * @param confirmed list of document references representing the confirmed list
+     */
     public void setConfirmed(ArrayList<DocumentReference> confirmed) {
         this.confirmed = confirmed;
     }
 
     public ArrayList<DocumentReference> getCancelled() { return cancelled; }
+    /**
+     * Sets the cancelled list for the event.
+     *
+     * @param cancelled list of document references representing the cancelled list
+     */
     public void setCancelled(ArrayList<DocumentReference> cancelled) {
         this.cancelled = cancelled;
     }
 
     public ArrayList<String> getKeywords() { return Keywords; }
+    /**
+     * Sets the keywords list for the event.
+     *
+     * @param keyword list of document references representing the keywords list
+     */
     public void setKeywords(String keyword) {
         this.Keywords = Keywords;
     }

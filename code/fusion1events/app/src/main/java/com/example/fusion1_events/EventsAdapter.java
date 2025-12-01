@@ -32,20 +32,65 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     private Context context;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
+    /**
+     * Listener interface for handling interactions with event list items.
+     * Provides callbacks for viewing, editing, deleting, and viewing sample entrants.
+     */
     public interface OnEventClickListener {
+        /**
+         * Called when an event card is tapped.
+         *
+         * @param event    The selected event.
+         * @param position The event's position in the list.
+         */
         void onEventClick(EventsModel event, int position);
+
+        /**
+         * Called when the user selects "Edit" from an event's options menu.
+         *
+         * @param event    The selected event.
+         * @param position The event's position in the list.
+         */
         void onEditClick(EventsModel event, int position);
+
+        /**
+         * Called when the user selects "Delete" from an event's options menu.
+         *
+         * @param event    The selected event.
+         * @param position The event's position in the list.
+         */
         void onDeleteClick(EventsModel event, int position);
+
+        /**
+         * Called when the user selects "Sample Entrants" from an event's options menu.
+         *
+         * @param event    The selected event.
+         * @param position The event's position in the list.
+         */
         void onSampleClick(EventsModel event, int position);
 
     }
 
+    /**
+     * Creates a new EventsAdapter for displaying organizer events.
+     *
+     * @param context  The context where the adapter is used.
+     * @param events   The list of events to bind.
+     * @param listener Callback listener for item interactions.
+     */
     public EventsAdapter(Context context, ArrayList<EventsModel> events, OnEventClickListener listener) {
         this.context = context;
         this.events = events;
         this.listener = listener;
     }
 
+    /**
+     * Inflates the layout for individual event cards.
+     *
+     * @param parent   Parent ViewGroup.
+     * @param viewType Item view type.
+     * @return A new EventViewHolder instance.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,17 +99,32 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return new EventViewHolder(view);
     }
 
+    /**
+     * Binds event data to a specific ViewHolder.
+     *
+     * @param holder   The ViewHolder to populate.
+     * @param position The position of the event in the list.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         EventsModel event = events.get(position);
         holder.bind(event, position);
     }
 
+    /**
+     * Returns the total number of events displayed in the RecyclerView.
+     *
+     * @return Total number of events.
+     */
     @Override
     public int getItemCount() {
         return events.size();
     }
 
+    /**
+     * ViewHolder class that represents a single event card inside the RecyclerView.
+     * Handles binding event data and configuring the options menu.
+     */
     class EventViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageBanner;
         private TextView textEventTitle;
@@ -72,6 +132,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         private TextView textEventAttendees;
         private ImageButton btnEventOptions;
 
+        /**
+         * Initializes UI components for the event card.
+         *
+         * @param itemView The root view of the event card layout.
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             imageBanner = itemView.findViewById(R.id.imageBanner);
@@ -81,6 +146,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             btnEventOptions = itemView.findViewById(R.id.btnEventOptions);
         }
 
+        /**
+         * Binds event details to the UI elements in the event card, sets up click listeners,
+         * loads the banner image, and configures the popup menu for edit/delete/sample actions.
+         *
+         * @param event    The event to display.
+         * @param position The event's position in the list.
+         */
         public void bind( EventsModel event, int position) {
             // Set title
             textEventTitle.setText(event.getEventTitle());
