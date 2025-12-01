@@ -2,6 +2,7 @@ package com.example.fusion1_events;
 
 import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,7 +52,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * Creates a new instance of EventCreatedDialogFragment.
      *
      * @param event The event that was created or is being displayed
-     * @param imageUri The URI of the event image (can be null)
      * @return A new instance of EventCreatedDialogFragment
      */
     public static EventCreatedDialogFragment newInstance(EventsModel event) {
@@ -70,6 +70,7 @@ public class EventCreatedDialogFragment extends DialogFragment {
      * Creates and configures the dialog to display event creation confirmation.
      * Generates a QR code for the event and displays either the registration deadline
      * or the list of invited attendees.
+     * Displays geolocation requirement toggle and map of entrants on waiting list.
      *
      * @param savedInstanceState Bundle containing the dialog's previously saved state
      * @return The configured AlertDialog
@@ -92,6 +93,8 @@ public class EventCreatedDialogFragment extends DialogFragment {
         Button btnViewCancelled = view.findViewById(R.id.btnViewCancelled);
         Button btnViewFinalList = view.findViewById(R.id.btnViewFinalList);
         Button btnViewWaitingList = view.findViewById(R.id.btnViewWaitingList);
+
+        Button btnViewMap = view.findViewById(R.id.btnViewMap);
 
         btnViewCancelled.setOnClickListener(v -> {
             CancelledEntrantsDialogFragment
@@ -142,6 +145,13 @@ public class EventCreatedDialogFragment extends DialogFragment {
                     .addOnFailureListener(e -> Log.e("EventDialog", "Error updating geo setting", e));
         });
 
+        // View map button functionality
+        btnViewMap.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EntrantsMapActivity.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
+        });
+
 
         // Generate QR code for the event
         generateQRCode(qrCode);
@@ -156,8 +166,6 @@ public class EventCreatedDialogFragment extends DialogFragment {
         } else {
             poster.setImageResource(R.drawable.logo_loading);
         }
-
-
 
         //Set the dates
         Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

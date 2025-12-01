@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
 /*
  * File: Profile.java
  *
@@ -13,7 +15,7 @@ import androidx.annotation.Nullable;
  * -
  *
  */
-
+@IgnoreExtraProperties
 public class Profile implements Serializable {
     private String name;
     private String email;
