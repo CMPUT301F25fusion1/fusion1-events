@@ -57,8 +57,7 @@ public class EventsModel {
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired) {
-                       ArrayList<String> invitedList, Long maxWaitList, String organizerId) {
+                       ArrayList<String> invitedList, Long maxWaitList,ArrayList<String> cancelled, ArrayList<String> confirmed, boolean geolocationRequired, String organizerId) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -75,6 +74,7 @@ public class EventsModel {
         this.cancelled = cancelled != null ? cancelled : new ArrayList<>();
         this.confirmed = confirmed != null ? confirmed : new ArrayList<>();
         this.geolocationRequired = geolocationRequired;
+        this.organizerId = organizerId;
     }
 
     /**
