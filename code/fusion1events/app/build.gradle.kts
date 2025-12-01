@@ -98,6 +98,7 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.2.0")
 
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
     // For JVM unit tests
     testImplementation("org.mockito:mockito-core:5.12.0")

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 
 /**
  * File: Event.java
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
  * - Assumes Firestore timestamps and document references are always present and valid.
  *
  */
+@IgnoreExtraProperties
 public class Event implements Serializable {
     private String id;
     private String title;
