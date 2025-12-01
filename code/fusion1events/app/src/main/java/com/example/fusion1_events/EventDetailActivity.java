@@ -44,6 +44,7 @@ import java.util.Map;
  * - Displays full details for a selected event: title, description, date, signups, and image.
  * - Loads event data from Firestore based on the event ID passed through the intent.
  * - Allows entrant users to join or leave the event's waiting list.
+ * - Allows entrant users to accept/decline/cancel invitations to an event.
  * - Provides navigation to the home screen, the user's events, or the user's profile.
  * - Handles UI state changes (e.g., showing/hiding Join/Leave buttons).
  *

@@ -49,10 +49,12 @@ import java.util.Locale;
  * - Acts as the home screen for users with the Entrant role.
  * - Retrieves the current user’s profile using their device ID.
  * - Displays a list of all available events from Firestore.
+ * - Allows user to filter events by interests or by date.
  * - Provides navigation to:
  *      - Home screen
  *      - Entrant's events screen
  *      - Entrant's profile screen
+ *      - Entrant's notification screen
  * - Initializes and binds an EventAdapter to show event cards for the entrant.
  * - Notify user of any notification that they have not interacted with yet.
  *
@@ -68,7 +70,8 @@ public class EntrantHomeActivity extends AppCompatActivity {
     private RecyclerView eventsRecyclerView;
     private EventAdapter adapter;
     private List<Event> eventList;
-    private List<Event> filteredEvents = new ArrayList<>();
+    private List<Event> filterByInterest = new ArrayList<>();
+    private List<Event> filterByDate = new ArrayList<>();
     private Profile currentUser;
     private Button profileButton;
     private String currentSelectedInterest = null;
@@ -161,18 +164,24 @@ public class EntrantHomeActivity extends AppCompatActivity {
 
 
                     List<String> interests = Arrays.asList(
-                            "Sports", "Chill", "Education", "Remove Filter"
+                            "Chill \uD83E\uDD1F", "Sports \uD83C\uDFC0", "Educational \uD83C\uDFC0",
+                            "Seasonal ☃\uFE0F","Party \uD83C\uDF89", "Remove Filter"
                     );
                     tvInterest.setOnClickListener(v -> showInterestDropdown(v, interests));
 
                     tvDate.setOnClickListener(v -> {
-                        if (currentSelectedDate != null) {
+                        if (tvDate.getText() == "Clear filter") {
                             currentSelectedDate = null;
                             tvDate.setText("Date");
                             tvDate.setTextColor(Color.BLACK);
-                            filteredEvents.clear();
-                            filteredEvents.addAll(eventList);
-                            adapter.updateList(filteredEvents);
+                            filterByDate.clear();
+                            if (currentSelectedInterest != null) {
+                                filterByInterest = filterEventsByInterest(currentSelectedInterest);
+                                filterByDate.addAll(filterByInterest);
+                            } else {
+                                filterByDate.addAll(eventList);
+                            }
+                            adapter.updateList(filterByDate);
                             return;
                         }
 
@@ -183,7 +192,6 @@ public class EntrantHomeActivity extends AppCompatActivity {
                                     calendar.set(year, month, dayOfMonth);
                                     currentSelectedDate = calendar.getTime();
 
-                                    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
                                     tvDate.setText("Clear filter");
                                     tvDate.setTextColor(Color.RED);
 
@@ -321,9 +329,14 @@ public class EntrantHomeActivity extends AppCompatActivity {
             if (selectedInterest.equals("Remove Filter")) {
                 this.currentSelectedInterest = null;
                 ((TextView) anchorView).setText("Interest");
-                filteredEvents.clear();
-                filteredEvents.addAll(eventList);
-                adapter.updateList(filteredEvents);
+                filterByInterest.clear();
+                if (currentSelectedDate != null){
+                    filterByDate = filterEventsByDate(currentSelectedDate);
+                    filterByInterest.addAll(filterByDate);
+                } else {
+                    filterByInterest.addAll(eventList);
+                }
+                adapter.updateList(filterByInterest);
             } else {
                 ((TextView) anchorView).setText(selectedInterest);
                 this.currentSelectedInterest = selectedInterest;
@@ -334,21 +347,24 @@ public class EntrantHomeActivity extends AppCompatActivity {
         });
     }
 
-    private void filterEventsByInterest(String interest) {
-        filteredEvents.clear();
+    private List<Event> filterEventsByInterest(String interest) {
+        filterByInterest.clear();
 
         for (Event e : eventList) {
             if (e.getKeywords() != null &&
                     e.getKeywords().contains(interest)) {
-                filteredEvents.add(e);
+                if (currentSelectedDate == null || filterByDate.contains(e)){
+                    filterByInterest.add(e);
+                }
             }
         }
 
-        adapter.updateList(filteredEvents);
+        adapter.updateList(filterByInterest);
+        return filterByInterest;
     }
 
-    private void filterEventsByDate(Date selectedDate) {
-        filteredEvents.clear();
+    private List<Event> filterEventsByDate(Date selectedDate) {
+        filterByDate.clear();
 
         for (Event e : eventList) {
             Date eventDate = e.getDate().toDate();
@@ -361,12 +377,15 @@ public class EntrantHomeActivity extends AppCompatActivity {
                 if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
                         c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
                         c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)) {
-                    filteredEvents.add(e);
+                    if (currentSelectedInterest == null || filterByInterest.contains(e)){
+                        filterByDate.add(e);
+                    }
                 }
             }
         }
 
-        adapter.updateList(filteredEvents);
+        adapter.updateList(filterByDate);
+        return filterByDate;
     }
 
     private void showNotificationBanner(String title,
