@@ -320,7 +320,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     cancelled,
                                                                     confirmed,
                                                                     false,
-                                                                    eventDoc.getString("organizerId")
+                                                                    organizerRef
 
 
                                                             );
