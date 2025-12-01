@@ -59,7 +59,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivDetailImage;
     private TextView tvDetailTitle, tvDetailDate, tvDetailDescription,
             tvDetailSignups, tvCancelledMessage, tvDetailDeadline, tvDetailTime, tvPastDeadline;
-    private Button btnScanQR, btnJoinWaitingList, btnLeaveWaitingList,
+    private Button btnJoinWaitingList, btnLeaveWaitingList,
             btnAcceptInvite, btnDeclineInvite, btnCancelInvite;
     private Profile currentUser;
     private FirebaseFirestore db;
@@ -85,21 +85,13 @@ public class EventDetailActivity extends AppCompatActivity {
         eventId = getIntent().getStringExtra("eventId");
         currentUser = (Profile) getIntent().getSerializableExtra("currentUser");
 
-        // Check if this activity was opened via deep link
         Intent intent = getIntent();
         Uri data = intent.getData();
 
         if (data != null) {
-            // Opened from QR code scan - extract event ID from URI
-            // URI format: fusion1events://event/EVENT_ID
             eventId = data.getLastPathSegment();
 
-            // We don't have currentUser from the intent, so we'll need to load it
-            // You can either:
-            // 1. Load it from SharedPreferences/Firebase
-            // 2. Pass null and handle it gracefully
-            currentUser = null; // Handle this appropriately in your app
-        } else {
+            currentUser = null;
             // Opened normally - get data from intent extras
             eventId = intent.getStringExtra("eventId");
             currentUser = (Profile) intent.getSerializableExtra("currentUser");
@@ -114,7 +106,6 @@ public class EventDetailActivity extends AppCompatActivity {
         tvDetailSignups = findViewById(R.id.tvDetailSignups);
         tvCancelledMessage = findViewById(R.id.tvCancelledMessage);
         tvPastDeadline = findViewById(R.id.tvPastDeadline);
-        btnScanQR = findViewById(R.id.btnScanQR);
         btnJoinWaitingList = findViewById(R.id.btnJoinWaitingList);
         btnLeaveWaitingList = findViewById(R.id.btnLeaveWaitingList);
         btnAcceptInvite = findViewById(R.id.btnAcceptInvite);
@@ -178,9 +169,6 @@ public class EventDetailActivity extends AppCompatActivity {
                             startActivity(intent4);
                         });
 
-                        btnScanQR.setOnClickListener(v ->
-                                Toast.makeText(this, "Scan QR functionality coming soon!", Toast.LENGTH_SHORT).show()
-                        );
                         DocumentReference entrantRef = db.collection("Entrants").document(deviceId);
                         if (currentEvent.getWaitingList().contains(entrantRef)) {//TODO: Check if waitlistsize is not null and signups isnt bigger than waitlistsize in or statement
                             btnJoinWaitingList.setVisibility(View.GONE);
@@ -210,7 +198,6 @@ public class EventDetailActivity extends AppCompatActivity {
                                 currentEvent.getInvitedList().contains(entrantRef);
 
                         if (afterRegistration && !waiting && !invited) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -219,7 +206,6 @@ public class EventDetailActivity extends AppCompatActivity {
                         }
 
                         else if (isConfirmed) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -230,7 +216,6 @@ public class EventDetailActivity extends AppCompatActivity {
                         }
 
                         else if (isInFinalList) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.VISIBLE);
@@ -248,7 +233,6 @@ public class EventDetailActivity extends AppCompatActivity {
                             btnDeclineInvite.setOnClickListener(v -> declineInvitation());
                         }
                         else if (isCancelled) {
-                            btnScanQR.setVisibility(View.GONE);
                             btnJoinWaitingList.setVisibility(View.GONE);
                             btnLeaveWaitingList.setVisibility(View.GONE);
                             btnAcceptInvite.setVisibility(View.GONE);
@@ -439,7 +423,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "You declined the invitation.", Toast.LENGTH_SHORT).show();
 
-                    btnScanQR.setVisibility(View.GONE);
                     btnJoinWaitingList.setVisibility(View.GONE);
                     btnLeaveWaitingList.setVisibility(View.GONE);
                     btnAcceptInvite.setVisibility(View.GONE);

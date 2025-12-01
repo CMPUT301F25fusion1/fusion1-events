@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -158,8 +159,8 @@ public class AddEventFragment extends DialogFragment {
         inputRegEndDate = view.findViewById(R.id.inputRegEndDate);
         inputEventDate = view.findViewById(R.id.inputEventDate);
         imagePreview = view.findViewById(R.id.imagePreview);
-        Button btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
-        LinearLayout waitingListContainer = view.findViewById(R.id.waitingListContainer);
+        btnShowWaitingList = view.findViewById(R.id.btnShowWaitingList);
+        waitingListContainer = view.findViewById(R.id.waitingListContainer);
         ChipGroup chipGroupTags = view.findViewById(R.id.chipGroupTags);
         TextInputLayout selectorTags = view.findViewById(R.id.tagSelector);
         AutoCompleteTextView inputTags = view.findViewById(R.id.inputTags);
@@ -172,6 +173,7 @@ public class AddEventFragment extends DialogFragment {
         inputTags.setOnClickListener(v -> {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+
             builder.setTitle("Select Tags");
 
             builder.setMultiChoiceItems(tagItems, selectedFlags, (dialog, i, isChecked) -> {
@@ -204,7 +206,9 @@ public class AddEventFragment extends DialogFragment {
             builder.setNegativeButton("Cancel", null);
 
             builder.show();
+
         });
+
 
         increase = view.findViewById(R.id.btnIncrease);
         decrease = view.findViewById(R.id.btnDecrease);
@@ -212,15 +216,12 @@ public class AddEventFragment extends DialogFragment {
         waitIncrease = view.findViewById(R.id.btnWaitIncrease);
         waitDecrease = view.findViewById(R.id.btnWaitDecrease);
 
-        //set template image
         imagePreview.setImageResource(R.drawable.logo_loading);
 
-        // Set up date pickers
         setupDatePicker(inputRegStartDate, date -> regStartDate = date);
         setupDatePicker(inputRegEndDate, date -> regEndDate = date);
         setupDatePicker(inputEventDate, date -> eventDate = date);
 
-        // Set up people count buttons
         setupPeopleCountButtons(editPeopleCount);
 
         setupMaxListCountButtons(editMaxListCount);
@@ -266,6 +267,7 @@ public class AddEventFragment extends DialogFragment {
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
+
 
 
     }
@@ -413,4 +415,5 @@ public class AddEventFragment extends DialogFragment {
          */
         void onDateSelected(Date date);
     }
+
 }

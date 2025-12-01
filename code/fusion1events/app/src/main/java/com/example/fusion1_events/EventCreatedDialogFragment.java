@@ -235,11 +235,8 @@ public class EventCreatedDialogFragment extends DialogFragment {
     private void generateQRCode(ImageView qrCodeImageView) {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            // Make sure your EventsModel has a getEventId() method
-            // or use whatever field stores the Firestore document ID
-            String eventId = createdEvent.getEventId(); // Or createdEvent.getDocumentId()
+            String eventId = createdEvent.getEventId();
 
-            // Create deep link with the event ID
             String deepLink = "fusion1events://event/" + eventId;
 
             BitMatrix bitMatrix = multiFormatWriter.encode(deepLink, BarcodeFormat.QR_CODE, 200, 200);
