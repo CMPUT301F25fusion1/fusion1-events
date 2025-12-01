@@ -12,6 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * File: NotificationHelperClass.java
+ * Role:<br>
+ * - Provides helper methods for creating and sending notifications.<br>
+ * - Sends notifications to waiting list entrants, invited entrants, and individual entrants
+ *   when their invitation is cancelled by the organizer.<br>
+ */
 public class NotificationHelperClass {
 
     private static final String TAG = "NotificationHelperClass";
@@ -26,6 +33,13 @@ public class NotificationHelperClass {
             DatabaseReferences.getOrganizersDatabase();
 
 
+    /**
+     * Sends notifications to all entrants on the waiting list for a specific event.<br>
+     *
+     * @param context the context
+     * @param eventId the ID of the event
+     * @param organizerId the ID of the organizer sending the notifications
+     */
     public static void sendWaitingListNotifications(Context context,
                                                     String eventId,
                                                     String organizerId) {
@@ -78,6 +92,13 @@ public class NotificationHelperClass {
     }
 
 
+    /**
+     * Sends notifications to all invited entrants for a specific event.<br>
+     *
+     * @param context the context
+     * @param eventId the ID of the event
+     * @param organizerId the ID of the organizer sending the notifications
+     */
     public static void sendInvitedNotifications(Context context,
                                                 String eventId,
                                                 String organizerId) {
@@ -130,6 +151,15 @@ public class NotificationHelperClass {
                 });
     }
 
+    /**
+     * Sends a single notification to an entrant informing them that their
+     * invitation for the event was cancelled by the organizer.
+     *
+     * @param context the context
+     * @param eventId the ID of the event
+     * @param organizerId the ID of the organizer canceling the invitation
+     * @param entrantRef Firestore document reference to the entrant.
+     */
     public static void sendSingleCancelledNotification(
             Context context,
             String eventId,
@@ -166,6 +196,21 @@ public class NotificationHelperClass {
                     notifRef.add(data);
                 });
     }
+
+
+    /**
+     * Helper method that sends notifications to a list of entrants.
+     * For each entrant, checks whether notifications are allowed, then creates a
+     * notification document in Firestore with the provided title and message.
+     *
+     * @param entrantRefs references representing entrants
+     * @param eventIdString ID of the event
+     * @param eventTitle title of the event
+     * @param notificationTitle title of the notification
+     * @param notificationMessage message of the notification
+     * @param senderRef reference of the organizer sending the notification
+     * @param context the context
+     */
 
     private static void sendNotificationsToEntrantRefs(List<DocumentReference> entrantRefs,
                                                        String eventIdString,

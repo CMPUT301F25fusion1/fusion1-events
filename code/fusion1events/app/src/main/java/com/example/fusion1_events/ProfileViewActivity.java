@@ -20,23 +20,18 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
+/**
  * File: ProfileViewActivity.java
- *
- * Role:
- * - Let user view their current information like name, email and phone number,
- *       they provided to the app
- * - To get user's information like name, email, phone number that the
- *      user wants to update in the database
- * - Update all of this information to a collection called Profile in firebase.
- * - As per their selected role, update the same set of data to either Entrant, Admin
- *   or Organizer collection respectively.
- * - Let's the user delete their account/profile from the app.
- *
- *
- * Issues:
- * - Assumes device is online.
- *
+ * Role:<br>
+ * - Lets the user view their current information such as name, email, and phone number.<br>
+ * - Collects updated profile information that the user wants to change.<br>
+ * - Updates this information in the Profile collection in Firestore.<br>
+ * - Updates the same set of data in the Entrant, Organizer, or Admin collection,
+ *   depending on the user's role.<br>
+ * - Lets the user delete their account/profile from the app.<br>
+ * <br>
+ * Issues:<br>
+ * - Assumes the device is online.<br>
  */
 
 public class ProfileViewActivity extends AppCompatActivity {
@@ -49,7 +44,16 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private SwitchCompat allowNotifSwitch;
 
-
+    /**
+     * <p>
+     * This method initializes the UI components,,
+     * and sets up the listener for the sign-up button. loads the current profile data from Firestore,
+     * configures the allowNotification switch for entrants, and attaches click
+     * listeners for navigation, editing, saving, and deleting the profile.It is called when the activity is starting.
+     * </p>
+     *
+     * @param savedInstanceState non-null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +147,10 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Shows a confirmation dialog and, if confirmed, deletes the user's profile
+     * and role-specific document from Firestore, then returns to the app's load screen.
+     */
     private void deleteUserProfile(){
             new AlertDialog.Builder(this).setTitle("Delete Your Profile/Account.")
                     .setMessage("Are you sure you want to delete your profile/account?")
@@ -184,6 +192,9 @@ public class ProfileViewActivity extends AppCompatActivity {
                     }).show();
     }
 
+    /**
+     * Navigates the user back to their home screen based on their role.
+     */
     private void goHomeScreen(){
         FirebaseInstallations.getInstance().getId().addOnSuccessListener(deviceId -> {
 
@@ -216,7 +227,12 @@ public class ProfileViewActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * When edit mode is enabled, the text fields become editable and the save/cancel
+     * buttons are shown. When disabled, it is not editable anymore.
+     *
+     * @param Mode true to enable edit mode; false to switch back to view mode
+     */
     private void editMode(boolean Mode){
 
         if (Mode){
@@ -249,7 +265,10 @@ public class ProfileViewActivity extends AppCompatActivity {
         numProfileEditText.setEnabled(Mode);
     }
 
-
+    /**
+     * Cancels any edits made and restores the original values, then
+     * switches back to view mode.
+     */
     private void cancelEdit(){
 
         nameProfileEditText.setText(preEditName);
@@ -262,7 +281,10 @@ public class ProfileViewActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
 
     }
-
+/**
+ * Validates the edited fields and, if valid, updates the Profile and
+ * role-specific documents in Firestore.
+ */
     private void saveEdit(){
         String postEditName = nameProfileEditText.getText().toString().trim();
         String postEditEmail = emailProfileEditText.getText().toString().trim();

@@ -19,19 +19,19 @@ import java.util.Map;
 
 
 
-/*
+/**
  * File: SignUpActivity.java
  *
- * Role:
- * - To get users information like device id, name, email, phone number, and their preferred role.
- * - Add all of this information to a collection called Profile in firebase.
- * - As per their selected role, add the same set of data to either Entrant, Admin
- *   or Organizer collection respectively.
- * - To start the home screen activity for the user after successful sign up as per their role
- *
- * Issues:
- * - Assumes device is online.
- *
+ * Role:<br>
+ * - Collects user information such as device id, name, email, phone number, and preferred role.<br>
+ * - Stores this data in the Profile collection in Firestore.<br>
+ * - Depending on the selected role, also stores the same data in the Entrant, Organizer,
+ *   or Admin collection.<br>
+ * - Entrants also receive an allowNotification boolean field.<br>
+ * - After successful sign up, navigates the user to the appropriate home screen based on role.<br>
+ * <br>
+ * Issues:<br>
+ * - Assumes the device is online.<br>
  */
 
 public class SignUpActivity extends AppCompatActivity {
@@ -42,6 +42,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     private CollectionReference profileRef, entrantsRef, organizerRef, adminRef ;
 
+    /**
+     * <p>
+     * This method initializes the UI components, obtains Firestore collection references,
+     * and sets up the listener for the sign-up button. It is called when the activity is starting.
+     * </p>
+     *
+     * @param savedInstanceState non-null
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +75,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * <p>
+     * This Method validates user input and creates a profile record in Firestore, and navigates to
+     * the appropriate home activity based for selected role.
+     * </p>
+     */
     private void signUpProfile(){
         String name = nameEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();

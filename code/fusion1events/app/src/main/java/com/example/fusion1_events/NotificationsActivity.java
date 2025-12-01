@@ -14,12 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * File: NotificationsActivity.java
+ * Role:<br>
+ * - Displays a list of notifications received by the currently logged-in entrant.<br>
+ * <br>
+ * Issues:<br>
+ * - Assumes the device is online and fetches firestore data.<br>
+ */
 public class NotificationsActivity extends AppCompatActivity {
 
     private static final String TAG = "NotificationsActivity";
@@ -33,7 +40,15 @@ public class NotificationsActivity extends AppCompatActivity {
 
     private CollectionReference profileRef;
 
-    private Profile currentUser;  // optional, but matches EventDetailActivity usage
+    private Profile currentUser;
+
+    /**
+     *
+     * Sets up the View, initializes Firestore references, loads notifications
+     * for the current entrant. Called when the activity is starting.
+     *
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
