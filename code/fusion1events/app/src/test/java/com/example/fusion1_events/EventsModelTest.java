@@ -1,8 +1,18 @@
 package com.example.fusion1_events;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import com.google.firebase.firestore.DocumentReference;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,9 +20,14 @@ import java.util.Date;
 public class EventsModelTest {
 
     private EventsModel event;
+    private FirebaseFirestore db;
+    private DocumentReference organizerRef;
+
 
     @Before
     public void setup() {
+        organizerRef = mock(DocumentReference.class);
+
         Date now = new Date();
         event = new EventsModel(
                 "Concert",
@@ -31,7 +46,7 @@ public class EventsModelTest {
                 new ArrayList<String>(),
                 new ArrayList<String>(),
                 false,
-                "organizer123"
+                organizerRef
         );
     }
 

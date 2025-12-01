@@ -379,6 +379,11 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
 
     }
 
+    @Override
+    public void onEventAdded(String eventTitle) {
+
+    }
+
     /**
      * Callback method for adding a new event.
      * If an image is provided, uploads it to Cloudinary before creating the event.

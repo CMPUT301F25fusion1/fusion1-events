@@ -53,6 +53,8 @@ public class AddEventFragment extends DialogFragment {
      * Interface for communicating event creation back to the host activity.
      */
     public interface AddEventDialogListener {
+        void onEventAdded(String eventTitle);
+
         /**
          * Called when a new event is created.
          *
@@ -73,9 +75,7 @@ public class AddEventFragment extends DialogFragment {
     private EditText inputRegEndDate;
     private EditText inputEventDate;
     private String organizerId;
-
     private FirebaseFirestore db;
-
     private DocumentReference organizerRef;
 
     private Integer peopleCount = 0;
