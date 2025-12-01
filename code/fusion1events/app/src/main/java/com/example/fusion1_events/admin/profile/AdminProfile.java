@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.profile;
 
 /**
  * Represents a profile in the application.

@@ -1,8 +1,7 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.event;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusion1_events.Event;
 import com.example.fusion1_events.R;
-import com.google.android.material.button.MaterialButton;
+import com.example.fusion1_events.admin.NavBarHelper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

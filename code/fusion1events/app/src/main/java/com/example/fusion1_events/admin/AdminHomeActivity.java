@@ -6,6 +6,10 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fusion1_events.R;
+import com.example.fusion1_events.admin.event.AdminBrowseEventsActivity;
+import com.example.fusion1_events.admin.image.AdminBrowseImagesActivity;
+import com.example.fusion1_events.admin.notification.AdminBrowseNotificationsActivity;
+import com.example.fusion1_events.admin.profile.AdminBrowseProfilesActivity;
 
 
 /**

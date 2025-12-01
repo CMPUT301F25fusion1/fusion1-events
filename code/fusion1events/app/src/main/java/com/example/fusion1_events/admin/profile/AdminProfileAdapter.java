@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.profile;
 
 import android.view.LayoutInflater;
 import android.view.View;

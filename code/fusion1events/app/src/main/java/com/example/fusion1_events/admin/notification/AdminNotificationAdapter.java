@@ -1,4 +1,4 @@
-package com.example.fusion1_events.admin;
+package com.example.fusion1_events.admin.notification;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
