@@ -89,4 +89,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("com.google.firebase:firebase-messaging")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.7.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
 }

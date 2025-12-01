@@ -11,9 +11,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A utility class that performs the random draw of entrants for an event.
+ * It fetches the event document, loads waiting and invited lists, determines
+ * available attendee slots, selects entrants accordingly, and updates Firestore.
+ */
 public class DrawHelper {
 
     private static final String TAG = "DrawHelper";
+
+    /**
+     * Runs the draw process for a given event.<br>
+     * Steps performed:<br>
+     * Fetch event data from Firestore.<br>
+     * Load attendees limit, waiting list, and invited list.<br>
+     * Determine available space.<br>
+     * If waiting list ≤ space available: move everyone.<br>
+     * Otherwise: randomly select a subset (lottery).<br>
+     * Update Firestore with the new invited and waiting lists.<br>
+     * Show appropriate Toast messages and log progress.<br>
+     * @param eventId The Firestore ID of the event.<br>
+     * @param db The Firestore instance used for database operations.<br>
+     * @param context Optional: Android context for Toast messages. Can be null for tests.
+     */
     public static void runDraw(String eventId, FirebaseFirestore db, Context context) {
 
         DocumentReference eventRef = db.collection("Events").document(eventId);
