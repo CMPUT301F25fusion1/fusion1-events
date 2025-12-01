@@ -21,11 +21,7 @@ public class EventsModel {
     Long maxWaitList;
     ArrayList<String> selectedTags;
 
-
-
-
-
-    // Sports, Chill, Party, Seasonal, Educational,
+    String organizerId;
 
 
 
@@ -49,7 +45,7 @@ public class EventsModel {
     public EventsModel(String eventTitle,ArrayList<String> selectedTags, Date registrationStart, Date registrationEnd,
                        String eventDescription, Date date, Long attendees, Long signups,
                        ArrayList<String> waitingList, String imageUrl, String eventId,
-                       ArrayList<String> invitedList, Long maxWaitList) {
+                       ArrayList<String> invitedList, Long maxWaitList, String organizerId) {
         this.eventTitle = eventTitle;
         this.selectedTags = selectedTags != null ? selectedTags : new ArrayList<>();
         this.registrationStart = registrationStart;
@@ -63,6 +59,15 @@ public class EventsModel {
         this.eventId = eventId;
         this.invitedList = invitedList != null ? invitedList : new ArrayList<>();
         this.maxWaitList = maxWaitList;
+        this.organizerId = organizerId;
+    }
+
+    public String getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
     }
     public ArrayList<String> getSelectedTags(){
         return this.selectedTags;

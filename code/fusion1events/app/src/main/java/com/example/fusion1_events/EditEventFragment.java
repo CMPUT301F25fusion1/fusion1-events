@@ -204,9 +204,9 @@ public class EditEventFragment extends DialogFragment {
             imagePreview.setImageResource(R.drawable.logo_loading);
         }
 
-        //set the keywords
-        String[] tagItems = {"Chill", "Sports", "Educational"};
-        boolean[] selectedFlags = {false, false, false};
+        //set the keywords Sports, Chill, Party, Seasonal, Educational,
+        String[] tagItems = {"Chill \uD83E\uDD1F", "Sports \uD83C\uDFC0", "Educational \uD83C\uDFC0","Seasonal ☃\uFE0F","Party \uD83C\uDF89" };
+        boolean[] selectedFlags = {false, false, false, false, false};
 
         for (int i = 0; i < selectedTags.size(); i++){
             selectedFlags[i] = true;
@@ -405,7 +405,8 @@ public class EditEventFragment extends DialogFragment {
                 null, // imageUrl will be set after upload
                 eventsModel.getEventId(),
                 null,
-                Long.valueOf(maxListCount)
+                Long.valueOf(maxListCount),
+                eventsModel.getOrganizerId()
         );
     }
 

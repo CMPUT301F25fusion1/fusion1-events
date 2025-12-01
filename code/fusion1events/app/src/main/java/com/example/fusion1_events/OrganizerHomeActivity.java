@@ -259,7 +259,8 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getString("imageUrl"),
                                                                     eventDoc.getId(),
                                                                     invitedList,
-                                                                    eventDoc.getLong("maxWaitingListSize")//TODO: if an event is legacy, set maxWaitingListSize to null
+                                                                    eventDoc.getLong("maxWaitingListSize"),
+                                                                    eventDoc.getString("organizerId")
 
 
                                                             );
