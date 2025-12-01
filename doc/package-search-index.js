@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.fusion1_events"},{"l":"com.example.fusion1_events.admin"},{"l":"com.example.fusion1_events.admin.event"},{"l":"com.example.fusion1_events.admin.image"},{"l":"com.example.fusion1_events.admin.notification"},{"l":"com.example.fusion1_events.admin.profile"}];updateSearchResults();
