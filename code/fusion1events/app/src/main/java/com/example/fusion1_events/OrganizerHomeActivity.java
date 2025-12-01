@@ -308,8 +308,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
                                                                     eventDoc.getLong("maxWaitingListSize"),//TODO: if an event is legacy, set maxWaitingListSize to null
                                                                     cancelled,
                                                                     confirmed,
-                                                                    false
-                                                                    eventDoc.getLong("maxWaitingListSize"),
+                                                                    false,
                                                                     eventDoc.getString("organizerId")
 
 
@@ -533,6 +532,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("invitedList", new ArrayList<>());
         eventData.put("confirmed", new ArrayList<>());                 // NEW
         eventData.put("maxWaitingListSize",eventsModel.getMaxWaitList());
+        eventData.put("organizerId",eventsModel.getOrganizerId());
 
         db.collection("Events")
                 .add(eventData)
@@ -590,6 +590,7 @@ public class OrganizerHomeActivity extends AppCompatActivity implements AddEvent
         eventData.put("attendees", eventsModel.getAttendees());
         eventData.put("imageUrl", imageUrl);
         eventData.put("maxWaitingListSize", eventsModel.getMaxWaitList());
+
 
         Log.d(TAG, "Updating event: " + eventId);
 

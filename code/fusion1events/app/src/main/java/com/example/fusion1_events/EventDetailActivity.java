@@ -173,9 +173,9 @@ public class EventDetailActivity extends AppCompatActivity {
                         });
 
                         tvNotifications.setOnClickListener(v -> {
-                            Intent intent = new Intent( this, NotificationsActivity.class);
-                            intent.putExtra("currentUser", currentUser);
-                            startActivity(intent);
+                            Intent intent4 = new Intent( this, NotificationsActivity.class);
+                            intent4.putExtra("currentUser", currentUser);
+                            startActivity(intent4);
                         });
 
                         btnScanQR.setOnClickListener(v ->
