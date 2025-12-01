@@ -18,7 +18,18 @@ import com.google.firebase.firestore.DocumentReference;
 
 import java.text.DateFormat;
 import java.util.List;
-
+/**
+ * File: NotificationAdapter.java
+ * Role:<br>
+ * - Adapter for displaying a list of notifications <br>
+ * - Handles putting notification data to UI elements such as title, message, timestamp,
+ *   read/unread status.<br>
+ * - Allows marking notifications as read.<br>
+ * - Handles buttons to navigate the user to the related event.<br>
+ * <br>
+ * Issues:<br>
+ * - Assumes Firestore operations always succeeds; no offline handling.<br>
+ */
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
 
     private Context context;
@@ -26,6 +37,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private CollectionReference notifRef;
     private Profile currentUser;
 
+    /**
+     * Constructs a NotificationAdapter with required context, items list, database reference,
+     * and current user profile.<br>
+     *
+     * @param context the context
+     * @param items the list of NotificationModel objects
+     * @param notifRef reference to the Firestore Notifications collection
+     * @param currentUser the Profile of the current user
+     */
     public NotificationAdapter(Context context,
                                List<NotificationModel> items,
                                CollectionReference notifRef,
@@ -36,6 +56,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.currentUser = currentUser;
     }
 
+
     @NonNull
     @Override
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +65,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return new NotificationViewHolder(view);
     }
 
+    /**
+     * Puts the notification data to the UI.<br>
+     * Handles updating data, read/unread appearance, marking notifications as read,
+     * and navigating to event details.<br>
+     *
+     * @param holder the ViewHolder
+     * @param position the position of the notification in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         NotificationModel item = items.get(position);
@@ -93,6 +122,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         });
     }
 
+    /**
+     * Returns the number of notifications in the list.<br>
+     *
+     * @return the total number of items
+     */
     @Override
     public int getItemCount() {
         return items.size();
